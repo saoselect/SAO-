@@ -1382,6 +1382,36 @@
 ──────────────────────────────────────────── -->
 <script>
 /* ════════════════════════════════════════════
+   JSONP 呼叫 GAS（解決 CORS 問題）
+   ════════════════════════════════════════════ */
+function callGAS(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'gasCallback_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const script = document.createElement('script');
+    const qs     = new URLSearchParams({ ...params, callback: cbName }).toString();
+    script.src   = GAS_URL + '?' + qs;
+    script.onerror = () => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      reject(new Error('GAS 連線失敗'));
+    };
+    window[cbName] = (data) => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      resolve(data);
+    };
+    document.body.appendChild(script);
+    setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        if (document.body.contains(script)) document.body.removeChild(script);
+        reject(new Error('GAS 請求逾時'));
+      }
+    }, 12000);
+  });
+}
+
+/* ════════════════════════════════════════════
    設定（填入你的 LIFF ID 和 GAS URL）
    ════════════════════════════════════════════ */
 const LIFF_ID = '2010363089-IaA8fmYO';    // LINE Developers Console 取得
@@ -1426,12 +1456,9 @@ async function initLiff() {
 ───────────────────────────────────────── */
 async function checkMemberStatus(lineUID) {
   try {
-    const res  = await fetch(`${GAS_URL}?action=getMemberStatus&lineUID=${encodeURIComponent(lineUID)}`);
-    const data = await res.json();
-
+    const data = await callGAS({ action: 'getMemberStatus', lineUID });
     memberStatus = data.status || 'new';
     applyMemberState(memberStatus, data);
-
   } catch (err) {
     console.error('Status check error:', err);
     memberStatus = 'new';
@@ -1553,10 +1580,7 @@ async function loadProducts(category) {
     // 只有在全部品項時重新請求，切換分類時用快取篩選
     if (category === 'all' || !cachedProducts.length) {
       const lineUID = currentUser?.lineUID || 'demo';
-      const res  = await fetch(
-        `${GAS_URL}?action=getProducts&category=all&lineUID=${encodeURIComponent(lineUID)}`
-      );
-      const data = await res.json();
+      const data = await callGAS({ action: 'getProducts', category: 'all', lineUID });
 
       if (!data.success) {
         grid.innerHTML = `<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">${data.error || '載入失敗，請重試'}</p>`;
@@ -1628,18 +1652,13 @@ async function openInquiry(productId, brand, name, model) {
   if (!confirm(`確認詢價？\n\n品項：${brand} ${name}\n型號：${model}\n\n送出後將有專人與您確認細節。`)) return;
 
   try {
-    const res  = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action:    'submitOrder',
-        lineUID:   currentUser.lineUID,
-        productId: productId,
-        quantity:  1,
-        note:      ''
-      })
+    const data = await callGAS({
+      action:    'submitOrder',
+      lineUID:   currentUser.lineUID,
+      productId: productId,
+      quantity:  1,
+      note:      ''
     });
-    const data = await res.json();
     if (data.success) {
       showToast('✓ 詢價已送出，稍後將有人員與您聯繫');
     } else {
@@ -1764,12 +1783,7 @@ async function submitApplication() {
       cardImageUrl: '' // 名片上傳需另行處理（見下方說明）
     };
 
-    const res  = await fetch(GAS_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(body)
-    });
-    const data = await res.json();
+    const data = await callGAS(body);
 
     if (data.success) {
       closeOverlay('overlay-register');
