@@ -1455,16 +1455,27 @@ async function initLiff() {
    查詢會員狀態
 ───────────────────────────────────────── */
 async function checkMemberStatus(lineUID) {
-  try {
-const data = await callGAS({
-  action:      'registerMember',
-  lineUID:     currentUser?.lineUID || 'demo_' + Date.now(),
-  displayName: currentUser?.displayName || '',
-  companyName: company,
-  taxID:       taxID,
-  phone:       phone,
-  cardImageUrl: ''
-});
+  let retries = 3;
+  while (retries > 0) {
+    try {
+      const data = await callGAS({ action: 'getMemberStatus', lineUID });
+      if (data && data.success !== undefined) {
+        memberStatus = data.status || 'new';
+        applyMemberState(memberStatus, data);
+        showLoadingState(false);
+        return;
+      }
+    } catch (err) {
+      console.error('Status check error:', err, '剩餘重試:', retries);
+    }
+    retries--;
+    if (retries > 0) await new Promise(r => setTimeout(r, 1500));
+  }
+  // 三次都失敗才設為 new
+  memberStatus = 'new';
+  applyMemberState('new', {});
+  showLoadingState(false);
+}
   } catch (err) {
     console.error('Status check error:', err);
     memberStatus = 'new';
