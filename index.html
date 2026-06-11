@@ -1839,5 +1839,10 @@ if (typeof liff !== 'undefined') {
   showLoadingState(false);
 }
 </script>
+  <!-- 除錯用，確認後刪除 -->
+<button onclick="alert('UID:' + (currentUser ? currentUser.lineUID : 'null') + '\nStatus:' + memberStatus)" 
+style="position:fixed;bottom:10px;right:10px;z-index:9999;padding:8px;font-size:11px;background:#fff;border:1px solid #ccc;border-radius:4px;">
+DEBUG
+</button>
 </body>
 </html>
