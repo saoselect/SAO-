@@ -1456,9 +1456,15 @@ async function initLiff() {
 ───────────────────────────────────────── */
 async function checkMemberStatus(lineUID) {
   try {
-    const data = await callGAS({ action: 'getMemberStatus', lineUID });
-    memberStatus = data.status || 'new';
-    applyMemberState(memberStatus, data);
+const data = await callGAS({
+  action:      'registerMember',
+  lineUID:     currentUser?.lineUID || 'demo_' + Date.now(),
+  displayName: currentUser?.displayName || '',
+  companyName: company,
+  taxID:       taxID,
+  phone:       phone,
+  cardImageUrl: ''
+});
   } catch (err) {
     console.error('Status check error:', err);
     memberStatus = 'new';
