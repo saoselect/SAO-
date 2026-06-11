@@ -1475,7 +1475,7 @@ async function checkMemberStatus(lineUID) {
   memberStatus = 'new';
   applyMemberState('new', {});
   showLoadingState(false);
-}
+
   } catch (err) {
     console.error('Status check error:', err);
     memberStatus = 'new';
