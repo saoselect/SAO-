@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <!-- LINE LIFF SDK（部署時取消註解並填入正確版本） -->
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js" async></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
     /* ─────────────────────────────────────────
@@ -997,18 +997,19 @@
        ───────────────────────────────────────── */
     @media (prefers-reduced-motion: no-preference) {
       .fade-in {
-        opacity: 1;
-        transform: none;
-        transition: opacity 0.6s ease, transform 0.6s ease;
-      }
-      .fade-in.animate {
         opacity: 0;
         transform: translateY(16px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
       }
-      .fade-in.animate.visible {
+      .fade-in.visible {
         opacity: 1;
         transform: none;
       }
+    }
+    /* SDK 載入中的安全網：超過 3 秒強制顯示所有內容 */
+    .fade-in.force-show {
+      opacity: 1 !important;
+      transform: none !important;
     }
   </style>
 </head>
@@ -2266,29 +2267,19 @@ if (typeof IntersectionObserver !== 'undefined') {
   document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
 }
 
-/* 啟動 */
-function startApp() {
-  if (typeof liff !== 'undefined') {
-    initLiff();
-  } else {
-    memberStatus = 'guest';
-    showLoadingState(false);
-  }
-}
+/* 安全網：3 秒後強制顯示所有內容，防止 SDK 卡住時畫面空白 */
+setTimeout(() => {
+  document.querySelectorAll('.fade-in').forEach(el => {
+    if (!el.classList.contains('visible')) {
+      el.classList.add('visible');
+    }
+  });
+  showLoadingState(false);
+}, 3000);
 
-// 等 LIFF SDK async 載入完成後啟動
-// 如果 SDK 已存在就直接啟動，否則等 onload
-const liffScript = document.querySelector('script[src*="liff"]');
-if (liffScript) {
-  if (typeof liff !== 'undefined') {
-    startApp();
-  } else {
-    liffScript.addEventListener('load', startApp);
-    liffScript.addEventListener('error', () => {
-      memberStatus = 'guest';
-      showLoadingState(false);
-    });
-  }
+/* 啟動 */
+if (typeof liff !== 'undefined') {
+  initLiff();
 } else {
   memberStatus = 'guest';
   showLoadingState(false);
