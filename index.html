@@ -1109,8 +1109,8 @@
             <div class="about-feature">
               <span class="feature-num">iii</span>
               <div class="feature-text">
-                <h4>發票由大發電器行開立</h4>
-                <p>三聯式發票，抬頭與金額均可依業主需求開立，符合工程驗收與報帳需求。</p>
+                <h4>原廠授權通路開立發票</h4>
+                <p>所有訂單均透過原廠授權通路出貨，三聯式發票依業主需求開立，符合工程驗收與報帳需求。</p>
               </div>
             </div>
             <div class="about-feature">
@@ -1438,7 +1438,7 @@
         專人將於 LINE 官方帳號與您聯繫，<br>
         確認規格、交期與付款方式。<br><br>
         <strong style="color:var(--text-pri);">匯款資訊</strong><br>
-        戶名：大發電器行<br>
+        戶名：原廠授權通路<br>
         <span id="bank-info" style="color:var(--text-sec);font-size:12px;">請等候專人提供完整匯款帳號</span>
       </p>
     </div>
@@ -1566,7 +1566,7 @@ function applyMemberState(status, data) {
     document.getElementById('member-name-display').textContent =
       data.companyName || currentUser?.displayName || '設計師';
     loadProducts('all');
-    initWatermark(String(data.taxID || ''), String(data.phone || ''));
+    initWatermark(String(data.taxID || ''), String(data.phone || ''), String(data.companyName || ''));
 
   } else if (status === 'pending') {
     ctaBtn.textContent = '審核中';
@@ -1612,7 +1612,7 @@ function DEMO_loginAsApproved() {
   document.body.classList.add('approved');
   document.getElementById('member-name-display').textContent = '禾木設計 林設計師';
   loadProducts('all');
-  initWatermark('12345678', '0912345678');
+  initWatermark('12345678', '0912345678', '禾木設計');
   closeOverlay('overlay-register');
   console.log('✅ DEMO 模式：已切換為 approved 設計師視角');
 }
@@ -1620,12 +1620,14 @@ function DEMO_loginAsApproved() {
 /* ─────────────────────────────────────────
    動態漂移浮水印
 ───────────────────────────────────────── */
-function initWatermark(taxID, phone) {
+function initWatermark(taxID, phone, companyName) {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const taxStr = String(taxID || '');
-  const phoneStr = String(phone || '');
-  const text = `${taxStr} · ${phoneStr.slice(-4) || phoneStr}`;
+  const taxStr     = String(taxID       || '');
+  const phoneStr   = String(phone       || '');
+  const companyStr = String(companyName || '');
+  // 顯示：統編 · 公司名稱 · 完整手機
+  const text = [taxStr, companyStr, phoneStr].filter(Boolean).join(' · ');
   const items = [];
   for (let i = 0; i < 16; i++) {
     const el = document.createElement('span');
@@ -2003,7 +2005,10 @@ function showLanding(show) {
     landing.style.cssText = 'display:none !important';
     pricePg.style.display = 'block';
     if (btn) btn.textContent = '關於 SAO';
-    pricePg.scrollIntoView({ behavior: 'smooth' });
+    // 用 setTimeout 確保 DOM 更新後再捲動
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
   }
 }
 
