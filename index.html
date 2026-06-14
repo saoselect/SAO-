@@ -1386,8 +1386,8 @@
 <div class="overlay" id="overlay-inquiry" role="dialog" aria-modal="true" aria-labelledby="inquiry-title">
   <div class="panel">
     <div class="panel-header">
-      <p class="section-label">專業詢價</p>
-      <h2 class="panel-title" id="inquiry-title">填寫詢價資料</h2>
+      <p class="section-label">諮詢 / 下單</p>
+      <h2 class="panel-title" id="inquiry-title">填寫諮詢資料</h2>
       <button class="panel-close" onclick="closeOverlay('overlay-inquiry')" aria-label="關閉">✕</button>
     </div>
     <div class="panel-body">
@@ -1422,7 +1422,7 @@
         <label class="form-label" for="inquiry-note">其他備註</label>
         <textarea class="form-input" id="inquiry-note" rows="3" placeholder="其他需求或說明..." style="resize:vertical;min-height:80px;"></textarea>
       </div>
-      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 與您確認訂單細節及付款方式。</p>
+      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 與您確認貨源、規格與付款方式。</p>
       <button class="btn-primary" id="inquiry-submit-btn" style="width:100%;justify-content:center;" onclick="submitInquiry()">
         送出詢價
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1437,9 +1437,9 @@
     <button class="panel-close" onclick="closeOverlay('overlay-inquiry-success')" aria-label="關閉">✕</button>
     <div class="status-panel">
       <div class="status-icon" style="border-color:var(--gold);color:var(--gold);">✓</div>
-      <h2 class="status-title" id="inq-success-title">詢價已送出</h2>
+      <h2 class="status-title" id="inq-success-title">諮詢已送出</h2>
       <p class="status-desc">
-        您的詢價資料已送出。<br>
+        您的諮詢 / 下單資料已送出。<br>
         專人將於 LINE 官方帳號與您聯繫，<br>
         確認規格、交期與付款方式。<br><br>
         <strong style="color:var(--text-pri);">匯款資訊</strong><br>
@@ -1569,6 +1569,21 @@ function applyMemberState(status, data) {
     document.body.classList.add('approved');
     document.getElementById('member-name-display').textContent =
       data.companyName || currentUser?.displayName || '設計師';
+    // 儲存 lineUID
+    if (!currentUser) currentUser = {};
+    if (data.lineUID) currentUser.lineUID = data.lineUID;
+    // 初始化頁面
+    document.getElementById('landing-content').style.cssText = 'display:none !important';
+    document.getElementById('price-page').style.display = 'block';
+    // 綁定按鈕
+    const toggleBtn = document.getElementById('toggle-landing-btn');
+    if (toggleBtn) {
+      toggleBtn.onclick = toggleLanding;
+    }
+    const topBtn = document.getElementById('back-top-btn');
+    if (topBtn) {
+      topBtn.onclick = scrollToTop;
+    }
     loadProducts('all');
     initWatermark(String(data.taxID || ''), String(data.phone || ''), String(data.companyName || ''));
 
@@ -1731,7 +1746,7 @@ function renderProducts(products) {
             <p class="product-price">$${Number(price).toLocaleString()}</p>
           </div>
           <div class="product-actions">
-            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">立即詢價</button>
+            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">立即諮詢 / 下單</button>
           </div>
         </div>
       </article>`;
