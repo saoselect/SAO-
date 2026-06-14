@@ -271,9 +271,58 @@
     .toast.show { transform: none; opacity: 1; }
 
     @media (max-width: 768px) {
-      .sidebar { width: 160px; min-width: 160px; }
+      /* 手機版：側欄改成底部 Tab */
+      .admin-shell { flex-direction: column; }
+      .sidebar {
+        width: 100%; min-width: 0;
+        flex-direction: row;
+        padding: 0;
+        order: 2;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        z-index: 50;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      .sidebar-logo { display: none; }
+      .sidebar-bottom { display: none; }
+      .nav-item {
+        flex: 1; text-align: center;
+        padding: 12px 4px;
+        border-left: none;
+        border-top: 2px solid transparent;
+        font-size: 11px;
+      }
+      .nav-item.active { border-left: none; border-top-color: var(--gold); }
+      .main { padding-bottom: 60px; }
       .stat-cards { grid-template-columns: 1fr 1fr; }
-      .content { padding: 20px; }
+      .content { padding: 14px; }
+      .topbar { padding: 0 14px; }
+      /* 手機版表格：改成卡片式 */
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        padding: 12px;
+      }
+      td {
+        border: none;
+        padding: 3px 0;
+        font-size: 13px;
+      }
+      td:before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-sec);
+        display: block;
+        margin-bottom: 2px;
+      }
+      .action-btns { margin-top: 10px; gap: 8px; }
+      .btn-xs { padding: 8px 16px; font-size: 12px; }
     }
   </style>
 </head>
@@ -287,10 +336,6 @@
     <div class="field">
       <label for="login-pass">管理密碼</label>
       <input type="password" id="login-pass" placeholder="輸入管理密碼" onkeydown="if(event.key==='Enter')doLogin()"/>
-    </div>
-    <div class="field">
-      <label for="gas-url-input">GAS Web App URL</label>
-      <input type="text" id="gas-url-input" placeholder="https://script.google.com/macros/s/..."/>
     </div>
     <p class="error-msg" id="login-error">密碼錯誤，請重試</p>
     <br>
@@ -403,7 +448,7 @@
 /* ─────────────────────────
    狀態
 ───────────────────────── */
-let GAS_URL  = '';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbymuShGeTN_k7tlCkK7CI3VGJ319WmmTg23TeFMWWvKD5VF2jVSqLbToxSfr3Wx5yc-/exec';
 let PASSWORD = '';
 let allMembers = [];
 
@@ -412,10 +457,8 @@ let allMembers = [];
 ───────────────────────── */
 function doLogin() {
   const pass = document.getElementById('login-pass').value.trim();
-  const url  = document.getElementById('gas-url-input').value.trim();
-  if (!pass || !url) { showError('login-error', '請填寫密碼和 GAS URL'); return; }
+  if (!pass) { showError('login-error', '請輸入管理密碼'); return; }
   PASSWORD = pass;
-  GAS_URL  = url;
   // 用 getMembers 驗證密碼
   fetchGET({ action: 'getMembers', password: PASSWORD })
     .then(data => {
@@ -429,7 +472,7 @@ function doLogin() {
 }
 
 function doLogout() {
-  PASSWORD = ''; GAS_URL = '';
+  PASSWORD = '';
   document.getElementById('admin-shell').classList.add('hidden');
   document.getElementById('admin-shell').classList.remove('visible');
   document.getElementById('login-screen').classList.remove('hidden');
@@ -490,20 +533,20 @@ function renderMemberTable(list) {
       <tbody>
         ${list.map(m => `
           <tr>
-            <td style="color:var(--text-sec);font-size:12px;">${m.CreatedAt||'—'}</td>
-            <td><strong>${m.CompanyName||'—'}</strong></td>
-            <td style="font-variant-numeric:tabular-nums;">${m.TaxID||'—'}</td>
-            <td>${m.Phone||'—'}</td>
-            <td><span class="badge badge-${m.Status||'pending'}">${statusLabel(m.Status)}</span></td>
-            <td>
+            <td data-label="申請時間" style="color:var(--text-sec);font-size:12px;">${(m.CreatedAt||'—').replace('T',' ').replace('.000Z','')}</td>
+            <td data-label="公司名稱"><strong>${m.CompanyName||'—'}</strong></td>
+            <td data-label="統編" style="font-variant-numeric:tabular-nums;">${m.TaxID||'—'}</td>
+            <td data-label="手機">${m.Phone||'—'}</td>
+            <td data-label="狀態"><span class="badge badge-${m.Status||'pending'}">${statusLabel(m.Status)}</span></td>
+            <td data-label="名片">
               ${m.CardImageURL
                 ? `<button class="btn-xs" onclick="showCard('${esc(m.LineUID)}','${esc(m.CompanyName)}','${esc(m.LineDisplayName)}','${esc(m.CardImageURL)}')">查看</button>`
                 : '<span style="color:var(--text-sec);font-size:12px;">未上傳</span>'}
             </td>
-            <td>
+            <td data-label="操作">
               <div class="action-btns">
-                ${m.Status !== 'approved' ? `<button class="btn-xs approve" onclick="doApprove('${esc(m.LineUID)}')">核准</button>` : ''}
-                ${m.Status !== 'rejected' ? `<button class="btn-xs reject"  onclick="doReject('${esc(m.LineUID)}')">拒絕</button>` : ''}
+                ${m.Status !== 'approved' ? `<button class="btn-xs approve" onclick="doApprove('${esc(m.LineUID)}')">✓ 核准</button>` : '<span style="color:var(--green);font-size:12px;">已核准</span>'}
+                ${m.Status !== 'rejected' ? `<button class="btn-xs reject"  onclick="doReject('${esc(m.LineUID)}')">✕ 拒絕</button>` : ''}
                 ${m.Status !== 'blocked'  ? `<button class="btn-xs block"   onclick="doBlock('${esc(m.LineUID)}')">封鎖</button>`  : ''}
               </div>
             </td>
