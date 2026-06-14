@@ -1376,6 +1376,75 @@
   </div>
 </div>
 
+
+<!-- OVERLAY: 詢價表單 -->
+<div class="overlay" id="overlay-inquiry" role="dialog" aria-modal="true" aria-labelledby="inquiry-title">
+  <div class="panel">
+    <div class="panel-header">
+      <p class="section-label">專業詢價</p>
+      <h2 class="panel-title" id="inquiry-title">填寫詢價資料</h2>
+      <button class="panel-close" onclick="closeOverlay('overlay-inquiry')" aria-label="關閉">✕</button>
+    </div>
+    <div class="panel-body">
+      <!-- 品項資訊（動態填入） -->
+      <div id="inquiry-product-info" style="background:var(--bg-card);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:6px;">詢價品項</p>
+        <p id="inquiry-product-name" style="font-family:var(--serif);font-size:18px;font-weight:400;color:var(--text-pri);"></p>
+        <p id="inquiry-product-model" style="font-size:12px;color:var(--text-sec);margin-top:2px;"></p>
+      </div>
+      <!-- 數量 -->
+      <div class="form-group">
+        <label class="form-label" for="inquiry-qty">數量</label>
+        <input class="form-input" id="inquiry-qty" type="number" min="1" max="99" value="1" placeholder="請輸入數量"/>
+      </div>
+      <!-- 工地地址 -->
+      <div class="form-group">
+        <label class="form-label" for="inquiry-address">工地 / 送貨地址</label>
+        <input class="form-input" id="inquiry-address" type="text" placeholder="例：台北市大安區忠孝東路四段XX號"/>
+      </div>
+      <!-- 需求交期 -->
+      <div class="form-group">
+        <label class="form-label" for="inquiry-date">需求交期</label>
+        <input class="form-input" id="inquiry-date" type="date" placeholder="期望到貨日期"/>
+      </div>
+      <!-- 顏色 / 規格備註 -->
+      <div class="form-group">
+        <label class="form-label" for="inquiry-spec">顏色 / 規格需求</label>
+        <input class="form-input" id="inquiry-spec" type="text" placeholder="例：深玫瑰金、嵌入式安裝..."/>
+      </div>
+      <!-- 備註 -->
+      <div class="form-group">
+        <label class="form-label" for="inquiry-note">其他備註</label>
+        <textarea class="form-input" id="inquiry-note" rows="3" placeholder="其他需求或說明..." style="resize:vertical;min-height:80px;"></textarea>
+      </div>
+      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 與您確認訂單細節及付款方式。</p>
+      <button class="btn-primary" id="inquiry-submit-btn" style="width:100%;justify-content:center;" onclick="submitInquiry()">
+        送出詢價
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY: 詢價成功 -->
+<div class="overlay" id="overlay-inquiry-success" role="dialog" aria-modal="true" aria-labelledby="inq-success-title">
+  <div class="panel">
+    <button class="panel-close" onclick="closeOverlay('overlay-inquiry-success')" aria-label="關閉">✕</button>
+    <div class="status-panel">
+      <div class="status-icon" style="border-color:var(--gold);color:var(--gold);">✓</div>
+      <h2 class="status-title" id="inq-success-title">詢價已送出</h2>
+      <p class="status-desc">
+        您的詢價資料已送出。<br>
+        專人將於 LINE 官方帳號與您聯繫，<br>
+        確認規格、交期與付款方式。<br><br>
+        <strong style="color:var(--text-pri);">匯款資訊</strong><br>
+        戶名：大發電器行<br>
+        <span id="bank-info" style="color:var(--text-sec);font-size:12px;">請等候專人提供完整匯款帳號</span>
+      </p>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container footer-inner">
@@ -1656,7 +1725,7 @@ function renderProducts(products) {
             <p class="product-price">$${Number(price).toLocaleString()}</p>
           </div>
           <div class="product-actions">
-            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">詢問此品項</button>
+            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">立即詢價</button>
           </div>
         </div>
       </article>`;
@@ -1680,8 +1749,45 @@ async function handleInquiryClick(e) {
   await openInquiry(pid, brand, name, model);
 }
 
-async function openInquiry(productId, brand, name, model) {
-  if (!confirm(`確認詢價？\n\n品項：${brand} ${name}\n型號：${model}\n\n送出後將有專人與您確認細節。`)) return;
+// 目前詢價品項暫存
+let currentInquiryProduct = {};
+
+function openInquiry(productId, brand, name, model) {
+  // 暫存品項資訊
+  currentInquiryProduct = { productId, brand, name, model };
+
+  // 填入品項資訊到 overlay
+  document.getElementById('inquiry-product-name').textContent = brand + ' ' + name;
+  document.getElementById('inquiry-product-model').textContent = model;
+
+  // 重設表單
+  document.getElementById('inquiry-qty').value = '1';
+  document.getElementById('inquiry-address').value = '';
+  document.getElementById('inquiry-date').value = '';
+  document.getElementById('inquiry-spec').value = '';
+  document.getElementById('inquiry-note').value = '';
+
+  // 設定最小日期為今天
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('inquiry-date').min = today;
+
+  showOverlay('overlay-inquiry');
+}
+
+async function submitInquiry() {
+  const { productId, brand, name, model } = currentInquiryProduct;
+  const qty     = document.getElementById('inquiry-qty').value || '1';
+  const address = document.getElementById('inquiry-address').value.trim();
+  const date    = document.getElementById('inquiry-date').value;
+  const spec    = document.getElementById('inquiry-spec').value.trim();
+  const note    = document.getElementById('inquiry-note').value.trim();
+
+  if (!address) {
+    document.getElementById('inquiry-address').classList.add('error');
+    document.getElementById('inquiry-address').focus();
+    return;
+  }
+  document.getElementById('inquiry-address').classList.remove('error');
 
   const lineUID = currentUser?.lineUID;
   if (!lineUID || lineUID === 'approved' || lineUID === 'new') {
@@ -1689,21 +1795,38 @@ async function openInquiry(productId, brand, name, model) {
     return;
   }
 
+  const btn = document.getElementById('inquiry-submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送出中…';
+
+  const noteText = [
+    spec    ? '規格：' + spec    : '',
+    date    ? '交期：' + date    : '',
+    address ? '地址：' + address : '',
+    note    ? '備註：' + note    : '',
+  ].filter(Boolean).join(' | ');
+
   try {
     const data = await callGAS({
       action:    'submitOrder',
       lineUID:   lineUID,
       productId: productId,
-      quantity:  1,
-      note:      ''
+      quantity:  parseInt(qty) || 1,
+      note:      noteText
     });
+
     if (data.success) {
-      showToast('✓ 詢價已送出，稍後將有人員與您聯繫');
+      closeOverlay('overlay-inquiry');
+      showOverlay('overlay-inquiry-success');
     } else {
       showToast('送出失敗：' + (data.error || '請重試'));
+      btn.disabled = false;
+      btn.textContent = '送出詢價';
     }
   } catch (err) {
     showToast('連線失敗，請重試');
+    btn.disabled = false;
+    btn.textContent = '送出詢價';
   }
 }
 
