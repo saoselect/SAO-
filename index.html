@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <!-- LINE LIFF SDK（部署時取消註解並填入正確版本） -->
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js" async></script>
 
   <style>
     /* ─────────────────────────────────────────
@@ -997,11 +997,15 @@
        ───────────────────────────────────────── */
     @media (prefers-reduced-motion: no-preference) {
       .fade-in {
-        opacity: 0;
-        transform: translateY(16px);
+        opacity: 1;
+        transform: none;
         transition: opacity 0.6s ease, transform 0.6s ease;
       }
-      .fade-in.visible {
+      .fade-in.animate {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      .fade-in.animate.visible {
         opacity: 1;
         transform: none;
       }
@@ -1965,23 +1969,25 @@ function initPaymentWatermark() {
 
 // 預設購買須知（Config 未設定時使用）
 function defaultTerms() {
-  return \`一、付款方式
-本平台採用銀行匯款方式付款，訂單確認後請於 3 個工作日內完成匯款。逾期未匯款者，訂單將自動取消。
-
-二、出貨說明
-確認收款後，由原廠授權通路安排出貨，送達指定工地地址。出貨時程依品項庫存狀況而定，通常為 7-14 個工作日，特殊品項另行通知。
-
-三、發票開立
-本平台開立三聯式統一發票，抬頭與金額依業主需求填寫，於出貨時一併寄送。
-
-四、退換貨政策
-商品出貨後，如有外觀損壞或功能異常，請於收貨後 48 小時內拍照回報，逾期恕不受理。人為損壞、自行拆解或安裝不當所造成之問題，不在保固範圍內。
-
-五、價格保密
-本平台所有報價屬於會員專屬底價，嚴禁對外公開或截圖分享。違者將立即停止服務資格，並保留法律追訴權。
-
-六、免責聲明
-本平台所有商品均透過原廠授權通路出貨，並提供原廠保固。本平台不承擔因不可抗力因素（如天災、罷工、斷料）造成之延誤責任。\`;
+  return [
+    '一、付款方式',
+    '訂單確認後請於 3 個工作日內完成匯款，逾期未匯款者訂單將自動取消。',
+    '',
+    '二、出貨說明',
+    '確認收款後由原廠授權通路安排出貨，送達指定工地地址，通常為 7-14 個工作日。',
+    '',
+    '三、發票開立',
+    '開立三聯式統一發票，抬頭與金額依業主需求填寫，於出貨時一併寄送。',
+    '',
+    '四、退換貨政策',
+    '收貨後 48 小時內回報外觀損壞或功能異常。人為損壞或安裝不當不在保固範圍。',
+    '',
+    '五、價格保密',
+    '所有報價屬會員專屬底價，嚴禁對外公開或截圖分享，違者立即停止服務資格。',
+    '',
+    '六、免責聲明',
+    '所有商品均透過原廠授權通路出貨並提供原廠保固。不可抗力因素造成之延誤不在賠償範圍。'
+  ].join('<br>');
 }
 
 // 目前詢價品項暫存
@@ -2261,12 +2267,29 @@ if (typeof IntersectionObserver !== 'undefined') {
 }
 
 /* 啟動 */
-// 如果是在 LINE LIFF 環境，啟動 initLiff()
-// 如果是在一般瀏覽器預覽，維持訪客模式（可用 DEMO_loginAsApproved() 測試）
-if (typeof liff !== 'undefined') {
-  initLiff();
+function startApp() {
+  if (typeof liff !== 'undefined') {
+    initLiff();
+  } else {
+    memberStatus = 'guest';
+    showLoadingState(false);
+  }
+}
+
+// 等 LIFF SDK async 載入完成後啟動
+// 如果 SDK 已存在就直接啟動，否則等 onload
+const liffScript = document.querySelector('script[src*="liff"]');
+if (liffScript) {
+  if (typeof liff !== 'undefined') {
+    startApp();
+  } else {
+    liffScript.addEventListener('load', startApp);
+    liffScript.addEventListener('error', () => {
+      memberStatus = 'guest';
+      showLoadingState(false);
+    });
+  }
 } else {
-  // 一般瀏覽器（非 LINE 環境）— 訪客模式
   memberStatus = 'guest';
   showLoadingState(false);
 }
