@@ -1431,6 +1431,84 @@
   </div>
 </div>
 
+
+<!-- OVERLAY: 購買須知 -->
+<div class="overlay" id="overlay-terms" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+  <div class="panel" style="max-width:520px;">
+    <div class="panel-header">
+      <p class="section-label">下單前請詳閱</p>
+      <h2 class="panel-title" id="terms-title">購買須知</h2>
+      <button class="panel-close" onclick="closeOverlay('overlay-terms')" aria-label="關閉">✕</button>
+    </div>
+    <div class="panel-body" style="max-height:60svh;overflow-y:auto;">
+      <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;">
+        <!-- 從 GAS Config 動態載入 -->
+      </div>
+      <br>
+      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--divider);">
+        <input type="checkbox" id="terms-agree-check" style="width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;" onchange="toggleTermsBtn()"/>
+        <span style="font-size:13px;font-weight:400;color:var(--text-pri);line-height:1.6;">
+          我已詳細閱讀並同意上述購買須知，確認下單後將依規定完成付款。
+        </span>
+      </label>
+      <br>
+      <button class="btn-primary" id="terms-confirm-btn" disabled
+        style="width:100%;justify-content:center;opacity:0.4;cursor:not-allowed;"
+        onclick="showPaymentInfo()">
+        同意並查看匯款資訊
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY: 匯款資訊 -->
+<div class="overlay" id="overlay-payment" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+  <div class="panel" style="max-width:480px;position:relative;">
+    <div class="panel-header">
+      <p class="section-label">請於確認後 3 日內完成匯款</p>
+      <h2 class="panel-title" id="payment-title">匯款資訊</h2>
+      <button class="panel-close" onclick="closeOverlay('overlay-payment')" aria-label="關閉">✕</button>
+    </div>
+    <div class="panel-body">
+      <!-- 訂單摘要 -->
+      <div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;">訂單摘要</p>
+        <p id="payment-product" style="font-family:var(--serif);font-size:16px;color:var(--text-pri);margin-bottom:4px;"></p>
+        <p id="payment-qty" style="font-size:12px;color:var(--text-sec);"></p>
+      </div>
+      <!-- 匯款帳號 -->
+      <div style="border:1px solid var(--gold-line);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">匯款帳號</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--divider);padding-bottom:8px;">
+            <span style="font-size:12px;color:var(--text-sec);">戶名</span>
+            <span id="bank-name" style="font-size:14px;font-weight:500;color:var(--text-pri);"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--divider);padding-bottom:8px;">
+            <span style="font-size:12px;color:var(--text-sec);">銀行</span>
+            <span id="bank-code" style="font-size:14px;font-weight:500;color:var(--text-pri);"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--text-sec);">帳號</span>
+            <span id="bank-account" style="font-family:monospace;font-size:16px;font-weight:500;color:var(--text-pri);letter-spacing:0.08em;"></span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:300;color:var(--text-sec);line-height:1.8;text-align:center;">
+        匯款完成後請保留收據，<br>並透過 LINE 官方帳號回傳匯款截圖。
+      </p>
+      <br>
+      <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">
+        傳送匯款截圖給客服
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <!-- 匯款頁浮水印（額外加強） -->
+    <div id="payment-watermark" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:var(--radius-md);z-index:1;"></div>
+  </div>
+</div>
+
 <!-- OVERLAY: 詢價成功 -->
 <div class="overlay" id="overlay-inquiry-success" role="dialog" aria-modal="true" aria-labelledby="inq-success-title">
   <div class="panel">
@@ -1569,9 +1647,12 @@ function applyMemberState(status, data) {
     document.body.classList.add('approved');
     document.getElementById('member-name-display').textContent =
       data.companyName || currentUser?.displayName || '設計師';
-    // 儲存 lineUID
+    // 儲存完整會員資料（浮水印和匯款頁用）
     if (!currentUser) currentUser = {};
-    if (data.lineUID) currentUser.lineUID = data.lineUID;
+    if (data.lineUID)     currentUser.lineUID      = data.lineUID;
+    if (data.taxID)       currentUser.taxID        = data.taxID;
+    if (data.phone)       currentUser.phone        = data.phone;
+    if (data.companyName) currentUser.companyName  = data.companyName;
     // 初始化頁面
     document.getElementById('landing-content').style.cssText = 'display:none !important';
     document.getElementById('price-page').style.display = 'block';
@@ -1746,7 +1827,10 @@ function renderProducts(products) {
             <p class="product-price">$${Number(price).toLocaleString()}</p>
           </div>
           <div class="product-actions">
-            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">立即諮詢 / 下單</button>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+              <button class="btn-inquiry btn-order" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}" data-price="${price}">立即下單</button>
+              <a href="https://line.me/R/ti/p/@267thqnd" style="font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);text-decoration:none;border:1px solid var(--divider);padding:7px 12px;border-radius:var(--radius);white-space:nowrap;display:inline-block;">諮詢貨源</a>
+            </div>
           </div>
         </div>
       </article>`;
@@ -1759,15 +1843,145 @@ function switchTab(btn, category) {
   loadProducts(category);
 }
 
-// 事件委派處理詢問按鈕點擊
+// 事件委派處理下單按鈕點擊
 async function handleInquiryClick(e) {
-  const btn = e.target.closest('.btn-inquiry');
+  const btn = e.target.closest('.btn-order');
   if (!btn) return;
   const pid   = btn.dataset.pid;
   const brand = btn.dataset.brand;
   const name  = btn.dataset.name;
   const model = btn.dataset.model;
-  await openInquiry(pid, brand, name, model);
+  const price = btn.dataset.price;
+  openOrderForm(pid, brand, name, model, price);
+}
+
+// 目前下單品項暫存
+let currentOrderProduct = {};
+let configData = {};  // 快取 Config Sheet 資料
+
+// 載入 Config（購買須知、匯款帳號）
+async function loadConfig() {
+  if (configData.loaded) return;
+  try {
+    const data = await callGAS({ action: 'getConfig' });
+    if (data.success) {
+      configData = { ...data.config, loaded: true };
+    }
+  } catch (e) {
+    console.error('Config 載入失敗:', e);
+  }
+}
+
+// 開啟下單表單
+function openOrderForm(productId, brand, name, model, price) {
+  currentOrderProduct = { productId, brand, name, model, price };
+
+  // 填入品項資訊
+  document.getElementById('inquiry-product-name').textContent = brand + ' ' + name;
+  document.getElementById('inquiry-product-model').textContent = model;
+
+  // 重設表單
+  document.getElementById('inquiry-qty').value      = '1';
+  document.getElementById('inquiry-address').value  = '';
+  document.getElementById('inquiry-date').value     = '';
+  document.getElementById('inquiry-spec').value     = '';
+  document.getElementById('inquiry-note').value     = '';
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('inquiry-date').min = today;
+
+  showOverlay('overlay-inquiry');
+}
+
+// 購買須知勾選控制
+function toggleTermsBtn() {
+  const checked = document.getElementById('terms-agree-check').checked;
+  const btn     = document.getElementById('terms-confirm-btn');
+  btn.disabled  = !checked;
+  btn.style.opacity = checked ? '1' : '0.4';
+  btn.style.cursor  = checked ? 'pointer' : 'not-allowed';
+}
+
+// 顯示購買須知（送出下單表單後）
+async function showTerms() {
+  await loadConfig();
+  const termsEl = document.getElementById('terms-content');
+  const terms   = configData.purchase_terms || defaultTerms();
+  // 把換行符轉成 HTML
+  termsEl.innerHTML = terms.replace(/
+/g, '<br>');
+  // 重設勾選
+  document.getElementById('terms-agree-check').checked = false;
+  toggleTermsBtn();
+  closeOverlay('overlay-inquiry');
+  showOverlay('overlay-terms');
+}
+
+// 顯示匯款資訊
+async function showPaymentInfo() {
+  if (!document.getElementById('terms-agree-check').checked) return;
+  await loadConfig();
+  // 填入訂單摘要
+  const p = currentOrderProduct;
+  document.getElementById('payment-product').textContent =
+    (p.brand || '') + ' ' + (p.name || '');
+  document.getElementById('payment-qty').textContent =
+    '數量：' + (document.getElementById('inquiry-qty')?.value || '1') + ' 台';
+  // 填入匯款帳號
+  document.getElementById('bank-name').textContent    = configData.bank_name    || '原廠授權通路';
+  document.getElementById('bank-code').textContent    = configData.bank_code    || '012 台北富邦';
+  document.getElementById('bank-account').textContent = configData.bank_account || '123-456-789012';
+  // 加強浮水印
+  initPaymentWatermark();
+  closeOverlay('overlay-terms');
+  showOverlay('overlay-payment');
+}
+
+// 匯款頁面專用浮水印（更密集）
+function initPaymentWatermark() {
+  const layer = document.getElementById('payment-watermark');
+  if (!layer || !currentUser) return;
+  layer.innerHTML = '';
+  const taxStr     = String(currentUser.taxID     || '');
+  const phoneStr   = String(currentUser.phone     || '');
+  const companyStr = String(currentUser.companyName || '');
+  const text = [taxStr, companyStr, phoneStr].filter(Boolean).join(' · ');
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('span');
+    el.textContent = text;
+    el.style.cssText = `
+      position:absolute;
+      color:rgba(80,60,40,0.12);
+      font-family:var(--sans);font-size:14px;font-weight:500;
+      letter-spacing:0.08em;white-space:nowrap;
+      transform:rotate(-28deg);
+      user-select:none;pointer-events:none;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+    `;
+    layer.appendChild(el);
+  }
+}
+
+// 預設購買須知（Config 未設定時使用）
+function defaultTerms() {
+  return \`一、付款方式
+本平台採用銀行匯款方式付款，訂單確認後請於 3 個工作日內完成匯款。逾期未匯款者，訂單將自動取消。
+
+二、出貨說明
+確認收款後，由原廠授權通路安排出貨，送達指定工地地址。出貨時程依品項庫存狀況而定，通常為 7-14 個工作日，特殊品項另行通知。
+
+三、發票開立
+本平台開立三聯式統一發票，抬頭與金額依業主需求填寫，於出貨時一併寄送。
+
+四、退換貨政策
+商品出貨後，如有外觀損壞或功能異常，請於收貨後 48 小時內拍照回報，逾期恕不受理。人為損壞、自行拆解或安裝不當所造成之問題，不在保固範圍內。
+
+五、價格保密
+本平台所有報價屬於會員專屬底價，嚴禁對外公開或截圖分享。違者將立即停止服務資格，並保留法律追訴權。
+
+六、免責聲明
+本平台所有商品均透過原廠授權通路出貨，並提供原廠保固。本平台不承擔因不可抗力因素（如天災、罷工、斷料）造成之延誤責任。\`;
 }
 
 // 目前詢價品項暫存
@@ -1837,8 +2051,7 @@ async function submitInquiry() {
     });
 
     if (data.success) {
-      closeOverlay('overlay-inquiry');
-      showOverlay('overlay-inquiry-success');
+      await showTerms();
     } else {
       showToast('送出失敗：' + (data.error || '請重試'));
       btn.disabled = false;
