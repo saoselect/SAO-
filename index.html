@@ -1467,6 +1467,7 @@ async function checkMemberStatus(lineUID) {
     try {
       const data = await callGAS({ action: 'getMemberStatus', lineUID });
       if (data && data.success !== undefined) {
+        data.lineUID = lineUID; // 確保 lineUID 傳入 applyMemberState
         memberStatus = data.status || 'new';
         applyMemberState(memberStatus, data);
         showLoadingState(false);
@@ -1682,9 +1683,9 @@ async function handleInquiryClick(e) {
 async function openInquiry(productId, brand, name, model) {
   if (!confirm(`確認詢價？\n\n品項：${brand} ${name}\n型號：${model}\n\n送出後將有專人與您確認細節。`)) return;
 
-  const lineUID = currentUser?.lineUID || memberStatus;
-  if (!lineUID) {
-    showToast('身份驗證失敗，請重新開啟頁面');
+  const lineUID = currentUser?.lineUID;
+  if (!lineUID || lineUID === 'approved' || lineUID === 'new') {
+    showToast('身份驗證失敗，請關閉後重新開啟頁面');
     return;
   }
 
