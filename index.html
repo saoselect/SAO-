@@ -1061,11 +1061,11 @@
       <div class="hero-meta fade-in">
         <div class="hero-meta-item">
           <span class="hero-meta-label">合作品牌</span>
-          <span class="hero-meta-value">8+</span>
+          <span class="hero-meta-value">10+</span>
         </div>
         <div class="hero-meta-item">
-          <span class="hero-meta-label">品項總數</span>
-          <span class="hero-meta-value">200+</span>
+          <span class="hero-meta-label">可選品項</span>
+          <span class="hero-meta-value">300+</span>
         </div>
         <div class="hero-meta-item">
           <span class="hero-meta-label">審核時效</span>
@@ -1175,7 +1175,7 @@
         <div class="process-step">
           <div class="step-dot"><span>2</span></div>
           <h4>填寫基本資料</h4>
-          <p>輸入公司統編、名稱與聯絡手機，確認後上傳名片一張。</p>
+          <p>輸入公司統編、公司名稱與聯絡手機完成實名登記。</p>
         </div>
         <div class="process-step">
           <div class="step-dot"><span>3</span></div>
@@ -1185,7 +1185,7 @@
         <div class="process-step">
           <div class="step-dot"><span>4</span></div>
           <h4>開始查價下單</h4>
-          <p>審核通過即可進入查價系統，透過 LINE 隨時查詢即時報價。</p>
+          <p>審核通過後點選選單「專業查價通道」，即可查詢即時底牌報價並送出詢價單。</p>
         </div>
       </div>
     </div>
@@ -1206,7 +1206,7 @@
           <div class="catalog-item-inner">
             <p class="catalog-brand">Panasonic</p>
             <p class="catalog-name">六門變頻冰箱</p>
-            <p class="catalog-spec">NR-F607HX · 600L</p>
+            <p class="catalog-spec">600L 系列 · 多色可選</p>
             <div class="catalog-price-row">
               <span class="price-locked">審核後可見</span>
               <span class="price-real" data-price="88500">$88,500</span>
@@ -1218,7 +1218,7 @@
           <div class="catalog-item-inner">
             <p class="catalog-brand">Hitachi</p>
             <p class="catalog-name">滾筒洗衣乾衣機</p>
-            <p class="catalog-spec">BD-SG130JS · 13kg</p>
+            <p class="catalog-spec">13kg / 10kg · 風熨燙系列</p>
             <div class="catalog-price-row">
               <span class="price-locked">審核後可見</span>
               <span class="price-real" data-price="62000">$62,000</span>
@@ -1230,7 +1230,7 @@
           <div class="catalog-item-inner">
             <p class="catalog-brand">LG</p>
             <p class="catalog-name">OLED 4K 電視</p>
-            <p class="catalog-spec">OLED65C4PSA · 65"</p>
+            <p class="catalog-spec">65" · MLA 面板 · 多尺寸</p>
             <div class="catalog-price-row">
               <span class="price-locked">審核後可見</span>
               <span class="price-real" data-price="72000">$72,000</span>
@@ -1242,7 +1242,7 @@
           <div class="catalog-item-inner">
             <p class="catalog-brand">Mitsubishi</p>
             <p class="catalog-name">變頻冷暖分離式</p>
-            <p class="catalog-spec">MSZ-ZW363VS · 適用 6–8 坪</p>
+            <p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p>
             <div class="catalog-price-row">
               <span class="price-locked">審核後可見</span>
               <span class="price-real" data-price="38000">$38,000</span>
@@ -1267,6 +1267,11 @@
           立即申請查價資格
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
+        <br><br>
+        <a href="https://line.me/R/ti/p/@267thqnd" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:0.08em;color:var(--text-sec);text-decoration:none;border:1px solid var(--divider);padding:10px 20px;border-radius:var(--radius);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          先加入 LINE 官方帳號
+        </a>
       </div>
     </div>
   </section>
@@ -1337,7 +1342,7 @@
         <input class="form-input" id="input-phone" type="tel" placeholder="09xx-xxxxxx" autocomplete="tel" />
       </div>
       <div class="form-group">
-        <label class="form-label">名片上傳</label>
+        <label class="form-label">名片上傳 <span style="color:var(--text-sec);font-size:10px;font-weight:300;letter-spacing:0;">(選填，加速審核)</span></label>
         <div class="file-upload-area" id="card-upload-area">
           <input type="file" id="input-card" accept="image/*" onchange="handleFileSelect(this)" aria-label="上傳名片照片" />
           <div class="file-upload-icon">&#43;</div>
@@ -1438,8 +1443,7 @@
         專人將於 LINE 官方帳號與您聯繫，<br>
         確認規格、交期與付款方式。<br><br>
         <strong style="color:var(--text-pri);">匯款資訊</strong><br>
-        戶名：原廠授權通路<br>
-        <span id="bank-info" style="color:var(--text-sec);font-size:12px;">請等候專人提供完整匯款帳號</span>
+        <span style="color:var(--text-sec);font-size:13px;">專人確認訂單後將提供完整匯款資訊</span>
       </p>
     </div>
   </div>
@@ -1449,7 +1453,7 @@
 <footer class="footer">
   <div class="container footer-inner">
     <span class="footer-logo">S<span>·</span>A<span>·</span>O</span>
-    <span class="footer-note">空間美學秩序 · Spatial Aesthetic Order · 封閉式 B2B 通道</span>
+    <span class="footer-note">空間美學秩序 · Spatial Aesthetic Order · © 2026 · 僅限專業設計師</span>
   </div>
 </footer>
 
