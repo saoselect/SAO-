@@ -639,16 +639,34 @@ function saveMargin(productId, value) {
 /* ─────────────────────────
    共用工具
 ───────────────────────── */
-function fetchGET(params) {
-  const qs = new URLSearchParams(params).toString();
-  return fetch(GAS_URL + '?' + qs).then(r => r.json());
-}
-function fetchPOST(body) {
-  return fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  }).then(r => r.json());
+// 所有請求統一用 JSONP（解決 CORS 問題）
+function fetchGET(params) { return callGAS(params); }
+function fetchPOST(body)  { return callGAS(body); }
+function callGAS(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'gasAdmin_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const script = document.createElement('script');
+    const qs     = new URLSearchParams({ ...params, callback: cbName }).toString();
+    script.src   = GAS_URL + '?' + qs;
+    script.onerror = () => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      reject(new Error('連線失敗'));
+    };
+    window[cbName] = (data) => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      resolve(data);
+    };
+    document.body.appendChild(script);
+    setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        if (document.body.contains(script)) document.body.removeChild(script);
+        reject(new Error('請求逾時'));
+      }
+    }, 12000);
+  });
 }
 
 function statusLabel(s) {
