@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAO 後台管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #F5F2EE;
+      --bg-card:  #FFFFFF;
+      --bg-deep:  #1A1916;
+      --text-pri: #1A1A18;
+      --text-sec: #6B6B63;
+      --gold:     #C5A96A;
+      --gold-dim: rgba(197,169,106,0.12);
+      --divider:  rgba(26,26,24,0.10);
+      --green:    #2D7A4F;
+      --green-bg: #EAF5EE;
+      --red:      #C04040;
+      --red-bg:   #FAEAEA;
+      --amber:    #A07020;
+      --amber-bg: #FEF7E6;
+      --sans:     'DM Sans', -apple-system, sans-serif;
+      --radius:   4px;
+    }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); font-family:var(--sans); font-size:14px; color:var(--text-pri); -webkit-font-smoothing:antialiased; }
+
+    /* ── 登入畫面 ── */
+    .login-screen {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-box {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 360px;
+      border: 1px solid var(--divider);
+    }
+    .login-logo {
+      font-size: 15px;
+      letter-spacing: 0.10em;
+      color: var(--text-sec);
+      margin-bottom: 24px;
+    }
+    .login-logo span { color: var(--gold); }
+    .login-box h1 { font-size: 22px; font-weight: 500; margin-bottom: 24px; }
+    .login-screen.hidden, .admin-shell.hidden { display: none; }
+    .admin-shell { display: none; }
+    .admin-shell.visible { display: flex; min-height: 100svh; }
+
+    /* ── 共用表單 ── */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 10px 12px;
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      font-family: var(--sans); font-size: 14px; color: var(--text-pri);
+      background: var(--bg); outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--gold); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--sans); font-size: 12px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 9px 18px; border-radius: var(--radius);
+      border: none; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.82; }
+    .btn-dark  { background: var(--text-pri); color: #fff; }
+    .btn-gold  { background: var(--gold); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--text-sec); border: 1px solid var(--divider); }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-red   { background: var(--red);   color: #fff; }
+    .btn-full  { width: 100%; justify-content: center; }
+    .error-msg { font-size: 12px; color: var(--red); margin-top: 8px; display:none; }
+    .error-msg.show { display: block; }
+
+    /* ── 側欄 ── */
+    .sidebar {
+      width: 200px; min-width: 200px;
+      background: var(--bg-deep);
+      display: flex; flex-direction: column;
+      padding: 28px 0;
+    }
+    .sidebar-logo {
+      padding: 0 24px 28px;
+      font-size: 14px; letter-spacing: 0.10em;
+      color: rgba(232,228,220,0.5);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 12px;
+    }
+    .sidebar-logo span { color: var(--gold); opacity: 0.8; }
+    .nav-item {
+      padding: 11px 24px;
+      font-size: 12px; font-weight: 400;
+      letter-spacing: 0.06em;
+      color: rgba(232,228,220,0.45);
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-item:hover { color: rgba(232,228,220,0.8); }
+    .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(197,169,106,0.06); }
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 16px 24px 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .logout-btn {
+      font-size: 11px; color: rgba(232,228,220,0.3);
+      background: none; border: none; cursor: pointer; letter-spacing: 0.06em;
+    }
+    .logout-btn:hover { color: rgba(232,228,220,0.6); }
+
+    /* ── 主內容區 ── */
+    .main { flex: 1; overflow-y: auto; }
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--divider);
+      padding: 0 32px;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar h2 { font-size: 15px; font-weight: 500; }
+    .topbar-actions { display: flex; gap: 10px; }
+    .content { padding: 28px 32px; }
+
+    /* ── 統計卡 ── */
+    .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat-label { font-size: 11px; font-weight: 400; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-sec); margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 300; color: var(--text-pri); }
+    .stat-value.gold { color: var(--gold); }
+
+    /* ── 資料表格 ── */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--divider);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-header h3 { font-size: 13px; font-weight: 500; }
+    .filter-tabs { display: flex; gap: 4px; }
+    .filter-tab {
+      padding: 5px 12px;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.06em;
+      border-radius: var(--radius);
+      background: none; border: 1px solid var(--divider);
+      color: var(--text-sec); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-tab.active { background: var(--text-pri); color: #fff; border-color: var(--text-pri); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 10px 16px; text-align: left;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--text-sec);
+      border-bottom: 1px solid var(--divider);
+      background: var(--bg);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 13px; color: var(--text-pri);
+      border-bottom: 1px solid var(--divider);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(197,169,106,0.04); }
+
+    /* 狀態 badge */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 2px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .badge-pending  { background: var(--amber-bg); color: var(--amber); }
+    .badge-approved { background: var(--green-bg); color: var(--green); }
+    .badge-rejected { background: var(--red-bg);   color: var(--red); }
+    .badge-blocked  { background: #f0f0f0;         color: #888; }
+    .badge-star     { background: var(--gold-dim);  color: var(--gold); }
+    .badge-profit   { background: rgba(26,26,24,0.05); color: var(--text-sec); }
+
+    /* 操作按鈕（表格內） */
+    .action-btns { display: flex; gap: 6px; flex-wrap: nowrap; }
+    .btn-xs {
+      padding: 4px 10px; font-size: 11px; border-radius: 2px;
+      border: 1px solid var(--divider); background: none;
+      color: var(--text-sec); cursor: pointer; white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-xs:hover { background: var(--text-pri); color: #fff; border-color: var(--text-pri); }
+    .btn-xs.approve { color: var(--green); border-color: var(--green); }
+    .btn-xs.approve:hover { background: var(--green); color: #fff; }
+    .btn-xs.reject  { color: var(--red);   border-color: var(--red); }
+    .btn-xs.reject:hover  { background: var(--red);   color: #fff; }
+    .btn-xs.block   { color: #888;         border-color: #ccc; }
+    .btn-xs.block:hover   { background: #888;         color: #fff; border-color: #888; }
+
+    /* 空狀態 */
+    .empty-state {
+      padding: 48px 20px; text-align: center;
+      color: var(--text-sec); font-size: 13px;
+    }
+
+    /* 分頁（Tab） */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* 名片彈窗 */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(26,25,22,0.75);
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 480px; width: 90%;
+      max-height: 90svh; overflow-y: auto;
+    }
+    .modal-box img { width: 100%; border-radius: var(--radius); margin-top: 12px; }
+    .modal-box h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .modal-close { float: right; background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-sec); }
+
+    /* 產品編輯 */
+    .price-input {
+      width: 100px; padding: 4px 8px;
+      border: 1px solid var(--divider); border-radius: 2px;
+      font-family: var(--sans); font-size: 13px; color: var(--text-pri);
+      background: var(--bg); outline: none; text-align: right;
+    }
+    .price-input:focus { border-color: var(--gold); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--text-pri); color: #fff;
+      padding: 12px 20px; border-radius: var(--radius);
+      font-size: 13px; z-index: 300;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: none; opacity: 1; }
+
+    @media (max-width: 768px) {
+      /* 手機版：側欄改成底部 Tab */
+      .admin-shell { flex-direction: column; }
+      .sidebar {
+        width: 100%; min-width: 0;
+        flex-direction: row;
+        padding: 0;
+        order: 2;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        z-index: 50;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      .sidebar-logo { display: none; }
+      .sidebar-bottom { display: none; }
+      .nav-item {
+        flex: 1; text-align: center;
+        padding: 12px 4px;
+        border-left: none;
+        border-top: 2px solid transparent;
+        font-size: 11px;
+      }
+      .nav-item.active { border-left: none; border-top-color: var(--gold); }
+      .main { padding-bottom: 60px; }
+      .stat-cards { grid-template-columns: 1fr 1fr; }
+      .content { padding: 14px; }
+      .topbar { padding: 0 14px; }
+      /* 手機版表格：改成卡片式 */
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        padding: 12px;
+      }
+      td {
+        border: none;
+        padding: 3px 0;
+        font-size: 13px;
+      }
+      td:before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-sec);
+        display: block;
+        margin-bottom: 2px;
+      }
+      .action-btns { margin-top: 10px; gap: 8px; }
+      .btn-xs { padding: 8px 16px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 登入畫面 ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <p class="login-logo">S<span>·</span>A<span>·</span>O 後台</p>
+    <h1>管理登入</h1>
+    <div class="field">
+      <label for="login-pass">管理密碼</label>
+      <input type="password" id="login-pass" placeholder="輸入管理密碼" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <p class="error-msg" id="login-error">密碼錯誤，請重試</p>
+    <br>
+    <button class="btn btn-dark btn-full" onclick="doLogin()">進入後台</button>
+  </div>
+</div>
+
+<!-- ── 後台主殼 ── -->
+<div class="admin-shell hidden" id="admin-shell">
+  <!-- 側欄 -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">S<span>·</span>A<span>·</span>O</div>
+    <div class="nav-item active" onclick="showPage('members')">會員審核</div>
+    <div class="nav-item" onclick="showPage('orders')">詢價記錄</div>
+    <div class="nav-item" onclick="showPage('products')">產品管理</div>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="doLogout()">登出</button>
+    </div>
+  </aside>
+
+  <!-- 主內容 -->
+  <div class="main">
+
+    <!-- ── 會員審核 ── -->
+    <div class="page-section active" id="page-members">
+      <div class="topbar">
+        <h2>會員審核</h2>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="loadMembers()">↻ 重新整理</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="stat-cards" id="member-stats">
+          <div class="stat-card"><p class="stat-label">待審核</p><p class="stat-value gold" id="stat-pending">—</p></div>
+          <div class="stat-card"><p class="stat-label">已核准</p><p class="stat-value" id="stat-approved">—</p></div>
+          <div class="stat-card"><p class="stat-label">已拒絕</p><p class="stat-value" id="stat-rejected">—</p></div>
+          <div class="stat-card"><p class="stat-label">總會員數</p><p class="stat-value" id="stat-total">—</p></div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>會員列表</h3>
+            <div class="filter-tabs">
+              <button class="filter-tab active" onclick="filterMembers('all', this)">全部</button>
+              <button class="filter-tab" onclick="filterMembers('pending', this)">待審核</button>
+              <button class="filter-tab" onclick="filterMembers('approved', this)">已核准</button>
+            </div>
+          </div>
+          <div id="members-table-wrap">
+            <div class="empty-state">載入中…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 詢價記錄 ── -->
+    <div class="page-section" id="page-orders">
+      <div class="topbar">
+        <h2>詢價記錄</h2>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="loadOrders()">↻ 重新整理</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-header"><h3>所有詢價</h3></div>
+          <div id="orders-table-wrap">
+            <div class="empty-state">載入中…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 產品管理 ── -->
+    <div class="page-section" id="page-products">
+      <div class="topbar">
+        <h2>產品管理</h2>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="loadProducts()">↻ 重新整理</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-header">
+            <h3>產品列表（點擊加價率可直接編輯）</h3>
+          </div>
+          <div id="products-table-wrap">
+            <div class="empty-state">載入中…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /admin-shell -->
+
+<!-- 名片彈窗 -->
+<div class="modal-overlay" id="card-modal" onclick="closeCardModal(event)">
+  <div class="modal-box" id="card-modal-box">
+    <button class="modal-close" onclick="document.getElementById('card-modal').classList.remove('open')">✕</button>
+    <h3 id="card-modal-name"></h3>
+    <p id="card-modal-company" style="font-size:12px;color:var(--text-sec);"></p>
+    <img id="card-modal-img" src="" alt="名片"/>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────────────────────
+   狀態
+───────────────────────── */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbymuShGeTN_k7tlCkK7CI3VGJ319WmmTg23TeFMWWvKD5VF2jVSqLbToxSfr3Wx5yc-/exec';
+let PASSWORD = '';
+let allMembers = [];
+
+/* ─────────────────────────
+   登入 / 登出
+───────────────────────── */
+function doLogin() {
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!pass) { showError('login-error', '請輸入管理密碼'); return; }
+  PASSWORD = pass;
+  // 用 getMembers 驗證密碼
+  fetchGET({ action: 'getMembers', password: PASSWORD })
+    .then(data => {
+      if (!data.success) { showError('login-error', '密碼錯誤，請重試'); return; }
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('admin-shell').classList.remove('hidden');
+      document.getElementById('admin-shell').classList.add('visible');
+      renderMembers(data.members);
+    })
+    .catch(() => showError('login-error', '無法連線，請確認 GAS URL'));
+}
+
+function doLogout() {
+  PASSWORD = '';
+  document.getElementById('admin-shell').classList.add('hidden');
+  document.getElementById('admin-shell').classList.remove('visible');
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+/* ─────────────────────────
+   頁面切換
+───────────────────────── */
+function showPage(name) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'orders')   loadOrders();
+  if (name === 'products') loadProducts();
+}
+
+/* ─────────────────────────
+   會員
+───────────────────────── */
+function loadMembers() {
+  document.getElementById('members-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
+  fetchGET({ action: 'getMembers', password: PASSWORD })
+    .then(data => {
+      if (!data.success) return showToast('載入失敗：' + data.error);
+      renderMembers(data.members);
+    });
+}
+
+function renderMembers(members) {
+  allMembers = members || [];
+  // 統計
+  const counts = { pending:0, approved:0, rejected:0, blocked:0 };
+  allMembers.forEach(m => { if (counts[m.Status] !== undefined) counts[m.Status]++; });
+  document.getElementById('stat-pending').textContent  = counts.pending;
+  document.getElementById('stat-approved').textContent = counts.approved;
+  document.getElementById('stat-rejected').textContent = counts.rejected;
+  document.getElementById('stat-total').textContent    = allMembers.length;
+  filterMembers('all', document.querySelector('.filter-tab.active'));
+}
+
+function filterMembers(status, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const list = status === 'all' ? allMembers : allMembers.filter(m => m.Status === status);
+  renderMemberTable(list);
+}
+
+function renderMemberTable(list) {
+  const wrap = document.getElementById('members-table-wrap');
+  if (!list.length) { wrap.innerHTML = '<div class="empty-state">沒有符合的會員</div>'; return; }
+  wrap.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>申請時間</th><th>公司名稱</th><th>統編</th><th>手機</th>
+        <th>狀態</th><th>名片</th><th>操作</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(m => `
+          <tr>
+            <td data-label="申請時間" style="color:var(--text-sec);font-size:12px;">${(m.CreatedAt||'—').replace('T',' ').replace('.000Z','')}</td>
+            <td data-label="公司名稱"><strong>${m.CompanyName||'—'}</strong></td>
+            <td data-label="統編" style="font-variant-numeric:tabular-nums;">${m.TaxID||'—'}</td>
+            <td data-label="手機">${m.Phone||'—'}</td>
+            <td data-label="狀態"><span class="badge badge-${m.Status||'pending'}">${statusLabel(m.Status)}</span></td>
+            <td data-label="名片">
+              ${m.CardImageURL
+                ? `<button class="btn-xs" onclick="showCard('${esc(m.LineUID)}','${esc(m.CompanyName)}','${esc(m.LineDisplayName)}','${esc(m.CardImageURL)}')">查看</button>`
+                : '<span style="color:var(--text-sec);font-size:12px;">未上傳</span>'}
+            </td>
+            <td data-label="操作">
+              <div class="action-btns">
+                ${m.Status !== 'approved' ? `<button class="btn-xs approve" onclick="doApprove('${esc(m.LineUID)}')">✓ 核准</button>` : '<span style="color:var(--green);font-size:12px;">已核准</span>'}
+                ${m.Status !== 'rejected' ? `<button class="btn-xs reject"  onclick="doReject('${esc(m.LineUID)}')">✕ 拒絕</button>` : ''}
+                ${m.Status !== 'blocked'  ? `<button class="btn-xs block"   onclick="doBlock('${esc(m.LineUID)}')">封鎖</button>`  : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+}
+
+function doApprove(lineUID) {
+  if (!confirm('確認核准此會員？')) return;
+  fetchPOST({ action:'approveMember', lineUID, password:PASSWORD })
+    .then(d => { showToast(d.success ? '✓ 已核准' : '失敗：'+d.error); if(d.success) loadMembers(); });
+}
+function doReject(lineUID) {
+  if (!confirm('確認拒絕此申請？')) return;
+  fetchPOST({ action:'rejectMember', lineUID, password:PASSWORD })
+    .then(d => { showToast(d.success ? '已拒絕' : '失敗：'+d.error); if(d.success) loadMembers(); });
+}
+function doBlock(lineUID) {
+  if (!confirm('確認封鎖此會員？封鎖後將無法查價。')) return;
+  fetchPOST({ action:'blockMember', lineUID, password:PASSWORD })
+    .then(d => { showToast(d.success ? '已封鎖' : '失敗：'+d.error); if(d.success) loadMembers(); });
+}
+
+/* ─────────────────────────
+   名片彈窗
+───────────────────────── */
+function showCard(lineUID, company, name, imgUrl) {
+  document.getElementById('card-modal-name').textContent    = name || lineUID;
+  document.getElementById('card-modal-company').textContent = company;
+  document.getElementById('card-modal-img').src             = imgUrl;
+  document.getElementById('card-modal').classList.add('open');
+}
+function closeCardModal(e) {
+  if (e.target === document.getElementById('card-modal'))
+    document.getElementById('card-modal').classList.remove('open');
+}
+
+/* ─────────────────────────
+   訂單
+───────────────────────── */
+function loadOrders() {
+  document.getElementById('orders-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
+  fetchGET({ action:'getOrders', password:PASSWORD })
+    .then(data => {
+      if (!data.success) return showToast('載入失敗');
+      const wrap = document.getElementById('orders-table-wrap');
+      if (!data.orders.length) { wrap.innerHTML = '<div class="empty-state">尚無詢價記錄</div>'; return; }
+      wrap.innerHTML = `
+        <table>
+          <thead><tr>
+            <th>時間</th><th>公司</th><th>品項 ID</th><th>數量</th><th>備註</th><th>狀態</th>
+          </tr></thead>
+          <tbody>
+            ${data.orders.map(o => `
+              <tr>
+                <td style="font-size:12px;color:var(--text-sec);">${o.CreatedAt||'—'}</td>
+                <td>${o.CompanyName||'—'}</td>
+                <td style="font-family:monospace;">${o.ProductID||'—'}</td>
+                <td>${o.Quantity||1}</td>
+                <td style="color:var(--text-sec);">${o.Note||'—'}</td>
+                <td><span class="badge badge-${o.Status==='confirmed'?'approved':'pending'}">${o.Status||'pending'}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    });
+}
+
+/* ─────────────────────────
+   產品管理
+───────────────────────── */
+function loadProducts() {
+  document.getElementById('products-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
+  // 用 admin 身份取得產品（此處直接讀 Sheet，簡化流程）
+  fetchGET({ action:'getProducts', lineUID:'__admin__', category:'all' })
+    .then(data => {
+      if (!data.success && data.error && data.error.includes('權限')) {
+        // admin uid 沒有設為 approved，改用 getMembers 後再顯示提示
+        document.getElementById('products-table-wrap').innerHTML =
+          '<div class="empty-state">請先在 Members Sheet 新增一筆 LineUID=__admin__ 且 Status=approved 的紀錄，或直接到 Google Sheet 管理產品。</div>';
+        return;
+      }
+      if (!data.success) return showToast('載入失敗：'+data.error);
+      renderProductsTable(data.products);
+    });
+}
+
+function renderProductsTable(products) {
+  const wrap = document.getElementById('products-table-wrap');
+  if (!products || !products.length) {
+    wrap.innerHTML = '<div class="empty-state">目前沒有上架品項</div>'; return;
+  }
+  wrap.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>品牌</th><th>型號</th><th>分類</th><th>類型</th>
+        <th>加價率</th><th>報價</th><th>狀態</th>
+      </tr></thead>
+      <tbody>
+        ${products.map(p => `
+          <tr>
+            <td>${p.Brand||'—'}</td>
+            <td style="font-size:12px;color:var(--text-sec);">${p.Model||'—'}<br><span style="font-size:12px;">${p.DisplayName||''}</span></td>
+            <td>${p.Category||'—'}</td>
+            <td><span class="badge badge-${p.Type==='star'?'star':'profit'}">${p.Type==='star'?'明星款':'常規款'}</span></td>
+            <td>
+              <input class="price-input" type="number" step="0.01" min="0" max="0.5"
+                value="${parseFloat(p.MarginRate)||0.10}"
+                onblur="saveMargin('${esc(p.ProductID)}', this.value)"
+                title="按 Enter 或點擊其他地方儲存"/>
+            </td>
+            <td style="font-variant-numeric:tabular-nums;">$${(p.Price||0).toLocaleString()}</td>
+            <td>
+              <span style="font-size:12px;color:${p.Active?'var(--green)':'var(--red)'}">
+                ${p.Active ? '▲ 上架' : '▼ 下架'}
+              </span>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+}
+
+function saveMargin(productId, value) {
+  const rate = parseFloat(value);
+  if (isNaN(rate) || rate < 0 || rate > 0.5) { showToast('加價率需介於 0~0.5'); return; }
+  fetchPOST({ action:'updateProduct', productId, field:'MarginRate', value:rate, password:PASSWORD })
+    .then(d => showToast(d.success ? '✓ 加價率已更新' : '更新失敗：'+d.error));
+}
+
+/* ─────────────────────────
+   共用工具
+───────────────────────── */
+// 所有請求統一用 JSONP（解決 CORS 問題）
+function fetchGET(params) { return callGAS(params); }
+function fetchPOST(body)  { return callGAS(body); }
+function callGAS(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'gasAdmin_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const script = document.createElement('script');
+    const qs     = new URLSearchParams({ ...params, callback: cbName }).toString();
+    script.src   = GAS_URL + '?' + qs;
+    script.onerror = () => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      reject(new Error('連線失敗'));
+    };
+    window[cbName] = (data) => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      resolve(data);
+    };
+    document.body.appendChild(script);
+    setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        if (document.body.contains(script)) document.body.removeChild(script);
+        reject(new Error('請求逾時'));
+      }
+    }, 12000);
+  });
+}
+
+function statusLabel(s) {
+  return { pending:'待審核', approved:'已核准', rejected:'已拒絕', blocked:'已封鎖' }[s] || s;
+}
+function esc(str) {
+  return String(str||'').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
