@@ -955,11 +955,11 @@
     body.approved #watermark-layer { display: block; }
     .wm-text {
       position: absolute;
-      color: rgba(100, 80, 60, 0.065);
+      color: rgba(80, 60, 40, 0.18);
       font-family: var(--sans);
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.06em;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       white-space: nowrap;
       transform: rotate(-28deg);
       user-select: none;
@@ -1020,7 +1020,7 @@
 ──────────────────────────────────────────── -->
 <nav class="nav" role="navigation" aria-label="主導覽">
   <div class="container nav-inner">
-    <a href="#" class="nav-logo">S<span>·</span>A<span>·</span>O</a>
+    <a href="#" class="nav-logo" onclick="goHome(event)">S<span>·</span>A<span>·</span>O</a>
     <ul class="nav-links">
       <li><a href="#about">關於</a></li>
       <li><a href="#qualify">申請資格</a></li>
@@ -1282,7 +1282,8 @@
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <p class="section-label" style="margin-bottom:0;">已通過審核 · 專業查價通道</p>
         <div style="display:flex;gap:10px;align-items:center;">
-          <a href="https://line.me/R/ti/p/@267thqnd" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(197,169,106,0.4);padding:7px 14px;border-radius:2px;text-decoration:none;">聯絡客服</a>
+          <button id="toggle-landing-btn" style="font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,220,0.6);background:none;border:1px solid rgba(232,228,220,0.2);padding:7px 14px;border-radius:2px;cursor:pointer;">關於 SAO</button>
+          <a href="https://line.me/R/ti/p/@你的官方帳號ID" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(197,169,106,0.4);padding:7px 14px;border-radius:2px;text-decoration:none;">聯絡客服</a>
         </div>
       </div>
       <h1 class="price-welcome">歡迎，<em id="member-name-display">設計師</em></h1>
@@ -1297,7 +1298,7 @@
         <button class="tab-btn" onclick="switchTab(this, 'washer')">洗衣機</button>
         <button class="tab-btn" onclick="switchTab(this, 'ac')">空調</button>
         <button class="tab-btn" onclick="switchTab(this, 'tv')">電視</button>
-        <button class="tab-btn" onclick="scrollToTop()" style="margin-left:auto;color:var(--gold);">↑ 回頂部</button>
+        <button class="tab-btn" onclick="scrollToTop()" style="margin-left:auto;color:var(--gold);" id="back-top-btn">↑ 回頂部</button>
       </div>
     </div>
   </nav>
@@ -1623,6 +1624,10 @@ function renderProducts(products) {
     grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;">此分類目前無上架品項</p>';
     return;
   }
+  // 移除舊的事件監聽，用事件委派處理詢問按鈕
+  grid.removeEventListener('click', handleInquiryClick);
+  grid.addEventListener('click', handleInquiryClick);
+
   grid.innerHTML = products.map(p => {
     // 相容 GAS 回傳的大寫欄位名稱
     const brand = p.Brand    || p.brand    || '';
@@ -1650,7 +1655,7 @@ function renderProducts(products) {
             <p class="product-price">$${Number(price).toLocaleString()}</p>
           </div>
           <div class="product-actions">
-            <button class="btn-inquiry" onclick="openInquiry('${pid}','${brand}','${name}','${model}')">詢問此品項</button>
+            <button class="btn-inquiry" data-pid="${pid}" data-brand="${brand}" data-name="${name}" data-model="${model}">詢問此品項</button>
           </div>
         </div>
       </article>`;
@@ -1661,6 +1666,17 @@ function switchTab(btn, category) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   loadProducts(category);
+}
+
+// 事件委派處理詢問按鈕點擊
+async function handleInquiryClick(e) {
+  const btn = e.target.closest('.btn-inquiry');
+  if (!btn) return;
+  const pid   = btn.dataset.pid;
+  const brand = btn.dataset.brand;
+  const name  = btn.dataset.name;
+  const model = btn.dataset.model;
+  await openInquiry(pid, brand, name, model);
 }
 
 async function openInquiry(productId, brand, name, model) {
@@ -1832,6 +1848,43 @@ function scrollToSection(id) {
 }
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 回首頁（SAO logo 點擊）
+function goHome(e) {
+  if (e) e.preventDefault();
+  if (memberStatus === 'approved') {
+    // approved 用戶：切換顯示首頁介紹
+    showLanding(true);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// 切換首頁介紹顯示
+let landingVisible = false;
+function showLanding(show) {
+  const landing = document.getElementById('landing-content');
+  const pricePg = document.getElementById('price-page');
+  const btn     = document.getElementById('toggle-landing-btn');
+  landingVisible = show;
+  if (show) {
+    // 顯示首頁介紹，隱藏查價
+    landing.style.cssText = 'display:block !important';
+    pricePg.style.display = 'none';
+    if (btn) btn.textContent = '回到查價';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    // 隱藏首頁，顯示查價
+    landing.style.cssText = 'display:none !important';
+    pricePg.style.display = 'block';
+    if (btn) btn.textContent = '關於 SAO';
+    pricePg.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function toggleLanding() {
+  showLanding(!landingVisible);
 }
 
 if (typeof IntersectionObserver !== 'undefined') {
