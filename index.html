@@ -496,13 +496,41 @@ function callGAS(params) {
 
 /* ── LIFF ── */
 async function initLiff() {
+  // 安全網：10 秒後強制顯示訪客頁面，不讓使用者一直卡在載入中
+  const safetyTimer = setTimeout(() => {
+    console.warn('LIFF init timeout，改為訪客模式');
+    memberStatus = 'guest';
+    showLoading(false);
+  }, 10000);
+
   try {
+    // 清除 URL 上的 OAuth 回調參數，避免 init 卡住
+    const url = new URL(location.href);
+    const hasCallback = url.searchParams.has('code') || url.searchParams.has('state');
+
     await liff.init({ liffId: LIFF_ID });
-    if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
+    clearTimeout(safetyTimer);
+
+    if (!liff.isLoggedIn()) {
+      // 如果有回調參數但還是未登入，清除參數後重新導向
+      if (hasCallback) {
+        url.searchParams.delete('code');
+        url.searchParams.delete('state');
+        url.searchParams.delete('liffClientId');
+        url.searchParams.delete('liffRedirectUri');
+        location.replace(url.toString());
+        return;
+      }
+      liff.login({ redirectUri: location.origin + location.pathname });
+      return;
+    }
+
     const p = await liff.getProfile();
     currentUser = { lineUID: p.userId, displayName: p.displayName };
     await checkMemberStatus(currentUser.lineUID);
+
   } catch (err) {
+    clearTimeout(safetyTimer);
     console.error('LIFF error:', err);
     memberStatus = 'guest';
     showLoading(false);
