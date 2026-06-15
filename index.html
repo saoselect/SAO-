@@ -850,7 +850,7 @@ document.getElementById('order-submit-btn').addEventListener('click', async func
   const note = document.getElementById('order-note').value.trim();
   const noteText = [spec?'規格：'+spec:'', date?'交期：'+date:'', '地址：'+address, note?'備註：'+note:''].filter(Boolean).join(' | ');
   try {
-    const data = await callGAS({ action: 'submitOrder', lineUID, productId: currentOrder.pid, quantity: parseInt(qty)||1, note: noteText });
+    const data = await callGAS({ action: 'submitOrder', lineUID, productId: currentOrder.pid, modelName: currentOrder.model || currentOrder.name || currentOrder.pid, quantity: parseInt(qty)||1, note: noteText });
     if (data.success) {
       closeOverlay('overlay-order');
       await showTerms();
