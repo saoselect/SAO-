@@ -443,7 +443,7 @@
 <!-- OVERLAY: 匯款資訊 -->
 <div class="overlay" id="overlay-payment" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:480px;position:relative;">
-    <div class="panel-header"><p class="section-label">請於確認後當日內完成匯款</p><h2 class="panel-title">匯款資訊</h2><button class="panel-close" data-close="overlay-payment">✕</button></div>
+    <div class="panel-header"><p class="section-label">請於確認後 3 日內完成匯款</p><h2 class="panel-title">匯款資訊</h2><button class="panel-close" data-close="overlay-payment">✕</button></div>
     <div class="panel-body">
       <div style="background:var(--bg-card);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;"><p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:6px;">訂單摘要</p><p id="payment-product" style="font-family:var(--serif);font-size:16px;color:var(--text-pri);margin-bottom:2px;"></p><p id="payment-qty" style="font-size:12px;color:var(--text-sec);"></p></div>
       <div style="border:1px solid var(--gold-line);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;">
@@ -455,7 +455,7 @@
         </div>
       </div>
       <p style="font-size:12px;font-weight:300;color:var(--text-sec);line-height:1.8;text-align:center;margin-bottom:16px;">匯款完成後請保留收據，<br>並透過 LINE 官方帳號回傳匯款截圖。</p>
-      <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">傳送匯款截圖給客服，確認後安排訂單出貨。<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">傳送匯款截圖給客服<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
     </div>
     <div id="payment-watermark" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:var(--radius-md);z-index:1;"></div>
   </div>
@@ -717,8 +717,7 @@ document.getElementById('terms-confirm-btn').addEventListener('click', function(
 });
 
 function defaultTerms() {
-  return ['一、付款方式', '訂單確認後請於當日內完成匯款，逾期未匯款者訂單將自動取消。', '', '二、出貨說明', '確認收款後由原廠授權通路安排出貨，送達指定工地地址，通常為 2 個工作日，如遇缺貨情形將會進行通知供貨日期或者更換機種
-          。', '', '三、發票開立', '開立三聯式統一發票，於出貨後另行寄送至貴公司地址。', '', '四、退換貨政策', '收貨當下回報外觀損壞或異常，請直接拒收。人為損壞或安裝不當不在保固範圍。', '', '五、價格保密', '所有報價屬會員專屬底價，嚴禁對外公開或截圖分享，違者立即停止服務資格。', '', '六、免責聲明', '所有商品均透過原廠倉庫物流出貨並提供原廠保固。不可抗力因素造成之延誤不在賠償範圍。'].join('<br>');
+  return ['一、付款方式', '訂單確認後請於 3 個工作日內完成匯款，逾期未匯款者訂單將自動取消。', '', '二、出貨說明', '確認收款後由原廠授權通路安排出貨，送達指定工地地址，通常為 7-14 個工作日。', '', '三、發票開立', '開立三聯式統一發票，抬頭與金額依業主需求填寫，於出貨時一併寄送。', '', '四、退換貨政策', '收貨後 48 小時內回報外觀損壞或功能異常。人為損壞或安裝不當不在保固範圍。', '', '五、價格保密', '所有報價屬會員專屬底價，嚴禁對外公開或截圖分享，違者立即停止服務資格。', '', '六、免責聲明', '所有商品均透過原廠授權通路出貨並提供原廠保固。不可抗力因素造成之延誤不在賠償範圍。'].join('<br>');
 }
 
 /* ── 申請表單 ── */
