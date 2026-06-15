@@ -8,6 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* 微軟正黑體優先用於產品型號 */
+    .product-model-font {
+      font-family: 'Microsoft JhengHei', '微軟正黑體', 'PingFang TC', 'Heiti TC', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
     :root {
@@ -196,11 +208,12 @@
     .series-btn.active{background:var(--text-pri);color:var(--bg);border-color:var(--text-pri);}
     .series-btn:hover{border-color:var(--gold);color:var(--gold);}
     /* PRODUCT CARD NEW */
-    .product-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;background:var(--bg);padding:20px 24px;border-bottom:1px solid var(--divider);}
+    .product-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;background:var(--bg);padding:16px 24px;border-bottom:1px solid var(--divider);}
+    .product-row-info{min-width:0;overflow:hidden;}
     .product-row:last-child{border-bottom:none;}
     .product-row-info{}
     .product-row-series{font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
-    .product-row-model{font-family:var(--serif);font-size:16px;font-weight:400;color:var(--text-pri);margin-bottom:2px;}
+    .product-row-model{font-family:'Microsoft JhengHei','微軟正黑體','PingFang TC','Heiti TC',sans-serif;font-size:14px;font-weight:400;color:var(--text-pri);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .product-row-spec{font-size:12px;color:var(--text-sec);}
     .product-row-price{text-align:right;}
     .product-row-price-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);margin-bottom:2px;}
@@ -228,6 +241,9 @@
       .catalog-grid{grid-template-columns:1fr;}
       .product-grid{grid-template-columns:1fr;}
       .catalog-header{flex-direction:column;align-items:flex-start;gap:16px;}
+      .product-row{grid-template-columns:1fr;gap:12px;}
+      .product-row-price{text-align:left;}
+      .product-row-actions{align-items:flex-start;}
     }
   </style>
 </head>
@@ -757,9 +773,12 @@ function renderProducts(products, cat) {
 
       html += '<div class="product-row">';
       html += '<div class="product-row-info">';
-      html += '<p class="product-row-model">' + (p.Model || p.DisplayName) + '</p>';
-      if (p.Spec && p.Spec !== p.Model) {
-        html += '<p class="product-row-spec">' + p.Spec + '</p>';
+      // 型號固定字體和大小，title 顯示完整型號
+      const modelText = p.Model || p.DisplayName || '';
+      html += '<p class="product-row-model" title="' + modelText + '">' + modelText + '</p>';
+      // 規格另起一行（如果與型號不同）
+      if (p.Spec && p.Spec !== p.Model && p.Spec !== modelText) {
+        html += '<p class="product-row-spec" style="font-family:\'Microsoft JhengHei\',\'微軟正黑體\',\'PingFang TC\',sans-serif;font-size:12px;">' + p.Spec + '</p>';
       }
       html += '</div>';
       html += '<div class="product-row-price">';
