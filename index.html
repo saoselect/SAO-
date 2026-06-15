@@ -189,6 +189,25 @@
     body.approved #watermark-layer{display:block;}
     .wm-text{position:absolute;color:rgba(80,60,40,0.10);font-family:var(--sans);font-size:16px;font-weight:400;letter-spacing:0.10em;white-space:nowrap;transform:rotate(-28deg);user-select:none;-webkit-user-select:none;pointer-events:none;}
 
+    /* CAT TAB */
+    .cat-tab{flex-shrink:0;padding:16px 24px;font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color 0.2s,border-color 0.2s;white-space:nowrap;}
+    .cat-tab.active{color:var(--text-pri);border-bottom-color:var(--gold);}
+    .series-btn{padding:7px 16px;font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.06em;background:var(--bg);border:1px solid var(--divider);border-radius:2px;cursor:pointer;color:var(--text-sec);transition:all 0.15s;white-space:nowrap;}
+    .series-btn.active{background:var(--text-pri);color:var(--bg);border-color:var(--text-pri);}
+    .series-btn:hover{border-color:var(--gold);color:var(--gold);}
+    /* PRODUCT CARD NEW */
+    .product-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;background:var(--bg);padding:20px 24px;border-bottom:1px solid var(--divider);}
+    .product-row:last-child{border-bottom:none;}
+    .product-row-info{}
+    .product-row-series{font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+    .product-row-model{font-family:var(--serif);font-size:16px;font-weight:400;color:var(--text-pri);margin-bottom:2px;}
+    .product-row-spec{font-size:12px;color:var(--text-sec);}
+    .product-row-price{text-align:right;}
+    .product-row-price-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);margin-bottom:2px;}
+    .product-row-price-value{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text-pri);}
+    .product-row-price-tbd{font-size:13px;color:var(--text-sec);font-style:italic;}
+    .product-row-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;margin-top:8px;}
+
     /* LOADING */
     #liff-loading{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:13px;color:var(--text-sec);letter-spacing:0.10em;}
 
@@ -349,6 +368,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <p class="section-label" style="margin-bottom:0;">已通過審核 · 專業查價通道</p>
         <div style="display:flex;gap:10px;align-items:center;">
+          <span id="tier-badge" style="font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);padding:4px 10px;border-radius:2px;"></span>
           <button id="toggle-landing-btn" style="font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,220,0.6);background:none;border:1px solid rgba(232,228,220,0.2);padding:7px 14px;border-radius:2px;cursor:pointer;">關於 SAO</button>
           <a href="https://line.me/R/ti/p/@267thqnd" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(197,169,106,0.4);padding:7px 14px;border-radius:2px;text-decoration:none;">聯絡客服</a>
         </div>
@@ -356,21 +376,32 @@
       <h1 class="price-welcome">歡迎，<em id="member-name-display">設計師</em></h1>
     </div>
   </div>
-  <nav class="category-tabs" aria-label="產品分類">
+
+  <!-- 分類選擇 -->
+  <div style="background:var(--bg);border-bottom:1px solid var(--divider);position:sticky;top:60px;z-index:50;">
     <div class="container">
-      <div class="tabs-inner">
-        <button class="tab-btn active" data-cat="all">全部品項</button>
-        <button class="tab-btn" data-cat="fridge">冰箱</button>
-        <button class="tab-btn" data-cat="washer">洗衣機</button>
-        <button class="tab-btn" data-cat="ac">空調</button>
-        <button class="tab-btn" data-cat="tv">電視</button>
-        <button class="tab-btn" style="margin-left:auto;color:var(--gold);" id="back-top-btn">↑ 回頂部</button>
+      <div style="display:flex;gap:0;overflow-x:auto;scrollbar-width:none;">
+        <button class="cat-tab active" data-cat="ac">空調</button>
+        <button class="cat-tab" data-cat="fridge">冰箱</button>
+        <button class="cat-tab" data-cat="washer">洗衣機</button>
+        <button class="cat-tab" data-cat="tv">電視</button>
+        <button class="cat-tab" style="margin-left:auto;color:var(--gold);" id="back-top-btn">↑ 回頂部</button>
       </div>
     </div>
-  </nav>
-  <section class="product-list">
+  </div>
+
+  <!-- 系列選擇 -->
+  <div id="series-bar" style="background:var(--bg-card);border-bottom:1px solid var(--divider);display:none;">
+    <div class="container" style="padding-top:16px;padding-bottom:16px;">
+      <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px;">選擇系列</p>
+      <div id="series-selector" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- 產品列表 -->
+  <section style="padding:32px 0 80px;background:var(--bg-card);">
     <div class="container">
-      <div class="product-grid" id="product-grid"></div>
+      <div id="product-grid"></div>
     </div>
   </section>
 </div>
@@ -570,7 +601,7 @@ function applyState(status, data) {
     currentUser.taxID       = data.taxID;
     currentUser.phone       = data.phone;
     currentUser.companyName = data.companyName;
-    loadProducts('all');
+    loadProducts('ac', 'all');
     initWatermark();
   } else if (status === 'pending') {
     btn.textContent = '審核中';
@@ -630,37 +661,144 @@ function initPaymentWatermark() {
 }
 
 /* ── 產品 ── */
-async function loadProducts(category) {
+let currentCat    = 'ac';
+let currentSeries = 'all';
+let allProducts   = [];
+
+async function loadProducts(cat, series) {
+  cat    = cat    || currentCat;
+  series = series || 'all';
+  currentCat    = cat;
+  currentSeries = series;
+
   const grid = document.getElementById('product-grid');
-  grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">載入中…</p>';
+  grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;letter-spacing:0.06em;">載入中…</p>';
+
   try {
-    if (category === 'all' || !cachedProducts.length) {
-      const data = await callGAS({ action: 'getProducts', category: 'all', lineUID: currentUser?.lineUID || '' });
-      if (!data.success) { grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">' + (data.error||'載入失敗') + '</p>'; return; }
-      cachedProducts = data.products || [];
+    const data = await callGAS({
+      action:   'getProducts',
+      lineUID:  currentUser?.lineUID || '',
+      category: cat,
+      series:   series
+    });
+
+    if (!data.success) {
+      grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">' + (data.error||'載入失敗') + '</p>';
+      return;
     }
-    const list = category === 'all' ? cachedProducts : cachedProducts.filter(p => (p.Category||'').toLowerCase() === category);
-    renderProducts(list);
+
+    allProducts = data.products || [];
+
+    // 更新等級 badge
+    const tier = data.member?.tier || 'A';
+    const tierEl = document.getElementById('tier-badge');
+    if (tierEl) tierEl.textContent = tier + ' 級會員';
+
+    // 更新系列選擇列
+    renderSeriesBar(data.seriesList || [], series);
+
+    // 渲染產品
+    renderProducts(allProducts, cat);
+
   } catch (e) {
+    console.error('loadProducts error:', e);
     grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">連線失敗，請重新整理</p>';
   }
 }
 
-function renderProducts(products) {
+function renderSeriesBar(seriesList, activeSeries) {
+  const bar = document.getElementById('series-bar');
+  const sel = document.getElementById('series-selector');
+  if (!seriesList.length) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  sel.innerHTML = seriesList.map(s =>
+    '<button class="series-btn' + (s === activeSeries ? ' active' : '') + '" data-series="' + s + '">' + s + '</button>'
+  ).join('');
+  // 事件
+  sel.querySelectorAll('.series-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      sel.querySelectorAll('.series-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentSeries = this.dataset.series;
+      const filtered = currentSeries === 'all'
+        ? allProducts
+        : allProducts.filter(p => p.Series === currentSeries);
+      renderProducts(filtered, currentCat);
+    });
+  });
+}
+
+function renderProducts(products, cat) {
   const grid = document.getElementById('product-grid');
-  if (!products.length) { grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;">此分類目前無上架品項</p>'; return; }
-  grid.innerHTML = products.map(p => {
-    const brand = p.Brand||''; const model = p.Model||''; const name = p.DisplayName||''; const spec = p.Spec||''; const price = p.Price||0; const type = (p.Type||'profit').toLowerCase(); const pid = p.ProductID||'';
-    return '<article class="product-card"><div class="product-card-header"><div><p class="product-model">' + brand + ' · ' + model + '</p><h3 class="product-name">' + name + '</h3></div><span class="catalog-type ' + (type==='star'?'type-star':'type-profit') + '">' + (type==='star'?'明星款':'常規款') + '</span></div><p class="product-spec-text">' + spec + '</p><div class="product-price-block"><div><p class="product-price-label">專業報價</p><p class="product-price">$' + Number(price).toLocaleString() + '</p></div><div class="product-actions"><button class="btn-order" data-pid="' + pid + '" data-brand="' + brand + '" data-name="' + name + '" data-model="' + model + '" data-price="' + price + '">立即下單</button><a href="https://line.me/R/ti/p/@267thqnd" class="btn-consult">諮詢貨源</a></div></div></article>';
-  }).join('');
+  if (!products.length) {
+    grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;">此分類目前無上架品項</p>';
+    return;
+  }
+
+  // 依系列分組
+  const groups = {};
+  products.forEach(p => {
+    const s = p.Series || '其他';
+    if (!groups[s]) groups[s] = [];
+    groups[s].push(p);
+  });
+
+  let html = '';
+  Object.keys(groups).forEach(series => {
+    html += '<div style="margin-bottom:24px;">';
+    html += '<div style="padding:12px 0 8px;border-bottom:1px solid var(--gold-line);margin-bottom:0;">';
+    html += '<p style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">' + series + '</p>';
+    html += '</div>';
+    html += '<div style="background:var(--bg);border-radius:0 0 var(--radius-md) var(--radius-md);overflow:hidden;">';
+
+    groups[series].forEach(p => {
+      const isConsult = p.Type === 'consult';
+      const hasPrice  = p.HasPrice && p.Price > 0;
+
+      html += '<div class="product-row">';
+      html += '<div class="product-row-info">';
+      html += '<p class="product-row-model">' + (p.Model || p.DisplayName) + '</p>';
+      if (p.Spec && p.Spec !== p.Model) {
+        html += '<p class="product-row-spec">' + p.Spec + '</p>';
+      }
+      html += '</div>';
+      html += '<div class="product-row-price">';
+
+      if (isConsult) {
+        html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-order" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">LINE 諮詢</a>';
+      } else {
+        html += '<p class="product-row-price-label">專業報價</p>';
+        if (hasPrice) {
+          html += '<p class="product-row-price-value">$' + Number(p.Price).toLocaleString() + '</p>';
+          html += '<div class="product-row-actions">';
+          html += '<button class="btn-order" data-pid="' + p.ProductID + '" data-brand="' + p.Brand + '" data-name="' + (p.DisplayName||p.Model) + '" data-model="' + p.Model + '" data-price="' + p.Price + '">立即下單</button>';
+          html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-consult">諮詢貨源</a>';
+          html += '</div>';
+        } else {
+          html += '<p class="product-row-price-tbd">請洽報價</p>';
+          html += '<div class="product-row-actions">';
+          html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-order" style="text-decoration:none;display:inline-flex;align-items:center;">LINE 詢價</a>';
+          html += '</div>';
+        }
+      }
+
+      html += '</div></div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  grid.innerHTML = html;
 }
 
 /* ── 分類 Tab ── */
-document.querySelectorAll('.tab-btn[data-cat]').forEach(btn => {
+/* ── 分類 Tab ── */
+document.querySelectorAll('.cat-tab[data-cat]').forEach(btn => {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.tab-btn[data-cat]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cat-tab[data-cat]').forEach(b => b.classList.remove('active'));
     this.classList.add('active');
-    loadProducts(this.dataset.cat);
+    currentSeries = 'all';
+    loadProducts(this.dataset.cat, 'all');
   });
 });
 
