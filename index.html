@@ -221,6 +221,43 @@
     .product-row-price-tbd{font-size:13px;color:var(--text-sec);font-style:italic;}
     .product-row-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;margin-top:8px;}
 
+    /* 購物車 */
+    #cart-fab{position:fixed;bottom:28px;right:20px;z-index:300;width:56px;height:56px;border-radius:50%;background:var(--text-pri);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.25);transition:background 0.2s;}
+    body.approved #cart-fab{display:flex;}
+    #cart-fab:hover{background:var(--gold);}
+    #cart-fab svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+    #cart-badge{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;font-size:11px;font-weight:700;display:none;align-items:center;justify-content:center;}
+    #cart-badge.show{display:flex;}
+    .cart-panel{position:fixed;bottom:96px;right:20px;z-index:299;width:min(420px,calc(100vw - 32px));background:var(--bg);border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,0.18);border:1px solid var(--divider);display:none;flex-direction:column;max-height:70svh;}
+    .cart-panel.open{display:flex;}
+    .cart-panel-header{padding:16px 20px;border-bottom:1px solid var(--divider);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+    .cart-panel-header h3{font-family:var(--serif);font-size:18px;font-weight:400;}
+    .cart-panel-body{overflow-y:auto;flex:1;padding:0;}
+    .cart-item{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--divider);}
+    .cart-item:last-child{border-bottom:none;}
+    .cart-item-name{font-family:'Microsoft JhengHei','微軟正黑體','PingFang TC',sans-serif;font-size:13px;font-weight:400;color:var(--text-pri);margin-bottom:3px;word-break:break-all;}
+    .cart-item-price{font-size:12px;color:var(--text-sec);}
+    .cart-item-controls{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .cart-qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--divider);background:var(--bg-card);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text-pri);transition:border-color 0.15s;}
+    .cart-qty-btn:hover{border-color:var(--gold);}
+    .cart-qty-num{font-size:14px;font-weight:500;min-width:20px;text-align:center;color:var(--text-pri);}
+    .cart-remove-btn{width:24px;height:24px;border:none;background:none;cursor:pointer;color:var(--text-sec);font-size:16px;padding:0;line-height:1;transition:color 0.15s;}
+    .cart-remove-btn:hover{color:#C04040;}
+    .cart-panel-footer{padding:16px 20px;border-top:1px solid var(--divider);flex-shrink:0;background:var(--bg);}
+    .cart-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+    .cart-total-label{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);}
+    .cart-total-value{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--text-pri);}
+    .cart-total-note{font-size:11px;color:var(--text-sec);margin-top:2px;}
+    /* 歷史紀錄 */
+    .history-month{margin-bottom:24px;}
+    .history-month-title{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);padding:10px 0;border-bottom:1px solid var(--gold-line);margin-bottom:0;}
+    .history-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--divider);font-size:13px;}
+    .history-row:last-child{border-bottom:none;}
+    .history-model{font-family:'Microsoft JhengHei','微軟正黑體','PingFang TC',sans-serif;color:var(--text-pri);}
+    .history-qty{color:var(--text-sec);text-align:center;}
+    .history-price{font-family:var(--serif);color:var(--text-pri);text-align:right;}
+    .history-month-total{font-size:12px;color:var(--text-sec);text-align:right;padding-top:8px;}
+
     /* LOADING */
     #liff-loading{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:13px;color:var(--text-sec);letter-spacing:0.10em;}
 
@@ -386,6 +423,7 @@
         <div style="display:flex;gap:10px;align-items:center;">
           <span id="tier-badge" style="font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);padding:4px 10px;border-radius:2px;"></span>
           <button id="toggle-landing-btn" style="font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,220,0.6);background:none;border:1px solid rgba(232,228,220,0.2);padding:7px 14px;border-radius:2px;cursor:pointer;">關於 SAO</button>
+          <button id="history-btn" style="font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,220,0.6);background:none;border:1px solid rgba(232,228,220,0.2);padding:7px 14px;border-radius:2px;cursor:pointer;">歷史紀錄</button>
           <a href="https://line.me/R/ti/p/@267thqnd" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(197,169,106,0.4);padding:7px 14px;border-radius:2px;text-decoration:none;">聯絡客服</a>
         </div>
       </div>
@@ -515,7 +553,71 @@
   </div>
 </footer>
 
-<div id="page-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text-pri);color:var(--bg);padding:12px 24px;border-radius:4px;font-size:13px;z-index:300;opacity:0;transition:transform 0.3s,opacity 0.3s;pointer-events:none;white-space:nowrap;"></div>
+<!-- 購物車浮動按鈕 -->
+<button id="cart-fab" aria-label="購物車">
+  <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+  <span id="cart-badge"></span>
+</button>
+
+<!-- 購物車面板 -->
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-panel-header">
+    <h3>購物車</h3>
+    <button onclick="toggleCart()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-sec);">✕</button>
+  </div>
+  <div class="cart-panel-body" id="cart-body"></div>
+  <div class="cart-panel-footer">
+    <div class="cart-total">
+      <div>
+        <p class="cart-total-label">合計金額</p>
+        <p class="cart-total-note" id="cart-total-note"></p>
+      </div>
+      <p class="cart-total-value" id="cart-total-value">$0</p>
+    </div>
+    <button class="btn-primary" id="cart-checkout-btn" style="width:100%;justify-content:center;">
+      確認送出
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- OVERLAY: 購物車結帳表單 -->
+<div class="overlay" id="overlay-checkout" role="dialog" aria-modal="true">
+  <div class="panel" style="max-width:500px;">
+    <div class="panel-header">
+      <p class="section-label">確認訂單</p>
+      <h2 class="panel-title">填寫送貨資料</h2>
+      <button class="panel-close" data-close="overlay-checkout">✕</button>
+    </div>
+    <div class="panel-body">
+      <div id="checkout-summary" style="background:var(--bg-card);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;max-height:200px;overflow-y:auto;"></div>
+      <div class="form-group"><label class="form-label" for="checkout-address">工地 / 送貨地址 <span style="color:#C06050;">*</span></label><input class="form-input" id="checkout-address" type="text" placeholder="台北市大安區忠孝東路四段XX號"/></div>
+      <div class="form-group"><label class="form-label" for="checkout-date">需求交期</label><input class="form-input" id="checkout-date" type="date"/></div>
+      <div class="form-group"><label class="form-label" for="checkout-note">備註</label><textarea class="form-input" id="checkout-note" rows="2" placeholder="其他需求或說明..."></textarea></div>
+      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單細節及付款方式。</p>
+      <button class="btn-primary" id="checkout-submit-btn" style="width:100%;justify-content:center;">送出訂單
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY: 歷史購買紀錄 -->
+<div class="overlay" id="overlay-history" role="dialog" aria-modal="true">
+  <div class="panel" style="max-width:560px;">
+    <div class="panel-header">
+      <p class="section-label">購買紀錄</p>
+      <h2 class="panel-title">歷史訂單</h2>
+      <button class="panel-close" data-close="overlay-history">✕</button>
+    </div>
+    <div class="panel-body" id="history-body" style="max-height:60svh;overflow-y:auto;">
+      <p style="color:var(--text-sec);font-size:13px;">載入中…</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-toast"
+ style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text-pri);color:var(--bg);padding:12px 24px;border-radius:4px;font-size:13px;z-index:300;opacity:0;transition:transform 0.3s,opacity 0.3s;pointer-events:none;white-space:nowrap;"></div>
 
 <script>
 const LIFF_ID = '2010363089-IaA8fmYO';
@@ -790,13 +892,14 @@ function renderProducts(products, cat) {
         if (hasPrice) {
           html += '<p class="product-row-price-value">$' + Number(p.Price).toLocaleString() + '</p>';
           html += '<div class="product-row-actions">';
-          html += '<button class="btn-order" data-pid="' + p.ProductID + '" data-brand="' + p.Brand + '" data-name="' + (p.DisplayName||p.Model) + '" data-model="' + p.Model + '" data-price="' + p.Price + '">立即下單</button>';
+          html += '<button class="btn-order" data-pid="' + p.ProductID + '" data-brand="' + p.Brand + '" data-name="' + (p.DisplayName||p.Model) + '" data-model="' + p.Model + '" data-price="' + p.Price + '">＋ 加入購物車</button>';
           html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-consult">諮詢貨源</a>';
           html += '</div>';
         } else {
           html += '<p class="product-row-price-tbd">請洽報價</p>';
           html += '<div class="product-row-actions">';
-          html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-order" style="text-decoration:none;display:inline-flex;align-items:center;">LINE 詢價</a>';
+          html += '<button class="btn-order" data-pid="' + p.ProductID + '" data-brand="' + p.Brand + '" data-name="' + (p.DisplayName||p.Model) + '" data-model="' + p.Model + '" data-price="0">＋ 加入購物車</button>';
+          html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-consult">LINE 詢價</a>';
           html += '</div>';
         }
       }
@@ -821,20 +924,229 @@ document.querySelectorAll('.cat-tab[data-cat]').forEach(btn => {
   });
 });
 
-/* ── 下單流程 ── */
+/* ── 購物車 ── */
+let cart = []; // [{ pid, brand, name, model, price, qty }]
+
+function cartAddItem(pid, brand, name, model, price) {
+  const existing = cart.find(i => i.pid === pid);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ pid, brand, name, model, price: parseFloat(price)||0, qty: 1 });
+  }
+  updateCartUI();
+  showToast('✓ 已加入購物車：' + model);
+}
+
+function cartRemoveItem(pid) {
+  cart = cart.filter(i => i.pid !== pid);
+  updateCartUI();
+}
+
+function cartUpdateQty(pid, delta) {
+  const item = cart.find(i => i.pid === pid);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  updateCartUI();
+}
+
+function cartTotal() {
+  return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+}
+
+function cartHasUnpriced() {
+  return cart.some(i => i.price === 0);
+}
+
+function updateCartUI() {
+  const badge   = document.getElementById('cart-badge');
+  const totalEl = document.getElementById('cart-total-value');
+  const noteEl  = document.getElementById('cart-total-note');
+  const count   = cart.reduce((s, i) => s + i.qty, 0);
+
+  // Badge
+  if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.classList.add('show'); }
+  else { badge.classList.remove('show'); }
+
+  // 合計
+  const total = cartTotal();
+  totalEl.textContent = total > 0 ? '$' + total.toLocaleString() : '$0';
+  if (cartHasUnpriced()) {
+    noteEl.textContent = '＊含請洽報價品項，最終金額由客服確認';
+    noteEl.style.color = 'var(--gold)';
+  } else {
+    noteEl.textContent = '共 ' + count + ' 件';
+    noteEl.style.color = 'var(--text-sec)';
+  }
+
+  // 購物車面板內容
+  const body = document.getElementById('cart-body');
+  if (!cart.length) {
+    body.innerHTML = '<p style="text-align:center;color:var(--text-sec);font-size:13px;padding:32px 20px;">購物車是空的</p>';
+    return;
+  }
+  body.innerHTML = cart.map(item => {
+    const priceText = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
+    const unitText  = item.price > 0 ? '單價 $' + item.price.toLocaleString() : '價格待確認';
+    return '<div class="cart-item">' +
+      '<div>' +
+        '<p class="cart-item-name">' + item.model + '</p>' +
+        '<p class="cart-item-price">' + unitText + '</p>' +
+      '</div>' +
+      '<div class="cart-item-controls">' +
+        '<button class="cart-qty-btn" data-pid="' + item.pid + '" data-delta="-1">−</button>' +
+        '<span class="cart-qty-num">' + item.qty + '</span>' +
+        '<button class="cart-qty-btn" data-pid="' + item.pid + '" data-delta="1">＋</button>' +
+        '<span style="color:var(--gold);font-weight:500;font-family:var(--serif);font-size:15px;min-width:80px;text-align:right;">' + priceText + '</span>' +
+        '<button class="cart-remove-btn" data-pid="' + item.pid + '">✕</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleCart() {
+  const panel = document.getElementById('cart-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) updateCartUI();
+}
+
+document.getElementById('cart-fab').addEventListener('click', toggleCart);
+
+// 購物車面板內的按鈕事件
+document.getElementById('cart-body').addEventListener('click', function(e) {
+  const qtyBtn = e.target.closest('.cart-qty-btn');
+  const rmBtn  = e.target.closest('.cart-remove-btn');
+  if (qtyBtn) { cartUpdateQty(qtyBtn.dataset.pid, parseInt(qtyBtn.dataset.delta)); }
+  if (rmBtn)  { cartRemoveItem(rmBtn.dataset.pid); }
+});
+
+// 點「確認送出」開啟結帳 overlay
+document.getElementById('cart-checkout-btn').addEventListener('click', function() {
+  if (!cart.length) { showToast('購物車是空的'); return; }
+  // 填入訂單摘要
+  const summary = document.getElementById('checkout-summary');
+  summary.innerHTML = cart.map(item => {
+    const priceText = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
+    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--divider);font-size:13px;">' +
+      '<span style="font-family:'Microsoft JhengHei',sans-serif;color:var(--text-pri);">' + item.model + ' × ' + item.qty + '</span>' +
+      '<span style="color:var(--text-pri);font-weight:500;">' + priceText + '</span>' +
+    '</div>';
+  }).join('') +
+  '<div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:14px;">' +
+    '<span style="color:var(--text-sec);">合計</span>' +
+    '<span style="font-family:var(--serif);font-size:20px;color:var(--text-pri);">$' + cartTotal().toLocaleString() + (cartHasUnpriced() ? '＋' : '') + '</span>' +
+  '</div>';
+  document.getElementById('checkout-address').value = '';
+  document.getElementById('checkout-date').value    = '';
+  document.getElementById('checkout-note').value    = '';
+  document.getElementById('checkout-date').min      = new Date().toISOString().split('T')[0];
+  document.getElementById('cart-panel').classList.remove('open');
+  showOverlay('overlay-checkout');
+});
+
+/* ── 結帳送出 ── */
+document.getElementById('checkout-submit-btn').addEventListener('click', async function() {
+  const address = document.getElementById('checkout-address').value.trim();
+  if (!address) { document.getElementById('checkout-address').classList.add('error'); return; }
+  document.getElementById('checkout-address').classList.remove('error');
+  const lineUID = currentUser?.lineUID;
+  if (!lineUID) { showToast('身份驗證失敗，請重新開啟頁面'); return; }
+
+  this.disabled = true; this.textContent = '送出中…';
+
+  const date    = document.getElementById('checkout-date').value;
+  const note    = document.getElementById('checkout-note').value.trim();
+
+  try {
+    const data = await callGAS({
+      action:    'submitCartOrder',
+      lineUID,
+      cartJSON:  JSON.stringify(cart),
+      address,
+      deadline:  date,
+      note,
+      totalPrice: cartTotal(),
+    });
+
+    if (data.success) {
+      cart = [];
+      updateCartUI();
+      closeOverlay('overlay-checkout');
+      currentOrder = { name: '購物車訂單', model: '多品項', price: cartTotal() };
+      await showTerms();
+    } else {
+      showToast('送出失敗：' + (data.error||'請重試'));
+      this.disabled = false; this.textContent = '送出訂單';
+    }
+  } catch(e) {
+    showToast('連線失敗，請重試');
+    this.disabled = false; this.textContent = '送出訂單';
+  }
+  this.disabled = false; this.textContent = '送出訂單';
+});
+
+/* ── 歷史紀錄 ── */
+document.getElementById('history-btn').addEventListener('click', async function() {
+  showOverlay('overlay-history');
+  const body = document.getElementById('history-body');
+  body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">載入中…</p>';
+  try {
+    const data = await callGAS({ action: 'getMyOrders', lineUID: currentUser?.lineUID || '' });
+    if (!data.success || !data.orders.length) {
+      body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">目前尚無訂單紀錄</p>';
+      return;
+    }
+    // 依月份分組
+    const byMonth = {};
+    data.orders.forEach(o => {
+      const d = new Date(o.CreatedAt || o.createdAt || '');
+      const key = isNaN(d) ? '未知日期' : d.getFullYear() + ' 年 ' + (d.getMonth()+1) + ' 月';
+      if (!byMonth[key]) byMonth[key] = [];
+      byMonth[key].push(o);
+    });
+
+    let html = '';
+    Object.keys(byMonth).reverse().forEach(month => {
+      const orders = byMonth[month];
+      const monthTotal = orders.reduce((s, o) => s + (parseFloat(o.TotalPrice||o.totalPrice)||0), 0);
+      html += '<div class="history-month">';
+      html += '<p class="history-month-title">' + month + '</p>';
+      orders.forEach(o => {
+        const items = (() => { try { return JSON.parse(o.CartJSON||o.cartJSON||'[]'); } catch(e) { return []; } })();
+        if (items.length) {
+          items.forEach(item => {
+            const p = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
+            html += '<div class="history-row">';
+            html += '<span class="history-model">' + item.model + '</span>';
+            html += '<span class="history-qty">×' + item.qty + '</span>';
+            html += '<span class="history-price">' + p + '</span>';
+            html += '</div>';
+          });
+        } else {
+          const p = parseFloat(o.TotalPrice||o.totalPrice) > 0 ? '$' + parseFloat(o.TotalPrice||o.totalPrice).toLocaleString() : '請洽報價';
+          html += '<div class="history-row">';
+          html += '<span class="history-model">' + (o.ModelName||o.modelName||o.ProductID||'訂單') + '</span>';
+          html += '<span class="history-qty">×' + (o.Quantity||1) + '</span>';
+          html += '<span class="history-price">' + p + '</span>';
+          html += '</div>';
+        }
+      });
+      if (monthTotal > 0) {
+        html += '<p class="history-month-total">本月合計：$' + monthTotal.toLocaleString() + '</p>';
+      }
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  } catch(e) {
+    body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">載入失敗，請重試</p>';
+  }
+});
+
+/* ── 加入購物車點擊事件 ── */
 document.getElementById('product-grid').addEventListener('click', function(e) {
   const btn = e.target.closest('.btn-order');
   if (!btn) return;
-  currentOrder = { pid: btn.dataset.pid, brand: btn.dataset.brand, name: btn.dataset.name, model: btn.dataset.model, price: btn.dataset.price };
-  document.getElementById('order-product-name').textContent = btn.dataset.brand + ' ' + btn.dataset.name;
-  document.getElementById('order-product-model').textContent = btn.dataset.model;
-  document.getElementById('order-qty').value = '1';
-  document.getElementById('order-address').value = '';
-  document.getElementById('order-date').value = '';
-  document.getElementById('order-spec').value = '';
-  document.getElementById('order-note').value = '';
-  document.getElementById('order-date').min = new Date().toISOString().split('T')[0];
-  showOverlay('overlay-order');
+  cartAddItem(btn.dataset.pid, btn.dataset.brand, btn.dataset.name, btn.dataset.model, btn.dataset.price);
 });
 
 document.getElementById('order-submit-btn').addEventListener('click', async function() {
