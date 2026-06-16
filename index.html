@@ -1,16 +1,3 @@
-為了將這份具備高度法律與資安防禦力的「採購與履約須知」完美整合，同時兼顧您的「兩層架構需求」與系統最佳實踐，我為您採用了 **SPA（單頁應用）的 Hash 路由技術** 來更新您的網頁。
-
-這種做法有以下極大優勢：
-
-1. **簡化部署：** 不需要另外管理 `terms.html`，所有內容都在同一個檔案內，載入速度最快。
-2. **獨立連結支援：** 只要在網址後加上 `#terms`（例如 `您的網址/#terms`），就會自動隱藏首頁與查價系統，全螢幕顯示「完整版條款」。這完美符合您要在 **LINE 審核通知** 以及 **頁腳** 放上獨立連結的需求。
-3. **優化轉換率：** 彈跳窗內採用您建議的「簡化版 6 條重點」，讓設計師能快速掌握並打勾同意，點擊連結又能隨時展開完整條款，毫不勸退。
-
-（註：我順手為您校對了原本草稿中因為語音辨識或 OCR 產生的錯字，例如「阿富汗之空軍空間」已修正為「通風散熱空間」，「直接劃過頭源」修正為「直接溯源」等，確保文件展現最高專業度。）
-
-以下是為您更新後的完整程式碼，您可以直接全選複製並部署：
-
-```html:index.html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -21,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  
   <style>
     /* 微軟正黑體優先用於產品型號 */
     .product-model-font {
@@ -34,6 +22,7 @@
     }
   </style>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  
   <style>
     :root {
       --bg:#F5F2EE; --bg-card:#EFECE8; --bg-deep:#1A1916;
@@ -390,7 +379,7 @@
       <div class="qualify-cards">
         <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
         <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
-        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
+        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司 or 代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
       </div>
     </div>
   </section>
@@ -517,7 +506,7 @@
           <span style="display:block;margin-top:8px;font-size:13px;">【步驟一：回傳憑證】匯款完成後，請於 LINE 官方帳號主動傳送「匯款帳號後五碼」或「轉帳成功截圖」。<br>
           【步驟二：金融對準】線上編輯收到訊息後，會立即透過網銀即時通知系統進行款項核對。<br>
           【步驟三：數位憑證寄送】系統將於收到訊息後（營業時段內 15 至 30 分鐘），於 LINE 對話中正式發送【入帳成功與鎖貨通知】。此數位文字記錄即視為本平台之正式收款憑證，具備契約效力。</span></li>
-        <li><strong>出賣人與發票主體對齊：</strong>本平台為維護稅務合規，本案指定收款之帳戶戶名，依法與後續開立給貴司之【原廠授權一線經銷商】合法三聯式發票憑證 100% 一致。此雙重法律勾稽保障能完全排除非授權管道或假冒詐騙之風險。</li>
+        <li><strong>出賣人與發票主體對齊：</strong>本平台為維護稅務合規，本案指定收款之帳戶戶名，依法與後續開開立給貴司之【原廠授權一線經銷商】合法三聯式發票憑證 100% 一致。此雙重法律勾稽保障能完全排除非授權管道或假冒詐騙之風險。</li>
       </ul>
     </div>
 
@@ -527,7 +516,7 @@
         <li><strong>指定交貨日期：</strong>本平台配合案場施工細節，可於下單時指定特定日期。自訂單完全付款日起計算，指定交貨期不得超過「一個月（30天）」，請精準控管現場木工、泥作與油漆進度。</li>
         <li><strong>冰洗安裝基本服務：</strong>採購項目為冰箱、洗衣機時，服務內含原廠標準拆箱定位、同商品舊機回收（限同地址），以及基本進出水管接續。隨貨符合資格之原廠贈品，將依原廠規範一併搭贈或寄送。</li>
         <li><strong>電視無安裝服務：</strong>採購項目為電視時，報價均不含任何安裝服務（如壁掛或桌面安裝費用）。若案場需要安裝服務，須由業主自行聯絡原廠服務站進行視聽環境評估，並依原廠獨立報價另行支付安裝費用。</li>
-        <li><strong>空調僅配送無安裝：</strong>採購項目為空調（冷氣）時，本平台僅負責將商品安全運送至案場一樓、室內指定地點或分區指定之轉運倉，現場完全不提供任何洗孔、配管、吊掛等安裝工程。</li>
+        <li><strong>空調僅配送無安裝：</strong>採購項目為空調（冷氣）時，本平台僅負責將商品安全運送至案場一樓、室內指定地點 or 分區指定之轉運倉，現場完全不提供任何洗孔、配管、吊掛等安裝工程。</li>
         <li><strong>雙方合意特約：</strong>所有採購品項之「底座寬度、深度、高度、開門弧度、迴旋半徑、木工 / 系統櫃嵌合尺寸及通風散熱空間」，依契約指示一律由貴司（會員）承擔完全核對與設計責任。</li>
       </ul>
     </div>
@@ -535,7 +524,7 @@
     <div class="terms-section">
       <h2 class="terms-h2">四、退換貨規範</h2>
       <ul class="terms-list">
-        <li><strong>拒絕非瑕疵退換貨：</strong>本案屬於 B2B 貨物，一經送抵案場，除原廠安裝師傅現場認定之「新品非人為瑕疵 / 運輸碰撞損壞」外，本平台一律拒絕任何因案場尺寸不符、現場搬運衝突、或業主暫時反悔等非原廠相關情況之「現場拒收」或「換貨」申請。</li>
+        <li><strong>拒絕非瑕疵退換貨：</strong>本案屬於 B2B 貨物，一經送抵案場，除原廠安裝師傅現場認定之「新品非人為瑕疵 / 運輸碰撞損壞」外，本平台一律拒絕任何因案場尺寸不符、現場搬運衝突、或業主暫時反悔等非原廠相關情況之「現場拒收」 or 「換貨」申請。</li>
         <li><strong>衍生費用負擔：</strong>若因動線限制、現場環境未清空，或空調/電視未安排銜接師傅，導致原廠物流無法順利交付、需二次配送或衍生退倉工本費，所有衍生之物流與行政費用將由買方（會員）負責負擔。</li>
       </ul>
     </div>
@@ -569,7 +558,11 @@
         <div class="file-upload-area"><input type="file" id="input-card" accept="image/*" onchange="document.getElementById('file-preview-name').textContent='✓ '+this.files[0].name;document.getElementById('file-preview-name').style.display='block'"/><div class="file-upload-icon">+</div><p class="file-upload-text">點擊上傳名片照片<br><span style="opacity:0.6;">JPG / PNG，上限 5MB</span></p></div>
         <p class="file-preview" id="file-preview-name" style="display:none;margin-top:8px;font-size:12px;color:var(--gold);"></p>
       </div>
-      <p class="form-hint">資料送出後通常於 24 小時內完成人工審核，結果將以 LINE 訊息通知。</p><br>
+      
+      <p class="form-hint">
+        資料送出後通常於 24 小時內完成人工審核，結果將以 LINE 訊息通知。<br>
+        <a href="#terms" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;font-weight:400;" onclick="closeOverlay('overlay-register')">▶ 閱讀夥伴合作與履約條款 (獨立網頁)</a>
+      </p><br>
       <button class="btn-primary" id="register-submit-btn" style="width:100%;justify-content:center;">送出申請</button>
     </div>
   </div>
@@ -595,7 +588,7 @@
       <div class="form-group"><label class="form-label" for="order-address">工地 / 送貨地址 <span style="color:#C06050;">*</span></label><input class="form-input" id="order-address" type="text" placeholder="例：台北市大安區忠孝東路四段XX號"/></div>
       <div class="form-group"><label class="form-label" for="order-date">需求交期</label><input class="form-input" id="order-date" type="date"/></div>
       <div class="form-group"><label class="form-label" for="order-spec">顏色 / 規格需求</label><input class="form-input" id="order-spec" type="text" placeholder="例：深玫瑰金、嵌入式安裝..."/></div>
-      <div class="form-group"><label class="form-label" for="order-note">其他備註</label><textarea class="form-input" id="order-note" rows="2" placeholder="其他需求或說明..."></textarea></div>
+      <div class="form-group"><label class="form-label" for="order-note">其他備註</label><textarea class="form-input" id="order-note" rows="2" placeholder="其他需求 or 說明..."></textarea></div>
       <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單細節及付款方式。</p>
       <button class="btn-primary" id="order-submit-btn" style="width:100%;justify-content:center;">送出下單
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -612,7 +605,7 @@
       <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;max-height:40vh;overflow-y:auto;padding-right:4px;margin-bottom:12px;"></div>
       
       <div style="text-align:center;margin-bottom:20px;">
-        <a href="#terms" target="_blank" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px;transition:opacity 0.2s;" onclick="closeOverlay('overlay-terms')">閱讀完整條款 (獨立頁面)</a>
+        <a href="#terms" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px;transition:opacity 0.2s;" onclick="closeOverlay('overlay-terms')">閱讀完整條款 (獨立頁面)</a>
       </div>
 
       <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--divider);margin-bottom:16px;">
@@ -652,7 +645,6 @@
     <span class="footer-logo">S<span>·</span>A<span>·</span>O</span>
     <div style="text-align:right;">
       <span class="footer-note">空間美學秩序 · Spatial Aesthetic Order · © 2026 · 僅限專業設計師</span>
-      <!-- 頁腳服務條款連結 -->
       <a href="#terms" class="footer-link" style="display:inline-block;margin-left:16px;font-size:11px;color:var(--gold);letter-spacing:0.06em;">服務條款</a>
     </div>
   </div>
@@ -698,7 +690,7 @@
       <div id="checkout-summary" style="background:var(--bg-card);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;max-height:200px;overflow-y:auto;"></div>
       <div class="form-group"><label class="form-label" for="checkout-address">工地 / 送貨地址 <span style="color:#C06050;">*</span></label><input class="form-input" id="checkout-address" type="text" placeholder="台北市大安區忠孝東路四段XX號"/></div>
       <div class="form-group"><label class="form-label" for="checkout-date">需求交期</label><input class="form-input" id="checkout-date" type="date"/></div>
-      <div class="form-group"><label class="form-label" for="checkout-note">備註</label><textarea class="form-input" id="checkout-note" rows="2" placeholder="其他需求或說明..."></textarea></div>
+      <div class="form-group"><label class="form-label" for="checkout-note">備註</label><textarea class="form-input" id="checkout-note" rows="2" placeholder="其他需求 or 說明..."></textarea></div>
       <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單細節及付款方式。</p>
       <button class="btn-primary" id="checkout-submit-btn" style="width:100%;justify-content:center;">送出訂單
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -740,15 +732,20 @@ function handleRouting() {
   const hash = window.location.hash;
   
   if (hash === '#terms') {
-    // 進入獨立條款頁面
     document.body.classList.add('show-terms');
+    // 如果有載入中遮罩，直接隱藏，避免測試與檢視時被擋住
+    const loadingEl = document.getElementById('liff-loading');
+    if (loadingEl) loadingEl.style.display = 'none';
     window.scrollTo(0,0);
   } else {
-    // 回到主系統邏輯
     document.body.classList.remove('show-terms');
+    // 回到主畫面時，若尚未完成驗證再放回遮罩
+    const loadingEl = document.getElementById('liff-loading');
+    if (loadingEl && memberStatus === null) {
+      loadingEl.style.display = 'flex';
+    }
   }
 }
-// 監聽網址變化與初次載入
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('DOMContentLoaded', handleRouting);
 
@@ -1275,7 +1272,6 @@ async function showTerms() {
       if (data.success) cachedConfig = data.config;
     } catch(e) {}
   }
-  // 在此使用簡化版 6 條
   const termsHtml = [
     '<strong style="color:var(--text-pri);">1. 封閉式 B2B 通路：</strong>僅限實名審核之專業夥伴，全線商品來自原廠授權通路。',
     '<strong style="color:var(--text-pri);">2. 貨源與金流：</strong>採「先匯款、後排單」，款項匯入指定帳戶後即時鎖貨。',
@@ -1346,7 +1342,7 @@ document.querySelectorAll('.panel-close').forEach(btn => btn.addEventListener('c
 /* ── CTA ── */
 function handleCTA() {
   if (memberStatus==='approved') { 
-    window.location.hash = ''; // 如果在條款頁，先回到系統
+    window.location.hash = ''; 
     document.getElementById('price-page').scrollIntoView({behavior:'smooth'}); 
     return; 
   }
@@ -1405,6 +1401,3 @@ if (typeof liff !== 'undefined') {
 </script>
 </body>
 </html>
-```eof
-
-```
