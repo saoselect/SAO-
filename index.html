@@ -286,7 +286,7 @@
 </head>
 <body class="guest">
 
-<div id="liff-loading">驗證身份中…</div>
+<div id="liff-loading" style="position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;"><p style="font-family:var(--sans);font-size:13px;color:var(--text-sec);letter-spacing:0.10em;">驗證身份中…</p></div>
 <div id="watermark-layer" aria-hidden="true"></div>
 
 <nav class="nav" role="navigation" aria-label="主導覽">
@@ -649,8 +649,9 @@ async function initLiff() {
   const safetyTimer = setTimeout(() => {
     console.warn('LIFF init timeout，改為訪客模式');
     memberStatus = 'guest';
-    showLoading(false);
-  }, 10000);
+    const loadEl = document.getElementById('liff-loading');
+    if (loadEl) loadEl.remove();
+  }, 8000);
 
   try {
     // 清除 URL 上的 OAuth 回調參數，避免 init 卡住
@@ -682,7 +683,8 @@ async function initLiff() {
     clearTimeout(safetyTimer);
     console.error('LIFF error:', err);
     memberStatus = 'guest';
-    showLoading(false);
+    const loadEl = document.getElementById('liff-loading');
+    if (loadEl) loadEl.remove();
   }
 }
 
@@ -732,7 +734,12 @@ function applyState(status, data) {
 
 function showLoading(show) {
   const el = document.getElementById('liff-loading');
-  if (el) el.style.display = show ? 'flex' : 'none';
+  if (!el) return;
+  if (show) {
+    el.style.display = 'flex';
+  } else {
+    el.remove(); // 直接移除，不只是隱藏
+  }
 }
 
 /* ── 浮水印 ── */
@@ -880,7 +887,7 @@ function renderProducts(products, cat) {
       html += '<p class="product-row-model" title="' + modelText + '">' + modelText + '</p>';
       // 規格另起一行（如果與型號不同）
       if (p.Spec && p.Spec !== p.Model && p.Spec !== modelText) {
-        html += '<p class="product-row-spec" style="font-family:\'Microsoft JhengHei\',\'微軟正黑體\',\'PingFang TC\',sans-serif;font-size:12px;">' + p.Spec + '</p>';
+        html += '<p class="product-row-spec">' + p.Spec + '</p>';
       }
       html += '</div>';
       html += '<div class="product-row-price">';
@@ -1028,7 +1035,7 @@ document.getElementById('cart-checkout-btn').addEventListener('click', function(
   summary.innerHTML = cart.map(item => {
     const priceText = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
     return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--divider);font-size:13px;">' +
-      '<span style="font-family:'Microsoft JhengHei',sans-serif;color:var(--text-pri);">' + item.model + ' × ' + item.qty + '</span>' +
+      '<span class="cart-item-name" style="color:var(--text-pri);">' + item.model + ' × ' + item.qty + '</span>' +
       '<span style="color:var(--text-pri);font-weight:500;">' + priceText + '</span>' +
     '</div>';
   }).join('') +
