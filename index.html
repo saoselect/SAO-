@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  
   <style>
     /* 微軟正黑體優先用於產品型號 */
     .product-model-font {
@@ -21,6 +22,7 @@
     }
   </style>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  
   <style>
     :root {
       --bg:#F5F2EE; --bg-card:#EFECE8; --bg-deep:#1A1916;
@@ -137,6 +139,8 @@
     .footer-logo{font-family:var(--serif);font-size:15px;font-weight:300;color:rgba(232,228,220,0.5);letter-spacing:0.08em;}
     .footer-logo span{color:var(--gold);opacity:0.7;}
     .footer-note{font-size:11px;font-weight:300;color:rgba(232,228,220,0.3);letter-spacing:0.06em;}
+    .footer-link{color:var(--gold);text-decoration:none;transition:opacity 0.2s;}
+    .footer-link:hover{opacity:0.8;}
 
     /* OVERLAY */
     .overlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(26,25,22,0.72);backdrop-filter:blur(4px);padding:20px;}
@@ -171,6 +175,22 @@
     .price-page{display:none;padding-top:60px;min-height:100svh;}
     body.approved .price-page{display:block;}
     body.approved .landing-content{display:none;}
+    
+    /* ROUTING: TERMS PAGE LOGIC */
+    #terms-page { display: none; padding-top: 100px; padding-bottom: 120px; background: var(--bg); min-height: 100svh; }
+    body.show-terms #terms-page { display: block; }
+    body.show-terms #landing-content,
+    body.show-terms #price-page { display: none !important; }
+
+    /* TERMS PAGE TYPOGRAPHY */
+    .terms-section { margin-bottom: 48px; }
+    .terms-h2 { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--gold); margin-bottom: 16px; border-bottom: 1px solid var(--gold-line); padding-bottom: 8px; letter-spacing: 0.05em; }
+    .terms-list { list-style: none; padding: 0; }
+    .terms-list li { font-size: 14px; font-weight: 300; color: var(--text-sec); line-height: 1.85; margin-bottom: 16px; padding-left: 20px; position: relative; }
+    .terms-list li::before { content: '·'; position: absolute; left: 0; color: var(--gold); font-weight: bold; font-size: 18px; line-height: 1.4; }
+    .terms-list strong { color: var(--text-pri); font-weight: 500; }
+    .terms-quote { background: var(--bg-card); border-left: 2px solid var(--gold); padding: 20px 24px; font-size: 13px; color: var(--text-sec); line-height: 1.8; font-style: italic; margin-top: 40px; border-radius: 0 var(--radius) var(--radius) 0; }
+
     .price-page-header{background:var(--bg-deep);padding:48px 0 40px;}
     .price-page-header .section-label{color:var(--gold);margin-bottom:8px;}
     .price-welcome{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--text-inv);}
@@ -201,17 +221,66 @@
     body.approved #watermark-layer{display:block;}
     .wm-text{position:absolute;color:rgba(80,60,40,0.10);font-family:var(--sans);font-size:16px;font-weight:400;letter-spacing:0.10em;white-space:nowrap;transform:rotate(-28deg);user-select:none;-webkit-user-select:none;pointer-events:none;}
 
-    /* CAT TAB */
-    .cat-tab{flex-shrink:0;padding:16px 24px;font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color 0.2s,border-color 0.2s;white-space:nowrap;}
-    .cat-tab.active{color:var(--text-pri);border-bottom-color:var(--gold);}
+    /* BRAND & CAT TAB - 精緻奢華優化 */
+    .brand-btn {
+      padding: 10px 24px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      cursor: pointer;
+      color: var(--text-sec);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+    .brand-btn.active {
+      background: var(--text-pri);
+      color: var(--bg);
+      border-color: var(--text-pri);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .brand-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .cat-tab {
+      padding: 10px 24px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.10em;
+      color: var(--text-sec);
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .cat-tab.active {
+      color: var(--bg);
+      background: var(--text-pri);
+      border-color: var(--text-pri);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .cat-tab:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
     .series-btn{padding:7px 16px;font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.06em;background:var(--bg);border:1px solid var(--divider);border-radius:2px;cursor:pointer;color:var(--text-sec);transition:all 0.15s;white-space:nowrap;}
     .series-btn.active{background:var(--text-pri);color:var(--bg);border-color:var(--text-pri);}
     .series-btn:hover{border-color:var(--gold);color:var(--gold);}
+    
     /* PRODUCT CARD NEW */
     .product-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;background:var(--bg);padding:16px 24px;border-bottom:1px solid var(--divider);}
     .product-row-info{min-width:0;overflow:hidden;}
     .product-row:last-child{border-bottom:none;}
-    .product-row-info{}
     .product-row-series{font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
     .product-row-model{font-family:'Microsoft JhengHei','微軟正黑體','PingFang TC','Heiti TC',sans-serif;font-size:14px;font-weight:400;color:var(--text-pri);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .product-row-spec{font-size:12px;color:var(--text-sec);}
@@ -248,6 +317,7 @@
     .cart-total-label{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-sec);}
     .cart-total-value{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--text-pri);}
     .cart-total-note{font-size:11px;color:var(--text-sec);margin-top:2px;}
+    
     /* 歷史紀錄 */
     .history-month{margin-bottom:24px;}
     .history-month-title{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);padding:10px 0;border-bottom:1px solid var(--gold-line);margin-bottom:0;}
@@ -286,12 +356,12 @@
 </head>
 <body class="guest">
 
-<div id="liff-loading" style="position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;"><p style="font-family:var(--sans);font-size:13px;color:var(--text-sec);letter-spacing:0.10em;">驗證身份中…</p></div>
+<div id="liff-loading"><p>驗證身份中…</p></div>
 <div id="watermark-layer" aria-hidden="true"></div>
 
 <nav class="nav" role="navigation" aria-label="主導覽">
   <div class="container nav-inner">
-    <a class="nav-logo" id="nav-logo">S<span>·</span>A<span>·</span>O</a>
+    <a class="nav-logo" id="nav-logo" href="#">S<span>·</span>A<span>·</span>O</a>
     <ul class="nav-links">
       <li><a href="#about">關於</a></li>
       <li><a href="#qualify">申請資格</a></li>
@@ -302,7 +372,7 @@
   </div>
 </nav>
 
-<!-- LANDING -->
+<!-- LANDING CONTENT -->
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
@@ -358,7 +428,7 @@
       <div class="qualify-cards">
         <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
         <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
-        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
+        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司 or 代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
       </div>
     </div>
   </section>
@@ -431,34 +501,117 @@
     </div>
   </div>
 
-  <!-- 分類選擇 -->
+  <!-- STICKY FILTER SYSTEM (BRAND FIRST -> CAT SECOND) -->
   <div style="background:var(--bg);border-bottom:1px solid var(--divider);position:sticky;top:60px;z-index:50;">
-    <div class="container">
-      <div style="display:flex;gap:0;overflow-x:auto;scrollbar-width:none;">
-        <button class="cat-tab active" data-cat="ac">空調</button>
-        <button class="cat-tab" data-cat="fridge">冰箱</button>
-        <button class="cat-tab" data-cat="washer">洗衣機</button>
-        <button class="cat-tab" data-cat="tv">電視</button>
-        <button class="cat-tab" style="margin-left:auto;color:var(--gold);" id="back-top-btn">↑ 回頂部</button>
+    <div class="container" style="padding-top:14px;padding-bottom:14px;">
+      
+      <!-- 第一步：選擇品牌 -->
+      <div id="brand-selector-wrapper">
+        <p style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;">第一步：選擇品牌 (Brand)</p>
+        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+          <button class="brand-btn" data-brand="Panasonic">PANASONIC</button>
+          <button class="brand-btn" data-brand="Hitachi">HITACHI</button>
+          <button class="brand-btn" data-brand="LG">LG</button>
+          <button class="brand-btn" data-brand="Mitsubishi">MITSUBISHI</button>
+        </div>
       </div>
+
+      <!-- 第二步：選擇品類 (選擇品牌後才會顯示) -->
+      <div id="category-selector-wrapper" style="margin-top:14px;border-top:1px solid var(--divider);padding-top:12px;display:none;">
+        <p style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;">第二步：選擇品類 (Category)</p>
+        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;">
+          <button class="cat-tab" data-cat="ac">空調</button>
+          <button class="cat-tab" data-cat="fridge">冰箱</button>
+          <button class="cat-tab" data-cat="washer">洗衣機</button>
+          <button class="cat-tab" data-cat="tv">電視</button>
+          <button class="cat-tab" style="margin-left:auto;color:var(--gold);border:none;background:none;padding:8px 0;" id="back-top-btn">↑ 回頂部</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- 系列選擇 -->
+  <!-- 第三步：選擇系列 (僅在選擇「空調」時動態顯示) -->
   <div id="series-bar" style="background:var(--bg-card);border-bottom:1px solid var(--divider);display:none;">
     <div class="container" style="padding-top:16px;padding-bottom:16px;">
-      <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px;">選擇系列</p>
+      <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px;">第三步：選擇系列 (Series)</p>
       <div id="series-selector" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
     </div>
   </div>
 
-  <!-- 產品列表 -->
   <section style="padding:32px 0 80px;background:var(--bg-card);">
     <div class="container">
       <div id="product-grid"></div>
     </div>
   </section>
 </div>
+
+<!-- TERMS PAGE (SPA ROUTING) -->
+<main id="terms-page" role="main">
+  <div class="container" style="max-width: 720px;">
+    <button onclick="window.location.hash=''" style="background:none;border:none;color:var(--text-sec);cursor:pointer;font-family:var(--sans);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:32px;display:flex;align-items:center;gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>回到首頁
+    </button>
+    
+    <h1 style="font-family:var(--serif);font-size:32px;color:var(--text-pri);margin-bottom:24px;line-height:1.4;">SAO 空間美學秩序<br><em style="font-style:italic;color:var(--gold);">夥伴採購與履約須知</em></h1>
+    <p style="font-size:14px;color:var(--text-sec);line-height:1.8;margin-bottom:48px;">歡迎加入 SAO 空間美學秩序 B2B 專屬系統（以下簡稱本平台）。為維護正規一線通路之市場控價秩序（MAPP政策），並確保專案履約之最高品質，本平台僅面向透過實名審核之室內設計師、建築師、系統裝修及統包工程夥伴（以下簡稱會員）。本平台全線商品皆來自「原廠授權第一線供應鏈通路」。提交專案選品與採購時，視同同意並承諾遵循以下「數位秩序與案場規範」：</p>
+
+    <div class="terms-section">
+      <h2 class="terms-h2">一、訂單確認與金流（訂單與付款）</h2>
+      <ul class="terms-list">
+        <li><strong>貨源前沿確認：</strong>於線上系統提交選購單後，請務必第一時間於 LINE 官方帳號向線上編輯確認原廠即時庫存與配貨情況。</li>
+        <li><strong>款項即時解鎖：</strong>經線上編輯確認原廠貨源無誤後，本平台嚴格採取「先匯款、後排單」原則。專案款項完全匯入【本案指定之特約一線經銷商（隨單檢附於匯款資訊）】專屬商務帳戶後，供應鏈系統將即時鎖定貨源並正式安排出貨排程。</li>
+        <li><strong>商務諮詢單一窗口：</strong>⚠️特別宣布：特約一線經銷商之實體門市均未配置本體系之專案權限。凡關於「商品規格功能諮詢」、「發票開立方式與品名調整」、「報價確認」等所有商務細節與財務，一律僅透過 LINE 官方帳號向線上編輯提出並由雲端系統進行文字留痕處理。特約實體門市現場與電話均不提供任何相關諮詢與變更服務。</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2 class="terms-h2">二、雲端資安與自動化對帳機制（資料安全與驗證）</h2>
+      <ul class="terms-list">
+        <li><strong>動態安全防偽水印（防洩密政策）：</strong>為維護 MAPP 控價秩序並保障全體夥伴之利潤空間，本平台全面啟氣「雲端資安追蹤系統」。凡本平台發行之報價單、出貨單、選品明細及匯款帳號資訊，系統皆會嵌入隱性或顯性「包含實名制資訊與專屬追蹤碼」之動態防偽浮水印。</li>
+        <li><strong>外流之法律與商務責任：</strong>會員知悉並同意，上述含動態浮水印之文件屬於封閉式商務機密。若有任何截圖外流、不當檢舉、或違反控價政策之情事，本平台依浮水印特徵直接溯源，並立即永久終止該夥伴之採購會員資格，並保留法律訴訟與商譽損害求償權。</li>
+        <li><strong>自動化對帳流程：</strong>匯款完成後，全程停止透過任何實體門市電話進行人工查詢，請依循以下自動化流程：<br>
+          <span style="display:block;margin-top:8px;font-size:13px;">【步驟一：回傳憑證】匯款完成後，請於 LINE 官方帳號主動傳送「匯款帳號後五碼」或「轉帳成功截圖」。<br>
+          【步驟二：金融對準】線上編輯收到訊息後，會立即透過網銀即時通知系統進行款項核對。<br>
+          【步驟三：數位憑證寄送】系統將於收到訊息後（營業時段內 15 至 30 分鐘），於 LINE 對話中正式發送【入帳成功與鎖貨通知】。此數位文字記錄即視為本平台之正式收款憑證，具備契約效力。</span></li>
+        <li><strong>出賣人與發票主體對齊：</strong>本平台為維護稅務合規，本案指定收款之帳戶戶名，依法與後續開開立給貴司之【原廠授權一線經銷商】合法三聯式發票憑證 100% 一致。此雙重法律勾稽保障能完全排除非授權管道 or 假冒詐騙之風險。</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2 class="terms-h2">三、物流調度與現場安裝（Delivery & Installation）</h2>
+      <ul class="terms-list">
+        <li><strong>指定交貨日期：</strong>本平台配合案場施工細節，可於下單時指定特定日期。自訂單完全付款日起計算，指定交貨期不得超過「一個月（30天）」，請精準控管現場木工、泥作與油漆進度。</li>
+        <li><strong>冰洗安裝基本服務：</strong>採購項目為冰箱、洗衣機時，服務內含原廠標準拆箱定位、同商品舊機回收（限同地址），以及基本進出水管接續。隨貨符合資格之原廠贈品，將依原廠規範一併搭贈或寄送。</li>
+        <li><strong>電視無安裝服務：</strong>採購項目為電視時，報價均不含任何安裝服務（如壁掛或桌面安裝費用）。若案場需要安裝服務，須由業主自行聯絡原廠服務站進行視聽環境評估，並依原廠獨立報價另行支付安裝費用。</li>
+        <li><strong>空調僅配送無安裝：</strong>採購項目為空調（冷氣）時，本平台僅負責將商品安全運送至案場一樓、室內指定地點 or 分區指定之轉運倉，現場完全不提供任何洗孔、配管、吊掛等安裝工程。</li>
+        <li><strong>雙方合意特約：</strong>所有採購品項之「底座寬度、深度、高度、開門弧度、迴旋半徑、木工 / 系統櫃嵌合尺寸及通風散熱空間」，依契約指示一律由貴司（會員）承擔完全核對與設計責任。</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2 class="terms-h2">四、退換貨規範</h2>
+      <ul class="terms-list">
+        <li><strong>拒絕非瑕疵退換貨：</strong>本案屬於 B2B 貨物，一經送抵案場，除原廠安裝師傅現場認定之「新品非人為瑕疵 / 運輸碰撞損壞」外，本平台一律拒絕任何因案場尺寸不符、現場搬運衝突、或業主暫時反悔等非原廠相關情況之「現場拒收」 or 「換貨」申請。</li>
+        <li><strong>衍生費用負擔：</strong>若因動線限制、現場環境未清空，或空調/電視未安排銜接師傅，導致原廠物流無法順利交付、需二次配送或衍生退倉工本費，所有衍生之物流與行政費用將由買方（會員）負責負擔。</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2 class="terms-h2">五、數位留痕與通訊秩序（通訊政策）</h2>
+      <ul class="terms-list">
+        <li><strong>唯一合法通訊管道：</strong>本平台全流程採取「數位文字留痕」運作，LINE 官方帳號為專案對談、進度追蹤與變更申請之唯一合法並具契約效力之通訊管道。實體門市人員將一律以「系統查無此單」掛斷處理。會員知悉並同意，此行為將導致雲端對帳與排單流程中斷與重置，凡因私下電話通話而導致出貨排程延宕之所有損失，一律由會員自行承擔。</li>
+      </ul>
+    </div>
+
+    <div class="terms-quote">
+      <strong style="color:var(--text-pri);font-size:14px;font-style:normal;">▎主理人備註：</strong><br><br>
+      秩序，是為了保障高效率的利潤空間。<br>
+      SAO 體系採取數位精準協作，不對外公開電話是為了確保封閉式通道的控價安全與高階資安。商品規格、發票開立等商務請一律對接線上編輯。<br>
+      每一筆金流對接金融端點即時核對，文字留痕即是最高履約。感謝各位設計職人的配合，讓我們共同維護高品質的數位商務環境。
+    </div>
+  </div>
+</main>
 
 <!-- OVERLAY: 申請表單 -->
 <div class="overlay" id="overlay-register" role="dialog" aria-modal="true">
@@ -473,7 +626,11 @@
         <div class="file-upload-area"><input type="file" id="input-card" accept="image/*" onchange="document.getElementById('file-preview-name').textContent='✓ '+this.files[0].name;document.getElementById('file-preview-name').style.display='block'"/><div class="file-upload-icon">+</div><p class="file-upload-text">點擊上傳名片照片<br><span style="opacity:0.6;">JPG / PNG，上限 5MB</span></p></div>
         <p class="file-preview" id="file-preview-name" style="display:none;margin-top:8px;font-size:12px;color:var(--gold);"></p>
       </div>
-      <p class="form-hint">資料送出後通常於 24 小時內完成人工審核，結果將以 LINE 訊息通知。</p><br>
+      
+      <p class="form-hint">
+        資料送出後通常於 24 小時內完成人工審核，結果將以 LINE 訊息通知。<br>
+        <a href="#terms" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;font-weight:400;" onclick="closeOverlay('overlay-register')">▶ 閱讀夥伴合作與履約條款 (獨立網頁)</a>
+      </p><br>
       <button class="btn-primary" id="register-submit-btn" style="width:100%;justify-content:center;">送出申請</button>
     </div>
   </div>
@@ -489,7 +646,7 @@
   <div class="panel"><button class="panel-close" data-close="overlay-success">✕</button><div class="status-panel"><div class="status-icon" style="border-color:var(--gold);color:var(--gold);">✓</div><h2 class="status-title">申請已送出</h2><p class="status-desc">資料已成功送出，我們將盡快完成審核。<br>請留意 LINE 通知。</p></div></div>
 </div>
 
-<!-- OVERLAY: 下單表單 -->
+<!-- OVERLAY: 下單表單 (單一品項) -->
 <div class="overlay" id="overlay-order" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:500px;">
     <div class="panel-header"><p class="section-label">立即下單</p><h2 class="panel-title" id="order-product-title">填寫下單資料</h2><button class="panel-close" data-close="overlay-order">✕</button></div>
@@ -499,7 +656,7 @@
       <div class="form-group"><label class="form-label" for="order-address">工地 / 送貨地址 <span style="color:#C06050;">*</span></label><input class="form-input" id="order-address" type="text" placeholder="例：台北市大安區忠孝東路四段XX號"/></div>
       <div class="form-group"><label class="form-label" for="order-date">需求交期</label><input class="form-input" id="order-date" type="date"/></div>
       <div class="form-group"><label class="form-label" for="order-spec">顏色 / 規格需求</label><input class="form-input" id="order-spec" type="text" placeholder="例：深玫瑰金、嵌入式安裝..."/></div>
-      <div class="form-group"><label class="form-label" for="order-note">其他備註</label><textarea class="form-input" id="order-note" rows="2" placeholder="其他需求或說明..."></textarea></div>
+      <div class="form-group"><label class="form-label" for="order-note">其他備註</label><textarea class="form-input" id="order-note" rows="2" placeholder="其他需求 or 說明..."></textarea></div>
       <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單細節及付款方式。</p>
       <button class="btn-primary" id="order-submit-btn" style="width:100%;justify-content:center;">送出下單
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -508,12 +665,17 @@
   </div>
 </div>
 
-<!-- OVERLAY: 購買須知 -->
+<!-- OVERLAY: 購買須知 (簡化版 6 條) -->
 <div class="overlay" id="overlay-terms" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:520px;">
-    <div class="panel-header"><p class="section-label">下單前請詳閱</p><h2 class="panel-title">購買須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
+    <div class="panel-header"><p class="section-label">下單前請詳閱</p><h2 class="panel-title">夥伴採購須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
     <div class="panel-body">
-      <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;max-height:40vh;overflow-y:auto;padding-right:4px;margin-bottom:20px;"></div>
+      <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;max-height:40vh;overflow-y:auto;padding-right:4px;margin-bottom:12px;"></div>
+      
+      <div style="text-align:center;margin-bottom:20px;">
+        <a href="#terms" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px;transition:opacity 0.2s;" onclick="closeOverlay('overlay-terms')">閱讀完整條款 (獨立頁面)</a>
+      </div>
+
       <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--divider);margin-bottom:16px;">
         <input type="checkbox" id="terms-agree-check" style="width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;" onchange="onTermsCheck()"/>
         <span style="font-size:13px;font-weight:400;color:var(--text-pri);line-height:1.6;">我已詳細閱讀並同意上述購買須知，確認下單後將依規定完成付款。</span>
@@ -525,22 +687,42 @@
   </div>
 </div>
 
-<!-- OVERLAY: 匯款資訊 -->
+<!-- OVERLAY: 匯款資訊 (改為「與客服確認貨源後提供」) -->
 <div class="overlay" id="overlay-payment" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:480px;position:relative;">
-    <div class="panel-header"><p class="section-label">請於確認後 3 日內完成匯款</p><h2 class="panel-title">匯款資訊</h2><button class="panel-close" data-close="overlay-payment">✕</button></div>
+    <div class="panel-header"><p class="section-label">請於客服確認後 3 日內完成匯款</p><h2 class="panel-title">匯款與貨源確認</h2><button class="panel-close" data-close="overlay-payment">✕</button></div>
     <div class="panel-body">
-      <div style="background:var(--bg-card);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;"><p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:6px;">訂單摘要</p><p id="payment-product" style="font-family:var(--serif);font-size:16px;color:var(--text-pri);margin-bottom:2px;"></p><p id="payment-qty" style="font-size:12px;color:var(--text-sec);"></p></div>
-      <div style="border:1px solid var(--gold-line);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;">
-        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">匯款帳號</p>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--divider);padding-bottom:8px;"><span style="font-size:12px;color:var(--text-sec);">戶名</span><span id="bank-name" style="font-size:14px;font-weight:500;color:var(--text-pri);"></span></div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--divider);padding-bottom:8px;"><span style="font-size:12px;color:var(--text-sec);">銀行</span><span id="bank-code" style="font-size:14px;font-weight:500;color:var(--text-pri);"></span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--text-sec);">帳號</span><span id="bank-account" style="font-family:monospace;font-size:16px;font-weight:500;color:var(--text-pri);letter-spacing:0.08em;"></span></div>
+      
+      <!-- 點對點訂單明細展示 -->
+      <div style="background:var(--bg-card);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;">本次訂購明細</p>
+        <div id="payment-items-list" style="max-height:140px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+          <!-- 動態渲染購物清單明細 -->
         </div>
       </div>
-      <p style="font-size:12px;font-weight:300;color:var(--text-sec);line-height:1.8;text-align:center;margin-bottom:16px;">匯款完成後請保留收據，<br>並透過 LINE 官方帳號回傳匯款截圖。</p>
-      <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">傳送匯款截圖給客服<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+      <!-- 匯款帳號安全保護卡 -->
+      <div style="border:1px solid var(--gold-line);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">匯款管道資訊</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--divider);padding-bottom:8px;">
+            <span style="font-size:12px;color:var(--text-sec);">戶名</span>
+            <span id="bank-name" style="font-size:13px;font-weight:500;color:var(--text-pri);">與客服確認貨源後提供</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--divider);padding-bottom:8px;">
+            <span style="font-size:12px;color:var(--text-sec);">銀行</span>
+            <span id="bank-code" style="font-size:13px;font-weight:500;color:var(--text-pri);">請與官方 LINE 聯繫</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--text-sec);">帳號</span>
+            <span id="bank-account" style="font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text-pri);letter-spacing:0.02em;text-align:right;">與客服確認貨源提供匯款資訊</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:300;color:var(--text-sec);line-height:1.8;text-align:center;margin-bottom:16px;">
+        為維護出貨秩序與庫存安全，<br>請透過 LINE 官方帳號向編輯確認貨源，將即時發送專屬匯款資料。
+      </p>
+      <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">聯絡客服確認貨源<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
     </div>
     <div id="payment-watermark" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:var(--radius-md);z-index:1;"></div>
   </div>
@@ -549,7 +731,10 @@
 <footer class="footer">
   <div class="container footer-inner">
     <span class="footer-logo">S<span>·</span>A<span>·</span>O</span>
-    <span class="footer-note">空間美學秩序 · Spatial Aesthetic Order · © 2026 · 僅限專業設計師</span>
+    <div style="text-align:right;">
+      <span class="footer-note">空間美學秩序 · Spatial Aesthetic Order · © 2026 · 僅限專業設計師</span>
+      <a href="#terms" class="footer-link" style="display:inline-block;margin-left:16px;font-size:11px;color:var(--gold);letter-spacing:0.06em;">服務條款</a>
+    </div>
   </div>
 </footer>
 
@@ -562,20 +747,20 @@
 <!-- 購物車面板 -->
 <div class="cart-panel" id="cart-panel">
   <div class="cart-panel-header">
-    <h3>購物車</h3>
+    <h3>購物車選品</h3>
     <button onclick="toggleCart()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-sec);">✕</button>
   </div>
   <div class="cart-panel-body" id="cart-body"></div>
   <div class="cart-panel-footer">
     <div class="cart-total">
       <div>
-        <p class="cart-total-label">合計金額</p>
+        <p class="cart-total-label">預估合計</p>
         <p class="cart-total-note" id="cart-total-note"></p>
       </div>
       <p class="cart-total-value" id="cart-total-value">$0</p>
     </div>
     <button class="btn-primary" id="cart-checkout-btn" style="width:100%;justify-content:center;">
-      確認送出
+      確認訂單明細
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
   </div>
@@ -585,7 +770,7 @@
 <div class="overlay" id="overlay-checkout" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:500px;">
     <div class="panel-header">
-      <p class="section-label">確認訂單</p>
+      <p class="section-label">確認訂購項目</p>
       <h2 class="panel-title">填寫送貨資料</h2>
       <button class="panel-close" data-close="overlay-checkout">✕</button>
     </div>
@@ -594,7 +779,7 @@
       <div class="form-group"><label class="form-label" for="checkout-address">工地 / 送貨地址 <span style="color:#C06050;">*</span></label><input class="form-input" id="checkout-address" type="text" placeholder="台北市大安區忠孝東路四段XX號"/></div>
       <div class="form-group"><label class="form-label" for="checkout-date">需求交期</label><input class="form-input" id="checkout-date" type="date"/></div>
       <div class="form-group"><label class="form-label" for="checkout-note">備註</label><textarea class="form-input" id="checkout-note" rows="2" placeholder="其他需求或說明..."></textarea></div>
-      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單細節及付款方式。</p>
+      <p class="form-hint" style="margin-bottom:16px;">送出後將由專人透過 LINE 確認訂單明細、庫存及排單付款方式。</p>
       <button class="btn-primary" id="checkout-submit-btn" style="width:100%;justify-content:center;">送出訂單
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
@@ -606,8 +791,8 @@
 <div class="overlay" id="overlay-history" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:560px;">
     <div class="panel-header">
-      <p class="section-label">購買紀錄</p>
-      <h2 class="panel-title">歷史訂單</h2>
+      <p class="section-label">採購紀錄</p>
+      <h2 class="panel-title">歷史明細紀錄</h2>
       <button class="panel-close" data-close="overlay-history">✕</button>
     </div>
     <div class="panel-body" id="history-body" style="max-height:60svh;overflow-y:auto;">
@@ -621,16 +806,37 @@
 
 <script>
 const LIFF_ID = '2010363089-IaA8fmYO';
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbymuShGeTN_k7tlCkK7CI3VGJ319WmmTg23TeFMWWvKD5VF2jVSqLbToxSfr3Wx5yc-/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwX1E9I-s0-tZ08p8OAxIxzlpfg7U-4NmHW0qgNUFy3m6CBGCrLJhIGfseXJvy_x1j7/exec';
 
 let currentUser  = null;
 let memberStatus = null;
 let cachedProducts = [];
 let cachedConfig   = null;
 let currentOrder   = {};
+let purchasedItems = []; // 用於記錄明細，防禦亂碼與「購物車訂單」的抽象化
 let landingVisible = false;
 
-/* ── JSONP ── */
+/* ── SPA 路由邏輯：透過 Hash 處理「獨立條款頁面」 ── */
+function handleRouting() {
+  const hash = window.location.hash;
+  if (hash === '#terms') {
+    document.body.classList.add('show-terms');
+    const loadingEl = document.getElementById('liff-loading');
+    if (loadingEl) loadingEl.style.display = 'none';
+    window.scrollTo(0,0);
+  } else {
+    document.body.classList.remove('show-terms');
+    const loadingEl = document.getElementById('liff-loading');
+    if (loadingEl && memberStatus === null) {
+      loadingEl.style.display = 'flex';
+    }
+  }
+}
+window.addEventListener('hashchange', handleRouting);
+window.addEventListener('DOMContentLoaded', handleRouting);
+
+
+/* ── JSONP 連線機制 ── */
 function callGAS(params) {
   return new Promise((resolve, reject) => {
     const cb = 'gas_' + Date.now() + '_' + Math.floor(Math.random()*9999);
@@ -643,18 +849,15 @@ function callGAS(params) {
   });
 }
 
-/* ── LIFF ── */
+/* ── LINE LIFF 初始化 ── */
 async function initLiff() {
-  // 安全網：10 秒後強制顯示訪客頁面，不讓使用者一直卡在載入中
   const safetyTimer = setTimeout(() => {
     console.warn('LIFF init timeout，改為訪客模式');
     memberStatus = 'guest';
-    const loadEl = document.getElementById('liff-loading');
-    if (loadEl) loadEl.remove();
+    showLoading(false);
   }, 8000);
 
   try {
-    // 清除 URL 上的 OAuth 回調參數，避免 init 卡住
     const url = new URL(location.href);
     const hasCallback = url.searchParams.has('code') || url.searchParams.has('state');
 
@@ -662,7 +865,6 @@ async function initLiff() {
     clearTimeout(safetyTimer);
 
     if (!liff.isLoggedIn()) {
-      // 如果有回調參數但還是未登入，清除參數後重新導向
       if (hasCallback) {
         url.searchParams.delete('code');
         url.searchParams.delete('state');
@@ -683,8 +885,7 @@ async function initLiff() {
     clearTimeout(safetyTimer);
     console.error('LIFF error:', err);
     memberStatus = 'guest';
-    const loadEl = document.getElementById('liff-loading');
-    if (loadEl) loadEl.remove();
+    showLoading(false);
   }
 }
 
@@ -721,7 +922,11 @@ function applyState(status, data) {
     currentUser.taxID       = data.taxID;
     currentUser.phone       = data.phone;
     currentUser.companyName = data.companyName;
-    loadProducts('ac', 'all');
+
+    // 提示設計師進行第一步品牌選擇
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:60px 0;text-align:center;letter-spacing:0.04em;">請點選上方「第一步：選擇品牌」開啟專業查價系統</p>';
+    
     initWatermark();
   } else if (status === 'pending') {
     btn.textContent = '審核中';
@@ -738,11 +943,11 @@ function showLoading(show) {
   if (show) {
     el.style.display = 'flex';
   } else {
-    el.remove(); // 直接移除，不只是隱藏
+    el.remove();
   }
 }
 
-/* ── 浮水印 ── */
+/* ── 動態資安浮水印系統 ── */
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
@@ -785,26 +990,68 @@ function initPaymentWatermark() {
   }
 }
 
-/* ── 產品 ── */
-let currentCat    = 'ac';
-let currentSeries = 'all';
-let allProducts   = [];
+/* ── 多層級篩選與商品動態載入 ── */
+let selectedBrand  = '';
+let selectedCat    = '';
+let selectedSeries = 'all';
+let allProducts    = [];
 
+// 點選品牌事件
+document.querySelectorAll('.brand-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    
+    selectedBrand  = this.dataset.brand;
+    selectedCat    = '';
+    selectedSeries = 'all';
+
+    // 展開第二步：品類選擇
+    document.getElementById('category-selector-wrapper').style.display = 'block';
+    
+    // 隱藏第三步系列，重置分類按鈕
+    document.getElementById('series-bar').style.display = 'none';
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+
+    // 提示選擇品類
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;text-align:center;">請繼續選擇下方「第二步：選擇品類」以查看 ' + selectedBrand + ' 商品</p>';
+  });
+});
+
+// 點選品類事件
+document.querySelectorAll('.cat-tab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (!selectedBrand) {
+      showToast('請先選擇上方品牌');
+      return;
+    }
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    
+    selectedCat    = this.dataset.cat;
+    selectedSeries = 'all';
+
+    loadProducts(selectedCat, 'all');
+  });
+});
+
+// 載入與篩選商品
 async function loadProducts(cat, series) {
-  cat    = cat    || currentCat;
+  cat    = cat    || selectedCat;
   series = series || 'all';
-  currentCat    = cat;
-  currentSeries = series;
+  selectedCat    = cat;
+  selectedSeries = series;
 
   const grid = document.getElementById('product-grid');
-  grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;letter-spacing:0.06em;">載入中…</p>';
+  grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;letter-spacing:0.06em;">資料讀取中…</p>';
 
   try {
     const data = await callGAS({
       action:   'getProducts',
       lineUID:  currentUser?.lineUID || '',
       category: cat,
-      series:   series
+      series:   'all' // 獲取該類別所有產品進行前端精確品牌與系列篩選
     });
 
     if (!data.success) {
@@ -812,21 +1059,41 @@ async function loadProducts(cat, series) {
       return;
     }
 
-    allProducts = data.products || [];
+    // 精準篩選當前選擇的「品牌」
+    const brandFiltered = (data.products || []).filter(p => 
+      p.Brand && p.Brand.toLowerCase() === selectedBrand.toLowerCase()
+    );
 
-    // 更新等級 badge
+    allProducts = brandFiltered;
+
     const tier = data.member?.tier || 'A';
     const tierEl = document.getElementById('tier-badge');
     if (tierEl) tierEl.textContent = tier + ' 級會員';
 
-    // 更新系列選擇列
-    renderSeriesBar(data.seriesList || [], series);
+    // 提取不重複的系列列表
+    const uniqueSeries = ['all'];
+    brandFiltered.forEach(p => {
+      if (p.Series && !uniqueSeries.includes(p.Series)) {
+        uniqueSeries.push(p.Series);
+      }
+    });
 
-    // 渲染產品
-    renderProducts(allProducts, cat);
+    // 核心需求：僅點選「空調」時，才顯示 VX UJ 等系列選擇
+    if (cat === 'ac' && uniqueSeries.length > 1) {
+      renderSeriesBar(uniqueSeries, series);
+    } else {
+      document.getElementById('series-bar').style.display = 'none';
+    }
+
+    // 篩選特定系列
+    const productsToRender = series === 'all' 
+      ? brandFiltered 
+      : brandFiltered.filter(p => p.Series === series);
+
+    renderProducts(productsToRender, cat);
 
   } catch (e) {
-    console.error('loadProducts error:', e);
+    console.error(e);
     grid.innerHTML = '<p style="color:var(--text-sec);font-size:13px;padding:40px 0;">連線失敗，請重新整理</p>';
   }
 }
@@ -836,19 +1103,20 @@ function renderSeriesBar(seriesList, activeSeries) {
   const sel = document.getElementById('series-selector');
   if (!seriesList.length) { bar.style.display = 'none'; return; }
   bar.style.display = 'block';
-  sel.innerHTML = seriesList.map(s =>
-    '<button class="series-btn' + (s === activeSeries ? ' active' : '') + '" data-series="' + s + '">' + s + '</button>'
-  ).join('');
-  // 事件
+  
+  sel.innerHTML = seriesList.map(s => {
+    const displayName = s === 'all' ? '全部系列' : s;
+    return '<button class="series-btn' + (s === activeSeries ? ' active' : '') + '" data-series="' + s + '">' + displayName + '</button>';
+  }).join('');
+
   sel.querySelectorAll('.series-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       sel.querySelectorAll('.series-btn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      currentSeries = this.dataset.series;
-      const filtered = currentSeries === 'all'
-        ? allProducts
-        : allProducts.filter(p => p.Series === currentSeries);
-      renderProducts(filtered, currentCat);
+      selectedSeries = this.dataset.series;
+      
+      const filtered = selectedSeries === 'all' ? allProducts : allProducts.filter(p => p.Series === selectedSeries);
+      renderProducts(filtered, selectedCat);
     });
   });
 }
@@ -856,11 +1124,10 @@ function renderSeriesBar(seriesList, activeSeries) {
 function renderProducts(products, cat) {
   const grid = document.getElementById('product-grid');
   if (!products.length) {
-    grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;">此分類目前無上架品項</p>';
+    grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;text-align:center;">此類別目前無 ' + selectedBrand + ' 的上架品項</p>';
     return;
   }
 
-  // 依系列分組
   const groups = {};
   products.forEach(p => {
     const s = p.Series || '其他';
@@ -882,10 +1149,8 @@ function renderProducts(products, cat) {
 
       html += '<div class="product-row">';
       html += '<div class="product-row-info">';
-      // 型號固定字體和大小，title 顯示完整型號
       const modelText = p.Model || p.DisplayName || '';
       html += '<p class="product-row-model" title="' + modelText + '">' + modelText + '</p>';
-      // 規格另起一行（如果與型號不同）
       if (p.Spec && p.Spec !== p.Model && p.Spec !== modelText) {
         html += '<p class="product-row-spec">' + p.Spec + '</p>';
       }
@@ -910,29 +1175,16 @@ function renderProducts(products, cat) {
           html += '</div>';
         }
       }
-
       html += '</div></div>';
     });
-
     html += '</div></div>';
   });
 
   grid.innerHTML = html;
 }
 
-/* ── 分類 Tab ── */
-/* ── 分類 Tab ── */
-document.querySelectorAll('.cat-tab[data-cat]').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.cat-tab[data-cat]').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    currentSeries = 'all';
-    loadProducts(this.dataset.cat, 'all');
-  });
-});
-
-/* ── 購物車 ── */
-let cart = []; // [{ pid, brand, name, model, price, qty }]
+/* ── 購物車模組 ── */
+let cart = []; 
 
 function cartAddItem(pid, brand, name, model, price) {
   const existing = cart.find(i => i.pid === pid);
@@ -971,11 +1223,9 @@ function updateCartUI() {
   const noteEl  = document.getElementById('cart-total-note');
   const count   = cart.reduce((s, i) => s + i.qty, 0);
 
-  // Badge
   if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.classList.add('show'); }
   else { badge.classList.remove('show'); }
 
-  // 合計
   const total = cartTotal();
   totalEl.textContent = total > 0 ? '$' + total.toLocaleString() : '$0';
   if (cartHasUnpriced()) {
@@ -986,7 +1236,6 @@ function updateCartUI() {
     noteEl.style.color = 'var(--text-sec)';
   }
 
-  // 購物車面板內容
   const body = document.getElementById('cart-body');
   if (!cart.length) {
     body.innerHTML = '<p style="text-align:center;color:var(--text-sec);font-size:13px;padding:32px 20px;">購物車是空的</p>';
@@ -1018,8 +1267,6 @@ function toggleCart() {
 }
 
 document.getElementById('cart-fab').addEventListener('click', toggleCart);
-
-// 購物車面板內的按鈕事件
 document.getElementById('cart-body').addEventListener('click', function(e) {
   const qtyBtn = e.target.closest('.cart-qty-btn');
   const rmBtn  = e.target.closest('.cart-remove-btn');
@@ -1027,11 +1274,11 @@ document.getElementById('cart-body').addEventListener('click', function(e) {
   if (rmBtn)  { cartRemoveItem(rmBtn.dataset.pid); }
 });
 
-// 點「確認送出」開啟結帳 overlay
+// 購物車點擊確認
 document.getElementById('cart-checkout-btn').addEventListener('click', function() {
   if (!cart.length) { showToast('購物車是空的'); return; }
-  // 填入訂單摘要
   const summary = document.getElementById('checkout-summary');
+  
   summary.innerHTML = cart.map(item => {
     const priceText = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
     return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--divider);font-size:13px;">' +
@@ -1040,9 +1287,10 @@ document.getElementById('cart-checkout-btn').addEventListener('click', function(
     '</div>';
   }).join('') +
   '<div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:14px;">' +
-    '<span style="color:var(--text-sec);">合計</span>' +
+    '<span style="color:var(--text-sec);">合計金額</span>' +
     '<span style="font-family:var(--serif);font-size:20px;color:var(--text-pri);">$' + cartTotal().toLocaleString() + (cartHasUnpriced() ? '＋' : '') + '</span>' +
   '</div>';
+  
   document.getElementById('checkout-address').value = '';
   document.getElementById('checkout-date').value    = '';
   document.getElementById('checkout-note').value    = '';
@@ -1051,7 +1299,7 @@ document.getElementById('cart-checkout-btn').addEventListener('click', function(
   showOverlay('overlay-checkout');
 });
 
-/* ── 結帳送出 ── */
+// 核心需求：購物車訂單提交改寫，完整列出明細以防歷史紀錄丟失
 document.getElementById('checkout-submit-btn').addEventListener('click', async function() {
   const address = document.getElementById('checkout-address').value.trim();
   if (!address) { document.getElementById('checkout-address').classList.add('error'); return; }
@@ -1060,9 +1308,11 @@ document.getElementById('checkout-submit-btn').addEventListener('click', async f
   if (!lineUID) { showToast('身份驗證失敗，請重新開啟頁面'); return; }
 
   this.disabled = true; this.textContent = '送出中…';
-
   const date    = document.getElementById('checkout-date').value;
   const note    = document.getElementById('checkout-note').value.trim();
+
+  // 儲存明細資料到全局變量中，確保支付和歷史明細一致
+  purchasedItems = cart.map(i => ({ model: i.model, qty: i.qty, price: i.price }));
 
   try {
     const data = await callGAS({
@@ -1079,20 +1329,16 @@ document.getElementById('checkout-submit-btn').addEventListener('click', async f
       cart = [];
       updateCartUI();
       closeOverlay('overlay-checkout');
-      currentOrder = { name: '購物車訂單', model: '多品項', price: cartTotal() };
+      currentOrder = { name: '專案採購組合明細', model: '多品項明細', price: cartTotal() };
       await showTerms();
     } else {
       showToast('送出失敗：' + (data.error||'請重試'));
-      this.disabled = false; this.textContent = '送出訂單';
     }
-  } catch(e) {
-    showToast('連線失敗，請重試');
-    this.disabled = false; this.textContent = '送出訂單';
-  }
+  } catch(e) { showToast('連線失敗，請重試'); }
   this.disabled = false; this.textContent = '送出訂單';
 });
 
-/* ── 歷史紀錄 ── */
+/* ── 歷史紀錄明細呈現 ── */
 document.getElementById('history-btn').addEventListener('click', async function() {
   showOverlay('overlay-history');
   const body = document.getElementById('history-body');
@@ -1103,7 +1349,6 @@ document.getElementById('history-btn').addEventListener('click', async function(
       body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">目前尚無訂單紀錄</p>';
       return;
     }
-    // 依月份分組
     const byMonth = {};
     data.orders.forEach(o => {
       const d = new Date(o.CreatedAt || o.createdAt || '');
@@ -1132,15 +1377,13 @@ document.getElementById('history-btn').addEventListener('click', async function(
         } else {
           const p = parseFloat(o.TotalPrice||o.totalPrice) > 0 ? '$' + parseFloat(o.TotalPrice||o.totalPrice).toLocaleString() : '請洽報價';
           html += '<div class="history-row">';
-          html += '<span class="history-model">' + (o.ModelName||o.modelName||o.ProductID||'訂單') + '</span>';
+          html += '<span class="history-model">' + (o.ModelName||o.modelName||o.ProductID||'專案訂單') + '</span>';
           html += '<span class="history-qty">×' + (o.Quantity||1) + '</span>';
           html += '<span class="history-price">' + p + '</span>';
           html += '</div>';
         }
       });
-      if (monthTotal > 0) {
-        html += '<p class="history-month-total">本月合計：$' + monthTotal.toLocaleString() + '</p>';
-      }
+      if (monthTotal > 0) { html += '<p class="history-month-total">本月合計：$' + monthTotal.toLocaleString() + '</p>'; }
       html += '</div>';
     });
     body.innerHTML = html;
@@ -1149,42 +1392,13 @@ document.getElementById('history-btn').addEventListener('click', async function(
   }
 });
 
-/* ── 加入購物車點擊事件 ── */
 document.getElementById('product-grid').addEventListener('click', function(e) {
   const btn = e.target.closest('.btn-order');
   if (!btn) return;
   cartAddItem(btn.dataset.pid, btn.dataset.brand, btn.dataset.name, btn.dataset.model, btn.dataset.price);
 });
 
-document.getElementById('order-submit-btn').addEventListener('click', async function() {
-  const address = document.getElementById('order-address').value.trim();
-  if (!address) { document.getElementById('order-address').classList.add('error'); document.getElementById('order-address').focus(); return; }
-  document.getElementById('order-address').classList.remove('error');
-  const lineUID = currentUser?.lineUID;
-  if (!lineUID) { showToast('身份驗證失敗，請重新開啟頁面'); return; }
-  this.disabled = true; this.textContent = '送出中…';
-  const qty  = document.getElementById('order-qty').value || '1';
-  const date = document.getElementById('order-date').value;
-  const spec = document.getElementById('order-spec').value.trim();
-  const note = document.getElementById('order-note').value.trim();
-  const noteText = [spec?'規格：'+spec:'', date?'交期：'+date:'', '地址：'+address, note?'備註：'+note:''].filter(Boolean).join(' | ');
-  try {
-    const data = await callGAS({ action: 'submitOrder', lineUID, productId: currentOrder.pid, modelName: currentOrder.model || currentOrder.name || currentOrder.pid, quantity: parseInt(qty)||1, note: noteText });
-    if (data.success) {
-      closeOverlay('overlay-order');
-      await showTerms();
-    } else {
-      showToast('送出失敗：' + (data.error||'請重試'));
-      this.disabled = false; this.textContent = '送出下單';
-    }
-  } catch (e) {
-    showToast('連線失敗，請重試');
-    this.disabled = false; this.textContent = '送出下單';
-  }
-  this.disabled = false; this.textContent = '送出下單';
-});
-
-/* ── 購買須知 ── */
+/* ── 條款呈現 ── */
 async function showTerms() {
   if (!cachedConfig) {
     try {
@@ -1192,8 +1406,16 @@ async function showTerms() {
       if (data.success) cachedConfig = data.config;
     } catch(e) {}
   }
-  const terms = (cachedConfig && cachedConfig.purchase_terms) || defaultTerms();
-  document.getElementById('terms-content').innerHTML = terms.replace(/\n/g, '<br>');
+  const termsHtml = [
+    '<strong style="color:var(--text-pri);">1. 封閉式 B2B 通路：</strong>僅限實名審核之專業夥伴，全線商品來自原廠授權通路。',
+    '<strong style="color:var(--text-pri);">2. 貨源與金流：</strong>採「先匯款、後排單」，款項匯入指定帳戶後即時鎖貨。',
+    '<strong style="color:var(--text-pri);">3. 雲端資安防護：</strong>報價含動態防偽水印，截圖外流將永久終止資格並追究法律責任。',
+    '<strong style="color:var(--text-pri);">4. 唯一通訊管道：</strong>報價與訂單諮詢一律透過 LINE 官方帳號處理，門市不提供查詢。',
+    '<strong style="color:var(--text-pri);">5. 物流與安裝：</strong>交期最長30天；冰洗含基本安裝，空調/電視僅配送，尺寸衝突由買方負責。',
+    '<strong style="color:var(--text-pri);">6. 退換貨規範：</strong>除原廠認定之新品瑕疵外，一律拒絕因尺寸不符或個人因素之退換貨。'
+  ].join('<br><br>');
+  
+  document.getElementById('terms-content').innerHTML = termsHtml;
   document.getElementById('terms-agree-check').checked = false;
   onTermsCheck();
   showOverlay('overlay-terms');
@@ -1207,24 +1429,43 @@ function onTermsCheck() {
   btn.style.cursor  = checked ? 'pointer' : 'not-allowed';
 }
 
+// 渲染付款彈出視窗中的所有採購明細
+function renderPaymentItemsList() {
+  const container = document.getElementById('payment-items-list');
+  if (!container) return;
+  
+  if (!purchasedItems.length) {
+    container.innerHTML = '<p style="color:var(--text-sec);font-size:12px;">無品項明細</p>';
+    return;
+  }
+  
+  container.innerHTML = purchasedItems.map(item => {
+    const pText = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
+    return '<div style="display:flex;justify-content:space-between;color:var(--text-pri);font-size:13px;line-height:1.4;">' +
+      '<span>' + item.model + ' <span style="color:var(--text-sec);font-size:11px;">× ' + item.qty + '</span></span>' +
+      '<span style="font-weight:500;color:var(--text-pri);">' + pText + '</span>' +
+    '</div>';
+  }).join('');
+}
+
 document.getElementById('terms-confirm-btn').addEventListener('click', function() {
   if (!document.getElementById('terms-agree-check').checked) return;
   if (!cachedConfig) { showToast('載入中，請稍候'); return; }
-  document.getElementById('payment-product').textContent  = (currentOrder.brand||'') + ' ' + (currentOrder.name||'');
-  document.getElementById('payment-qty').textContent      = '數量：' + (document.getElementById('order-qty')?.value||'1') + ' 台';
-  document.getElementById('bank-name').textContent    = cachedConfig.bank_name    || '原廠授權通路';
-  document.getElementById('bank-code').textContent    = cachedConfig.bank_code    || '012 台北富邦銀行';
-  document.getElementById('bank-account').textContent = cachedConfig.bank_account || '123-456-789012';
+  
+  // 渲染明細
+  renderPaymentItemsList();
+
+  // 核心需求：匯款帳號修改為與客服確認貨源提供匯款資訊
+  document.getElementById('bank-name').textContent    = '與客服確認貨源後提供';
+  document.getElementById('bank-code').textContent    = '請與官方 LINE 聯繫';
+  document.getElementById('bank-account').textContent = '與客服確認貨源提供匯款資訊';
+  
   initPaymentWatermark();
   closeOverlay('overlay-terms');
   showOverlay('overlay-payment');
 });
 
-function defaultTerms() {
-  return ['一、付款方式', '訂單確認後請於 3 個工作日內完成匯款，逾期未匯款者訂單將自動取消。', '', '二、出貨說明', '確認收款後由原廠授權通路安排出貨，送達指定工地地址，通常為 7-14 個工作日。', '', '三、發票開立', '開立三聯式統一發票，抬頭與金額依業主需求填寫，於出貨時一併寄送。', '', '四、退換貨政策', '收貨後 48 小時內回報外觀損壞或功能異常。人為損壞或安裝不當不在保固範圍。', '', '五、價格保密', '所有報價屬會員專屬底價，嚴禁對外公開或截圖分享，違者立即停止服務資格。', '', '六、免責聲明', '所有商品均透過原廠授權通路出貨並提供原廠保固。不可抗力因素造成之延誤不在賠償範圍。'].join('<br>');
-}
-
-/* ── 申請表單 ── */
+/* ── 註冊申請 ── */
 function validateTaxID(id) {
   if (!/^\d{8}$/.test(String(id))) return false;
   const w = [1,2,1,2,1,2,4,1]; let sum = 0;
@@ -1249,15 +1490,19 @@ document.getElementById('register-submit-btn').addEventListener('click', async f
   this.disabled = false; this.textContent = '送出申請';
 });
 
-/* ── Overlay ── */
+/* ── Overlay 彈出控制 ── */
 function showOverlay(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow='hidden'; }
 function closeOverlay(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow=''; }
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e) { if(e.target===this) closeOverlay(this.id); }));
 document.querySelectorAll('.panel-close').forEach(btn => btn.addEventListener('click', function() { closeOverlay(this.dataset.close); }));
 
-/* ── CTA ── */
+/* ── CTA 導流控制 ── */
 function handleCTA() {
-  if (memberStatus==='approved') { document.getElementById('price-page').scrollIntoView({behavior:'smooth'}); return; }
+  if (memberStatus==='approved') { 
+    window.location.hash = ''; 
+    document.getElementById('price-page').scrollIntoView({behavior:'smooth'}); 
+    return; 
+  }
   if (memberStatus==='pending')  { showOverlay('overlay-pending'); return; }
   showOverlay('overlay-register');
 }
@@ -1265,9 +1510,13 @@ document.getElementById('nav-cta-btn').addEventListener('click', handleCTA);
 document.getElementById('hero-cta-btn').addEventListener('click', handleCTA);
 document.getElementById('cta-bottom-btn').addEventListener('click', handleCTA);
 
-/* ── Logo 切換 ── */
+/* ── 導航選單與 Logo 控制 ── */
 document.getElementById('nav-logo').addEventListener('click', function(e) {
   e.preventDefault();
+  if (window.location.hash === '#terms') {
+    window.location.hash = ''; 
+    return;
+  }
   if (memberStatus !== 'approved') { window.scrollTo({top:0,behavior:'smooth'}); return; }
   landingVisible = !landingVisible;
   const landing = document.getElementById('landing-content');
@@ -1292,14 +1541,14 @@ document.getElementById('back-top-btn').addEventListener('click', function() {
   window.scrollTo({top:0,behavior:'smooth'});
 });
 
-/* ── Toast ── */
+/* ── Toast 訊息提示 ── */
 function showToast(msg) {
   const t = document.getElementById('page-toast');
   t.textContent = msg; t.style.transform='translateX(-50%) translateY(0)'; t.style.opacity='1';
   setTimeout(()=>{ t.style.transform='translateX(-50%) translateY(80px)'; t.style.opacity='0'; }, 3000);
 }
 
-/* ── 啟動 ── */
+/* ── 系統啟動 ── */
 if (typeof liff !== 'undefined') {
   initLiff();
 } else {
