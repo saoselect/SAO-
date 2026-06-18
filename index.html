@@ -668,7 +668,7 @@
 <!-- OVERLAY: 購買須知 (簡化版 6 條) -->
 <div class="overlay" id="overlay-terms" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:520px;">
-    <div class="panel-header"><p class="section-label">下單前請詳閱</p><h2 class="panel-title">夥伴採購須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
+    <div class="panel-header"><p class="section-label">訂單已建立 · 請詳閱合作條款</p><h2 class="panel-title">夥伴採購須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
     <div class="panel-body">
       <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;max-height:40vh;overflow-y:auto;padding-right:4px;margin-bottom:12px;"></div>
       
@@ -723,6 +723,10 @@
         為維護出貨秩序與庫存安全，<br>請透過 LINE 官方帳號向編輯確認貨源，將即時發送專屬匯款資料。
       </p>
       <a href="https://line.me/R/ti/p/@267thqnd" class="btn-primary" style="width:100%;justify-content:center;text-decoration:none;display:flex;">聯絡客服確認貨源<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <button id="back-to-line-btn" style="width:100%;margin-top:12px;padding:14px;background:transparent;border:1px solid var(--divider);border-radius:var(--radius);color:var(--text-sec);font-size:13px;letter-spacing:0.06em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        完成 · 回到 LINE 對話
+      </button>
     </div>
     <div id="payment-watermark" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:var(--radius-md);z-index:1;"></div>
   </div>
@@ -1470,6 +1474,16 @@ document.getElementById('terms-confirm-btn').addEventListener('click', function(
   showOverlay('overlay-payment');
 });
 
+/* ── 完成 · 回到 LINE 對話 ── */
+document.getElementById('back-to-line-btn').addEventListener('click', function() {
+  // 在 LIFF 環境內就直接關掉視窗回到 LINE 對話；否則跳到官方帳號頁
+  if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
+    liff.closeWindow();
+  } else {
+    location.href = 'https://line.me/R/ti/p/@267thqnd';
+  }
+});
+
 /* ── 註冊申請 ── */
 function validateTaxID(id) {
   if (!/^\d{8}$/.test(String(id))) return false;
@@ -1560,24 +1574,6 @@ if (typeof liff !== 'undefined') {
   memberStatus = 'guest';
   showLoading(false);
 }
-
-
-/* ── 初始化載入 ── */
-window.addEventListener('DOMContentLoaded', async () => {
-  try {
-    showLoading(true);
-    await initLIFF();
-    await fetchConfigAndInit();
-    
-    // 綁定 DOM 事件
-    setupEventListeners();
-  } catch (err) {
-    console.error('初始化失敗:', err);
-    showToast('系統初始化失敗，請重新整理');
-  } finally {
-    showLoading(false);
-  }
-});
 
 // 統一管理所有事件監聽
 function setupEventListeners() {
