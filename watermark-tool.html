@@ -332,6 +332,25 @@ function loadImages() {
 }
 loadImages();
 
+// ── 從 URL 參數自動填入資料 ───────────────────────────
+function prefillFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const id      = params.get('id')      || params.get('memberId') || '';
+  const tax     = params.get('tax')     || params.get('taxId')    || '';
+  const company = params.get('company') || params.get('name')     || '';
+
+  if (id)      document.getElementById('inp-id').value      = id;
+  if (tax)     document.getElementById('inp-taxid').value   = tax;
+  if (company) document.getElementById('inp-company').value = company;
+
+  // 三個欄位都有資料時，自動產生圖片
+  if (id && tax && company) {
+    // 等底圖載入後再產生
+    setTimeout(generate, 800);
+  }
+}
+prefillFromURL();
+
 // ── 主題切換 ──────────────────────────────────────────
 function selectTheme(theme) {
   currentTheme = theme;
