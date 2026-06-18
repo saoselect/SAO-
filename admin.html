@@ -448,7 +448,7 @@
 /* ─────────────────────────
    狀態
 ───────────────────────── */
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbymuShGeTN_k7tlCkK7CI3VGJ319WmmTg23TeFMWWvKD5VF2jVSqLbToxSfr3Wx5yc-/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhdD6DTDooiasKmidU3nYGzI32juZhiZA7fNL-9se3y7iY-b0qM33soj-H4RodB4N5/exec';
 let PASSWORD = '';
 let allMembers = [];
 
@@ -599,17 +599,34 @@ function loadOrders() {
       wrap.innerHTML = `
         <table>
           <thead><tr>
-            <th>時間</th><th>公司</th><th>品項 ID</th><th>數量</th><th>備註</th><th>狀態</th>
+            <th>時間</th>
+            <th>公司</th>
+            <th>姓名</th>
+            <th>手機</th>
+            <th>地址</th>
+            <th>交期</th>
+            <th>訂購明細</th>
+            <th>單價</th>
+            <th>數量</th>
+            <th>總金額</th>
+            <th>備註</th>
+            <th>狀態</th>
           </tr></thead>
           <tbody>
             ${data.orders.map(o => `
               <tr>
-                <td style="font-size:12px;color:var(--text-sec);">${o.CreatedAt||'—'}</td>
-                <td>${o.CompanyName||'—'}</td>
-                <td style="font-family:monospace;">${o.ProductID||'—'}</td>
-                <td>${o.Quantity||1}</td>
-                <td style="color:var(--text-sec);">${o.Note||'—'}</td>
-                <td><span class="badge badge-${o.Status==='confirmed'?'approved':'pending'}">${o.Status||'pending'}</span></td>
+                <td data-label="時間" style="font-size:12px;color:var(--text-sec);">${o.CreatedAt||'—'}</td>
+                <td data-label="公司"><strong>${o.CompanyName||'—'}</strong></td>
+                <td data-label="姓名">${o.DisplayName||'—'}</td>
+                <td data-label="手機" style="font-variant-numeric:tabular-nums;">${o.Phone||'—'}</td>
+                <td data-label="地址" style="font-size:12px;color:var(--text-sec);max-width:180px;word-break:break-all;">${o.Address||'—'}</td>
+                <td data-label="交期" style="font-size:12px;font-variant-numeric:tabular-nums;">${o.Deadline||'—'}</td>
+                <td data-label="訂購明細" style="font-family:monospace;white-space:pre-line;font-size:12px;">${o.OrderDetail||'—'}</td>
+                <td data-label="單價" style="white-space:pre-line;font-variant-numeric:tabular-nums;font-size:12px;">${o.UnitPrice||'—'}</td>
+                <td data-label="數量" style="font-variant-numeric:tabular-nums;">${o.Quantity||1}</td>
+                <td data-label="總金額" style="font-variant-numeric:tabular-nums;font-weight:500;">${o.TotalPrice ? '$'+Number(o.TotalPrice).toLocaleString() : '—'}</td>
+                <td data-label="備註" style="color:var(--text-sec);font-size:12px;">${o.Note||'—'}</td>
+                <td data-label="狀態"><span class="badge badge-${o.Status==='confirmed'?'approved':'pending'}">${o.Status||'pending'}</span></td>
               </tr>
             `).join('')}
           </tbody>
