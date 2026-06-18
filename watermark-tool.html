@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAO 轉帳圖片產生器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f0f0f;
+    color: #e8e0d0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .header .logo {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: #b8960c;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: #e8e0d0;
+  }
+
+  .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 540px;
+    margin: 0 auto 24px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #b8960c;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  /* 底圖切換 */
+  .theme-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  .theme-btn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: transparent;
+    color: #888;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .theme-btn.active {
+    border-color: #b8960c;
+    color: #b8960c;
+    background: rgba(184,150,12,0.08);
+  }
+  .theme-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+  }
+  .theme-btn.dark-btn .theme-dot { background: #222; border-color: #b8960c; }
+  .theme-btn.light-btn .theme-dot { background: #f0e8d8; border-color: #888; }
+  .theme-btn.light-btn.active .theme-dot { border-color: #b8960c; }
+
+  /* 表單 */
+  .form-group {
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: #888;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+  input[type="text"] {
+    width: 100%;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 11px 14px;
+    color: #e8e0d0;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus {
+    border-color: #b8960c;
+  }
+  input[type="text"]::placeholder { color: #444; }
+
+  /* 透明度滑桿 */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 3px;
+    background: #2a2a2a;
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #b8960c;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .slider-val {
+    font-size: 12px;
+    color: #b8960c;
+    width: 36px;
+    text-align: right;
+  }
+
+  /* 產生按鈕 */
+  .btn-generate {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #b8960c, #d4af37);
+    border: none;
+    border-radius: 8px;
+    color: #0f0f0f;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-generate:hover { opacity: 0.9; }
+  .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* 預覽區 */
+  .preview-card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 540px;
+    margin: 0 auto 24px;
+    display: none;
+  }
+  .preview-card.visible { display: block; }
+
+  .preview-card .card-title { margin-bottom: 16px; }
+
+  #preview-canvas {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-download {
+    flex: 1;
+    padding: 12px;
+    background: #b8960c;
+    border: none;
+    border-radius: 8px;
+    color: #0f0f0f;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-download:hover { opacity: 0.85; }
+
+  .btn-copy-note {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #888;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-copy-note:hover { border-color: #b8960c; color: #b8960c; }
+  .btn-copy-note.copied { border-color: #4caf50; color: #4caf50; }
+
+  .member-tag {
+    font-size: 11px;
+    color: #555;
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  /* 頁尾 */
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 0.1em;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* 分隔線 */
+  .divider {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">S · A · O &nbsp;空間美學秩序</div>
+  <h1>轉帳圖片產生器</h1>
+</div>
+
+<!-- 設定卡片 -->
+<div class="card">
+  <div class="card-title">底圖樣式</div>
+  <div class="theme-toggle">
+    <button class="theme-btn dark-btn active" id="btn-dark" onclick="selectTheme('dark')">
+      <span class="theme-dot"></span> 黑色版
+    </button>
+    <button class="theme-btn light-btn" id="btn-light" onclick="selectTheme('light')">
+      <span class="theme-dot"></span> 白色版
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">會員資料</div>
+
+  <div class="form-group">
+    <label>會員 ID</label>
+    <input type="text" id="inp-id" placeholder="例：M001" maxlength="20">
+  </div>
+
+  <div class="form-group">
+    <label>統一編號</label>
+    <input type="text" id="inp-taxid" placeholder="例：12345678" maxlength="8">
+  </div>
+
+  <div class="form-group">
+    <label>公司名稱</label>
+    <input type="text" id="inp-company" placeholder="例：澄設計有限公司" maxlength="30">
+  </div>
+
+  <hr class="divider">
+
+  <div class="card-title">浮水印設定</div>
+
+  <div class="form-group">
+    <label>透明度</label>
+    <div class="slider-row">
+      <input type="range" id="inp-opacity" min="5" max="40" value="18" oninput="updateOpacityLabel()">
+      <span class="slider-val" id="opacity-label">18%</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>字體大小</label>
+    <div class="slider-row">
+      <input type="range" id="inp-fontsize" min="12" max="28" value="17" oninput="updateFontLabel()">
+      <span class="slider-val" id="font-label">17px</span>
+    </div>
+  </div>
+
+  <button class="btn-generate" id="btn-gen" onclick="generate()">產 生 圖 片</button>
+</div>
+
+<!-- 預覽卡片 -->
+<div class="preview-card" id="preview-card">
+  <div class="card-title">預覽 · 確認後傳送</div>
+  <canvas id="preview-canvas"></canvas>
+  <div class="action-row">
+    <button class="btn-download" onclick="downloadImage()">⬇ 下載圖片</button>
+    <button class="btn-copy-note" id="btn-copy" onclick="copyFilename()">複製檔名</button>
+  </div>
+  <div class="member-tag" id="member-tag"></div>
+</div>
+
+<div class="footer-note">僅限內部使用 · 請勿外傳此工具頁面</div>
+
+<script>
+// ── 狀態 ──────────────────────────────────────────────
+let currentTheme = 'dark';
+let darkImg = null;
+let lightImg = null;
+let generatedFilename = '';
+
+// ── 預載底圖 ──────────────────────────────────────────
+function loadImages() {
+  darkImg = new Image();
+  darkImg.crossOrigin = 'anonymous';
+  darkImg.src = 'watermark-bg-dark.png';
+
+  lightImg = new Image();
+  lightImg.crossOrigin = 'anonymous';
+  lightImg.src = 'watermark-bg-light.png';
+}
+loadImages();
+
+// ── 主題切換 ──────────────────────────────────────────
+function selectTheme(theme) {
+  currentTheme = theme;
+  document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+  document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+}
+
+// ── 滑桿標籤 ──────────────────────────────────────────
+function updateOpacityLabel() {
+  document.getElementById('opacity-label').textContent =
+    document.getElementById('inp-opacity').value + '%';
+}
+function updateFontLabel() {
+  document.getElementById('font-label').textContent =
+    document.getElementById('inp-fontsize').value + 'px';
+}
+
+// ── 產生圖片 ──────────────────────────────────────────
+function generate() {
+  const memberId  = document.getElementById('inp-id').value.trim();
+  const taxId     = document.getElementById('inp-taxid').value.trim();
+  const company   = document.getElementById('inp-company').value.trim();
+
+  if (!memberId || !taxId || !company) {
+    alert('請填寫會員 ID、統一編號與公司名稱');
+    return;
+  }
+
+  const opacity  = parseInt(document.getElementById('inp-opacity').value) / 100;
+  const fontSize = parseInt(document.getElementById('inp-fontsize').value);
+  const bgImg    = currentTheme === 'dark' ? darkImg : lightImg;
+
+  if (!bgImg || !bgImg.complete || bgImg.naturalWidth === 0) {
+    alert('底圖尚未載入完成，請稍後再試');
+    return;
+  }
+
+  const canvas  = document.getElementById('preview-canvas');
+  const ctx     = canvas.getContext('2d');
+
+  // 依底圖原始尺寸設定 canvas
+  canvas.width  = bgImg.naturalWidth;
+  canvas.height = bgImg.naturalHeight;
+
+  // 繪製底圖
+  ctx.drawImage(bgImg, 0, 0);
+
+  // ── 浮水印層 ──────────────────────────────────
+  // 浮水印文字：三行，45 度斜排重複平鋪
+  const watermarkText = memberId + '  ' + taxId + '  ' + company;
+
+  // 字型設定（避免 JS 字串中使用中文字型名稱）
+  ctx.save();
+  ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+  ctx.textAlign   = 'left';
+  ctx.textBaseline = 'middle';
+
+  // 根據底圖顏色決定浮水印顏色
+  // 黑底用白色文字，白底用深色文字
+  if (currentTheme === 'dark') {
+    ctx.fillStyle = 'rgba(255, 255, 255, ' + opacity + ')';
+  } else {
+    ctx.fillStyle = 'rgba(60, 40, 0, ' + opacity + ')';
+  }
+
+  // 計算單一文字寬度，決定間距
+  const textWidth = ctx.measureText(watermarkText).width;
+  const stepX = textWidth + 80;   // 水平間距
+  const stepY = fontSize * 3.5;   // 垂直間距
+
+  // 旋轉 -45 度平鋪
+  ctx.rotate(-Math.PI / 4);
+
+  // 計算覆蓋整個旋轉後畫布所需的範圍
+  const diagonal = Math.sqrt(
+    canvas.width * canvas.width + canvas.height * canvas.height
+  );
+
+  const startX = -diagonal;
+  const startY = -diagonal;
+  const endX   =  diagonal * 2;
+  const endY   =  diagonal * 2;
+
+  for (let y = startY; y < endY; y += stepY) {
+    for (let x = startX; x < endX; x += stepX) {
+      ctx.fillText(watermarkText, x, y);
+    }
+    // 奇偶行錯開，讓平鋪更自然
+    for (let x = startX + stepX / 2; x < endX; x += stepX) {
+      ctx.fillText(watermarkText, x, y + stepY / 2);
+    }
+  }
+
+  ctx.restore();
+
+  // ── 顯示預覽 ──────────────────────────────────
+  const previewCard = document.getElementById('preview-card');
+  previewCard.classList.add('visible');
+
+  // 產生檔名：SAO_轉帳_統編_時間戳
+  const ts = new Date().toISOString().slice(0,16).replace(/[-T:]/g, '');
+  generatedFilename = 'SAO_' + taxId + '_' + ts + '.jpg';
+
+  document.getElementById('member-tag').textContent =
+    memberId + ' ｜ ' + taxId + ' ｜ ' + company;
+
+  // 滾到預覽
+  previewCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── 下載 ──────────────────────────────────────────────
+function downloadImage() {
+  const canvas = document.getElementById('preview-canvas');
+  const link   = document.createElement('a');
+  link.download = generatedFilename;
+  // JPEG 品質 0.92
+  link.href = canvas.toDataURL('image/jpeg', 0.92);
+  link.click();
+}
+
+// ── 複製檔名（方便紀錄） ──────────────────────────────
+function copyFilename() {
+  if (!generatedFilename) return;
+  navigator.clipboard.writeText(generatedFilename).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '複製檔名';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
