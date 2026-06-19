@@ -56,7 +56,9 @@
     .hero-geometry{position:absolute;inset:0;pointer-events:none;}
     .hero-geometry::before{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:var(--bg-card);clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
     .hero-geometry::after{content:'';position:absolute;top:50%;right:12%;transform:translateY(-50%);width:1px;height:60%;background:var(--gold-line);}
-    .hero-wordmark{position:absolute;top:50%;right:4%;transform:translateY(-52%);font-family:var(--serif);font-size:clamp(88px,14vw,160px);font-weight:300;font-style:italic;letter-spacing:-0.02em;color:transparent;-webkit-text-stroke:1px rgba(197,169,106,0.22);line-height:1;pointer-events:none;user-select:none;}
+    .hero-blueprint{position:absolute;top:50%;right:6%;transform:translateY(-50%);width:clamp(260px,32vw,400px);opacity:0.95;pointer-events:none;user-select:none;}
+    .hero-blueprint svg{width:100%;height:auto;display:block;}
+    @media(max-width:900px){.hero-blueprint{display:none;}}
     .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
     .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.08;letter-spacing:-0.01em;color:var(--text-pri);max-width:600px;margin-bottom:28px;}
@@ -376,7 +378,70 @@
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
-    <div class="hero-wordmark" aria-hidden="true">S·A·O</div>
+    <div class="hero-blueprint" aria-hidden="true">
+      <svg viewBox="0 0 440 560" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,60 L360,60 L360,260 L260,260 L260,460 L40,460 Z" fill="none" stroke="var(--gold-line)" stroke-width="1"/>
+
+        <line x1="40" y1="34" x2="360" y2="34" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <line x1="40" y1="28" x2="40" y2="40" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <line x1="360" y1="28" x2="360" y2="40" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <text x="200" y="23" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1.2" fill="var(--text-sec)">9,600</text>
+
+        <line x1="18" y1="60" x2="18" y2="460" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <line x1="12" y1="60" x2="24" y2="60" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <line x1="12" y1="460" x2="24" y2="460" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
+        <text x="10" y="260" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1.2" fill="var(--text-sec)" transform="rotate(-90 10 260)">12,400</text>
+
+        <g transform="translate(390,40)" opacity="0.75">
+          <circle r="14" fill="none" stroke="var(--gold-line)" stroke-width="0.8"/>
+          <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--gold-line)" stroke-width="0.8"/>
+          <path d="M0,-14 L-4,-6 L4,-6 Z" fill="var(--gold)"/>
+          <text x="0" y="-20" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="10" fill="var(--gold)">N</text>
+        </g>
+
+        <g>
+          <rect x="55" y="75" width="50" height="70" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
+          <line x1="80" y1="75" x2="80" y2="145" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.4"/>
+          <line x1="83" y1="95" x2="83" y2="105" stroke="var(--text-pri)" stroke-width="1" opacity="0.5"/>
+          <line x1="105" y1="110" x2="140" y2="110" stroke="var(--gold-line)" stroke-width="0.6"/>
+          <text x="145" y="108" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">REF</text>
+          <text x="145" y="120" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">01</text>
+        </g>
+
+        <g>
+          <rect x="170" y="80" width="55" height="55" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
+          <circle cx="197.5" cy="107.5" r="18" fill="none" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.5"/>
+          <line x1="225" y1="100" x2="255" y2="100" stroke="var(--gold-line)" stroke-width="0.6"/>
+          <text x="260" y="98" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">W/D</text>
+          <text x="260" y="110" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">02</text>
+        </g>
+
+        <g>
+          <rect x="300" y="64" width="48" height="16" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
+          <line x1="305" y1="68" x2="343" y2="68" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
+          <line x1="305" y1="72" x2="343" y2="72" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
+          <line x1="305" y1="76" x2="343" y2="76" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
+          <line x1="300" y1="90" x2="280" y2="105" stroke="var(--gold-line)" stroke-width="0.6"/>
+          <text x="255" y="113" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">A/C</text>
+          <text x="255" y="125" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">03</text>
+        </g>
+
+        <g>
+          <rect x="60" y="300" width="62" height="5" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
+          <rect x="75" y="305" width="32" height="10" fill="none" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.45"/>
+          <line x1="122" y1="305" x2="155" y2="322" stroke="var(--gold-line)" stroke-width="0.6"/>
+          <text x="160" y="325" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">TV</text>
+          <text x="160" y="337" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">04</text>
+        </g>
+
+        <g transform="translate(180,480)">
+          <rect x="0" y="0" width="180" height="56" fill="none" stroke="var(--gold-line)" stroke-width="0.7"/>
+          <line x1="0" y1="28" x2="180" y2="28" stroke="var(--gold-line)" stroke-width="0.4"/>
+          <text x="12" y="18" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--text-pri)">S·A·O Plan</text>
+          <text x="12" y="44" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.10em" fill="var(--text-sec)">SCALE 1 : 50 — NO. 01</text>
+        </g>
+      </svg>
+    </div>
     <div class="container">
       <div class="hero-content">
         <p class="hero-eyebrow">封閉式 B2B 採購通道 · 僅限專業設計師</p>
