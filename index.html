@@ -682,17 +682,17 @@
 <!-- OVERLAY: 購買須知 (簡化版 6 條) -->
 <div class="overlay" id="overlay-terms" role="dialog" aria-modal="true">
   <div class="panel" style="max-width:520px;">
-    <div class="panel-header"><p class="section-label">訂單已建立 · 請詳閱合作條款</p><h2 class="panel-title">夥伴採購須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
+    <div class="panel-header"><p class="section-label">請詳閱並同意合作條款</p><h2 class="panel-title">夥伴採購須知</h2><button class="panel-close" data-close="overlay-terms">✕</button></div>
     <div class="panel-body">
       <div id="terms-content" style="font-size:13px;font-weight:300;color:var(--text-sec);line-height:2;max-height:40vh;overflow-y:auto;padding-right:4px;margin-bottom:12px;"></div>
       
       <div style="text-align:center;margin-bottom:20px;">
-        <a href="#terms" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px;transition:opacity 0.2s;" onclick="closeOverlay('overlay-terms')">閱讀完整條款 (獨立頁面)</a>
+        <a href="javascript:void(0)" id="toggle-full-terms" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px;transition:opacity 0.2s;" onclick="toggleFullTerms()">閱讀完整條款</a>
       </div>
 
       <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--divider);margin-bottom:16px;">
         <input type="checkbox" id="terms-agree-check" style="width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;" onchange="onTermsCheck()"/>
-        <span style="font-size:13px;font-weight:400;color:var(--text-pri);line-height:1.6;">我已詳細閱讀並同意上述購買須知，確認下單後將依規定完成付款。</span>
+        <span style="font-size:13px;font-weight:400;color:var(--text-pri);line-height:1.6;">我已詳細閱讀並同意上述購買須知（含本案屬 B2B 採購、無七天鑑賞期），確認後將正式成立訂單並依規定完成付款。</span>
       </label>
       <button class="btn-primary" id="terms-confirm-btn" disabled style="width:100%;justify-content:center;opacity:0.4;cursor:not-allowed;">同意並查看匯款資訊
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -832,6 +832,7 @@ let cachedProducts = [];
 let cachedConfig   = null;
 let currentOrder   = {};
 let purchasedItems = []; // 用於記錄明細，防禦亂碼與「購物車訂單」的抽象化
+let pendingCheckout = null; // 修正：暫存結帳表單，待會員同意條款後才正式送單
 let landingVisible = false;
 
 /* ── SPA 路由邏輯：透過 Hash 處理「獨立條款頁面」 ── */
@@ -1324,42 +1325,22 @@ document.getElementById('cart-checkout-btn').addEventListener('click', function(
 });
 
 // 核心需求：購物車訂單提交改寫，完整列出明細以防歷史紀錄丟失
-document.getElementById('checkout-submit-btn').addEventListener('click', async function() {
+document.getElementById('checkout-submit-btn').addEventListener('click', function() {
   const address = document.getElementById('checkout-address').value.trim();
   if (!address) { document.getElementById('checkout-address').classList.add('error'); return; }
   document.getElementById('checkout-address').classList.remove('error');
-  const lineUID = currentUser?.lineUID;
-  if (!lineUID) { showToast('身份驗證失敗，請重新開啟頁面'); return; }
+  if (!currentUser?.lineUID) { showToast('身份驗證失敗，請重新開啟頁面'); return; }
+  if (!cart.length) { showToast('購物車是空的'); return; }
 
-  this.disabled = true; this.textContent = '送出中…';
-  const date    = document.getElementById('checkout-date').value;
-  const note    = document.getElementById('checkout-note').value.trim();
-
-  // 儲存明細資料到全局變量中，確保支付和歷史明細一致
-  purchasedItems = cart.map(i => ({ model: i.model, qty: i.qty, price: i.price }));
-
-  try {
-    const data = await callGAS({
-      action:    'submitCartOrder',
-      lineUID,
-      cartJSON:  JSON.stringify(cart),
-      address,
-      deadline:  date,
-      note,
-      totalPrice: cartTotal(),
-    });
-
-    if (data.success) {
-      cart = [];
-      updateCartUI();
-      closeOverlay('overlay-checkout');
-      currentOrder = { name: '專案採購組合明細', model: '多品項明細', price: cartTotal() };
-      await showTerms();
-    } else {
-      showToast('送出失敗：' + (data.error||'請重試'));
-    }
-  } catch(e) { showToast('連線失敗，請重試'); }
-  this.disabled = false; this.textContent = '送出訂單';
+  // 修正：此處「不」送單。先暫存表單，待會員於下一步同意合作條款後才正式建立訂單，
+  // 避免「未同意即已送出」與「閱讀完整條款後無法返回」的問題。
+  pendingCheckout = {
+    address,
+    date: document.getElementById('checkout-date').value,
+    note: document.getElementById('checkout-note').value.trim(),
+  };
+  closeOverlay('overlay-checkout');
+  showTerms();
 });
 
 /* ── 歷史紀錄明細呈現 ── */
@@ -1440,6 +1421,8 @@ async function showTerms() {
   ].join('<br><br>');
   
   document.getElementById('terms-content').innerHTML = termsHtml;
+  fullTermsShown = false;
+  const ftLink = document.getElementById('toggle-full-terms'); if (ftLink) ftLink.textContent = '閱讀完整條款';
   document.getElementById('terms-agree-check').checked = false;
   onTermsCheck();
   showOverlay('overlay-terms');
@@ -1451,6 +1434,31 @@ function onTermsCheck() {
   btn.disabled  = !checked;
   btn.style.opacity = checked ? '1' : '0.4';
   btn.style.cursor  = checked ? 'pointer' : 'not-allowed';
+}
+
+/* ── 閱讀完整條款：於彈窗內就地展開／收合，避免跳離結帳流程造成無法返回 ── */
+let fullTermsShown = false;
+function toggleFullTerms() {
+  const content = document.getElementById('terms-content');
+  const link    = document.getElementById('toggle-full-terms');
+  if (!content || !link) return;
+  if (!fullTermsShown) {
+    try {
+      const src   = document.getElementById('terms-page');
+      const clone = src.querySelector('.container').cloneNode(true);
+      const backBtn = clone.querySelector('button'); // 移除「回到首頁」按鈕
+      if (backBtn) backBtn.remove();
+      content.dataset.summaryHtml = content.innerHTML; // 暫存 6 條摘要，供收合還原
+      content.innerHTML = clone.innerHTML;
+      link.textContent = '收合，返回摘要';
+      fullTermsShown = true;
+    } catch (e) { showToast('條款載入失敗，請重試'); }
+  } else {
+    content.innerHTML = content.dataset.summaryHtml || content.innerHTML;
+    link.textContent = '閱讀完整條款';
+    fullTermsShown = false;
+  }
+  content.scrollTop = 0;
 }
 
 // 渲染付款彈出視窗中的所有採購明細
@@ -1472,21 +1480,52 @@ function renderPaymentItemsList() {
   }).join('');
 }
 
-document.getElementById('terms-confirm-btn').addEventListener('click', function() {
+document.getElementById('terms-confirm-btn').addEventListener('click', async function() {
   if (!document.getElementById('terms-agree-check').checked) return;
   if (!cachedConfig) { showToast('載入中，請稍候'); return; }
-  
-  // 渲染明細
-  renderPaymentItemsList();
+  if (!pendingCheckout || !cart.length) { showToast('購物車資料遺失，請重新下單'); return; }
 
+  // 修正：會員同意條款後，才正式送單；送單成功才進入匯款資訊
+  this.disabled = true; this.textContent = '送出中…';
+  const totalPrice    = cartTotal();
+  const itemsSnapshot = cart.map(i => ({ model: i.model, qty: i.qty, price: i.price }));
+  try {
+    const data = await callGAS({
+      action:    'submitCartOrder',
+      lineUID:   currentUser?.lineUID || '',
+      cartJSON:  JSON.stringify(cart),
+      address:   pendingCheckout.address,
+      deadline:  pendingCheckout.date,
+      note:      pendingCheckout.note,
+      totalPrice,
+    });
+    if (!data.success) {
+      showToast('送出失敗：' + (data.error || '請重試'));
+      this.disabled = false; this.textContent = '同意並查看匯款資訊';
+      return;
+    }
+  } catch (e) {
+    showToast('連線失敗，請重試');
+    this.disabled = false; this.textContent = '同意並查看匯款資訊';
+    return;
+  }
+
+  // 送單成功後，才建立明細、清空購物車、進入匯款資訊
+  purchasedItems = itemsSnapshot;
+  currentOrder   = { name: '專案採購組合明細', model: '多品項明細', price: totalPrice };
+  cart = [];
+  updateCartUI();
+  pendingCheckout = null;
+
+  renderPaymentItemsList();
   // 核心需求：匯款帳號修改為與客服確認貨源提供匯款資訊
   document.getElementById('bank-name').textContent    = '與客服確認貨源後提供';
   document.getElementById('bank-code').textContent    = '請與官方 LINE 聯繫';
   document.getElementById('bank-account').textContent = '與客服確認貨源提供匯款資訊';
-  
   initPaymentWatermark();
   closeOverlay('overlay-terms');
   showOverlay('overlay-payment');
+  this.disabled = false; this.textContent = '同意並查看匯款資訊';
 });
 
 /* ── 完成 · 回到 LINE 對話 ── */
@@ -1532,10 +1571,18 @@ document.querySelectorAll('.panel-close').forEach(btn => btn.addEventListener('c
 
 /* ── CTA 導流控制 ── */
 function handleCTA() {
-  if (memberStatus==='approved') { 
-    window.location.hash = ''; 
-    document.getElementById('price-page').scrollIntoView({behavior:'smooth'}); 
-    return; 
+  if (memberStatus==='approved') {
+    window.location.hash = '';
+    // 修正：在「關於 SAO」landing 視圖時，toggle 會用 inline style 強制隱藏 price-page，
+    // 單純 scrollIntoView 對 display:none 元素無效（按鈕看似沒反應）。
+    // 改為清掉殘留 inline style，讓 body.approved 的 CSS 還原查價系統視圖。
+    landingVisible = false;
+    document.getElementById('landing-content').style.cssText = '';
+    document.getElementById('price-page').style.display = '';
+    const tbtn = document.getElementById('toggle-landing-btn');
+    if (tbtn) tbtn.textContent = '關於 SAO';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
   }
   if (memberStatus==='pending')  { showOverlay('overlay-pending'); return; }
   showOverlay('overlay-register');
