@@ -173,6 +173,18 @@
       transition: all 0.15s;
     }
     .filter-tab.active { background: var(--text-pri); color: #fff; border-color: var(--text-pri); }
+    .taxcheck-card { background: var(--bg-card,#fff); border:1px solid var(--divider); border-radius:8px; padding:14px 16px; margin-bottom:16px; }
+    .taxcheck-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .taxcheck-input { padding:8px 10px; border:1px solid var(--divider); border-radius:4px; font-size:13px; color:var(--text-pri); background:var(--bg,#fff); }
+    #taxcheck-input { width:160px; font-variant-numeric:tabular-nums; }
+    #taxcheck-name { width:200px; }
+    .taxcheck-result { margin-top:10px; font-size:13px; line-height:1.7; color:var(--text-pri); }
+    .taxcheck-result:empty { display:none; }
+    .tc-ok { color:var(--green,#2e7d32); font-weight:600; }
+    .tc-bad { color:var(--red,#c62828); font-weight:600; }
+    .tc-warn { color:#b26a00; font-weight:600; }
+    tr.group-row td { background:rgba(0,0,0,0.045); font-size:13px; color:var(--text-pri); padding:10px 12px; border-top:2px solid var(--divider); }
+    .audit-note { display:block; margin-top:3px; font-size:11px; color:var(--text-sec); line-height:1.5; }
     table { width: 100%; border-collapse: collapse; }
     th {
       padding: 10px 16px; text-align: left;
@@ -368,6 +380,14 @@
         </div>
       </div>
       <div class="content">
+        <div class="taxcheck-card">
+          <div class="taxcheck-row">
+            <input id="taxcheck-input" class="taxcheck-input" placeholder="統一編號（8碼）" maxlength="8" inputmode="numeric"/>
+            <input id="taxcheck-name" class="taxcheck-input" placeholder="公司名稱（選填，比對用）"/>
+            <button class="btn" onclick="runTaxCheck()">統編健檢</button>
+          </div>
+          <div id="taxcheck-result" class="taxcheck-result"></div>
+        </div>
         <div class="stat-cards" id="member-stats">
           <div class="stat-card"><p class="stat-label">待審核</p><p class="stat-value gold" id="stat-pending">—</p></div>
           <div class="stat-card"><p class="stat-label">已核准</p><p class="stat-value" id="stat-approved">—</p></div>
@@ -524,17 +544,17 @@ function filterMembers(status, btn) {
 function renderMemberTable(list) {
   const wrap = document.getElementById('members-table-wrap');
   if (!list.length) { wrap.innerHTML = '<div class="empty-state">沒有符合的會員</div>'; return; }
-  wrap.innerHTML = `
-    <table>
-      <thead><tr>
-        <th>申請時間</th><th>公司名稱</th><th>統編</th><th>手機</th>
-        <th>狀態</th><th>名片</th><th>操作</th>
-      </tr></thead>
-      <tbody>
-        ${list.map(m => `
+  // 依統編分組：同一家公司的設計師收在一起
+  const groups = {}, order = [];
+  list.forEach(m => {
+    const k = m.TaxID || '—';
+    if (!groups[k]) { groups[k] = []; order.push(k); }
+    groups[k].push(m);
+  });
+  const memberRow = m => `
           <tr>
             <td data-label="申請時間" style="color:var(--text-sec);font-size:12px;">${(m.CreatedAt||'—').replace('T',' ').replace('.000Z','')}</td>
-            <td data-label="公司名稱"><strong>${m.CompanyName||'—'}</strong></td>
+            <td data-label="設計師"><strong>${m.LineDisplayName||'—'}</strong>${m.Note ? `<span class="audit-note">${esc(String(m.Note))}</span>` : ''}</td>
             <td data-label="統編" style="font-variant-numeric:tabular-nums;">${m.TaxID||'—'}</td>
             <td data-label="手機">${m.Phone||'—'}</td>
             <td data-label="狀態"><span class="badge badge-${m.Status||'pending'}">${statusLabel(m.Status)}</span></td>
@@ -550,10 +570,48 @@ function renderMemberTable(list) {
                 ${m.Status !== 'blocked'  ? `<button class="btn-xs block"   onclick="doBlock('${esc(m.LineUID)}')">封鎖</button>`  : ''}
               </div>
             </td>
-          </tr>
-        `).join('')}
-      </tbody>
+          </tr>`;
+  const body = order.map(k => {
+    const g = groups[k];
+    const head = `<tr class="group-row"><td colspan="7">🏢 <strong>${esc(g[0].CompanyName||'—')}</strong>　統編 ${k}　·　${g.length} 位設計師</td></tr>`;
+    return head + g.map(memberRow).join('');
+  }).join('');
+  wrap.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>申請時間</th><th>設計師</th><th>統編</th><th>手機</th>
+        <th>狀態</th><th>名片</th><th>操作</th>
+      </tr></thead>
+      <tbody>${body}</tbody>
     </table>`;
+}
+
+function runTaxCheck() {
+  const tax  = (document.getElementById('taxcheck-input').value||'').trim();
+  const name = (document.getElementById('taxcheck-name').value||'').trim();
+  const box  = document.getElementById('taxcheck-result');
+  if (!/^\d{8}$/.test(tax)) { box.innerHTML = '<span class="tc-bad">請輸入 8 碼數字統編</span>'; return; }
+  box.innerHTML = '查詢中…';
+  fetchGET({ action:'verifyTaxID', taxID:tax, companyName:name, password:PASSWORD })
+    .then(d => {
+      if (!d.success) { box.innerHTML = '<span class="tc-bad">查詢失敗：'+(d.error||'')+'</span>'; return; }
+      const r = d.result || {};
+      const out = [];
+      out.push('檢查碼：' + (r.checksumValid ? '<span class="tc-ok">通過</span>' : '<span class="tc-bad">錯誤（疑似亂編）</span>'));
+      if (!r.checksumValid) { box.innerHTML = out.join(''); return; }
+      if (r.found) {
+        out.push('登記名稱：<strong>'+esc(r.officialName||'')+'</strong>');
+        out.push('登記狀況：' + (r.dissolved ? '<span class="tc-bad">'+esc(r.statusDesc||'已解散/撤銷/廢止')+'（不可申請）</span>'
+                            : r.suspended ? '<span class="tc-warn">'+esc(r.statusDesc||'停業')+'</span>'
+                            : r.active   ? '<span class="tc-ok">'+esc(r.statusDesc||'營業中')+'</span>'
+                            : esc(r.statusDesc||'未知')));
+        if (name) out.push('名稱比對：' + (r.nameMatch ? '<span class="tc-ok">吻合</span>' : '<span class="tc-warn">與登記不符</span>'));
+      } else if (r.needsManualReview) {
+        out.push('<span class="tc-warn">'+esc(r.note||'公司登記查無，可能為商業登記行號，需人工核對名片')+'</span>');
+      }
+      box.innerHTML = out.join('<br>');
+    })
+    .catch(()=> box.innerHTML = '<span class="tc-bad">連線失敗</span>');
 }
 
 function doApprove(lineUID) {
