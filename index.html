@@ -56,10 +56,22 @@
     .hero-geometry{position:absolute;inset:0;pointer-events:none;}
     .hero-geometry::before{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:var(--bg-card);clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
     .hero-geometry::after{content:'';position:absolute;top:50%;right:12%;transform:translateY(-50%);width:1px;height:60%;background:var(--gold-line);}
-    .hero-wordmark{position:absolute;top:50%;right:4%;transform:translateY(-52%);font-family:var(--serif);font-size:clamp(88px,14vw,160px);font-weight:300;font-style:italic;letter-spacing:-0.02em;color:transparent;-webkit-text-stroke:1px rgba(197,169,106,0.22);line-height:1;pointer-events:none;user-select:none;}
+    .hero-illus-row{display:flex;gap:14px;margin:8px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
+    .hero-illus-row::-webkit-scrollbar{display:none;}
+    .hero-illus-chip{flex:0 0 auto;width:78px;text-align:center;}
+    .hero-illus-icon{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(26,25,22,0.10);}
+    .hero-illus-icon svg{width:42px;height:42px;display:block;}
+    .hero-illus-label{display:block;margin-top:8px;font-size:10px;letter-spacing:0.06em;color:var(--text-sec);font-weight:500;white-space:nowrap;}
+    .ic-fridge{background:#7E8F71;}
+    .ic-washer{background:#5F7E91;}
+    .ic-ac{background:#C0922B;}
+    .ic-tv{background:#2B2A27;}
+    .ic-light{background:#B2623F;}
+    .ic-tool{background:#3F6664;}
+    @media(max-width:768px){.hero-illus-icon{width:68px;height:68px;}.hero-illus-chip{width:68px;}.hero-illus-icon svg{width:36px;height:36px;}}
     .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
-    .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.08;letter-spacing:-0.01em;color:var(--text-pri);max-width:600px;margin-bottom:28px;}
+    .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.15;letter-spacing:-0.01em;color:var(--text-pri);max-width:11.5em;word-break:keep-all;margin-bottom:28px;}
     .hero-title em{font-style:italic;color:var(--gold);}
     .hero-sub{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--text-sec);max-width:400px;line-height:1.8;margin-bottom:48px;}
     .hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
@@ -96,6 +108,8 @@
     .qualify-card:hover{background:rgba(40,38,34,0.95);}
     .qualify-icon{width:40px;height:40px;border:1px solid var(--gold-line);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
     .qualify-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+    .qualify-icon.ic-tool,.qualify-icon.ic-light,.qualify-icon.ic-ac{border:none;border-radius:10px;}
+    .qualify-icon.ic-tool svg,.qualify-icon.ic-light svg,.qualify-icon.ic-ac svg{stroke:#fff;}
     .qualify-card h3{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--text-inv);margin-bottom:12px;}
     .qualify-card p{font-size:13px;font-weight:300;color:rgba(232,228,220,0.55);line-height:1.8;}
 
@@ -116,6 +130,8 @@
     .catalog-note{font-size:12px;font-weight:300;color:var(--text-sec);text-align:right;max-width:220px;line-height:1.6;}
     .catalog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
     .catalog-item{background:var(--bg);border-radius:var(--radius-md);overflow:hidden;position:relative;}
+    .catalog-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+    .catalog-icon svg{width:26px;height:26px;display:block;}
     .catalog-item-inner{padding:28px 24px 24px;}
     .catalog-brand{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;}
     .catalog-name{font-family:var(--serif);font-size:16px;font-weight:400;color:var(--text-pri);margin-bottom:4px;}
@@ -376,7 +392,6 @@
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
-    <div class="hero-wordmark" aria-hidden="true">S·A·O</div>
     <div class="container">
       <div class="hero-content">
         <p class="hero-eyebrow">封閉式 B2B 採購通道 · 僅限專業設計師</p>
@@ -388,6 +403,71 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
           <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">了解更多</button>
+        </div>
+
+        <div class="hero-illus-row" aria-hidden="true">
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-fridge">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.2"/>
+                <line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.2"/>
+                <line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">冰箱</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-washer">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.2"/>
+                <circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.2"/>
+                <circle cx="31" cy="13" r="1.6" fill="#fff"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">洗衣機</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-ac">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.2"/>
+                <line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">空調</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-tv">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.2"/>
+                <line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.2"/>
+                <line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">電視</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-light">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/>
+                <path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
+                <circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">燈具</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-tool">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="8" width="17" height="11" rx="2" transform="rotate(-28 16.5 13.5)" stroke="#fff" stroke-width="2.2"/>
+                <line x1="20" y1="20" x2="36" y2="36" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">裝潢工法</span>
+          </div>
         </div>
       </div>
       <div class="hero-meta">
@@ -426,9 +506,9 @@
         <h2 class="section-title">哪些身份可以申請</h2>
       </div>
       <div class="qualify-cards">
-        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
-        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
-        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
+        <div class="qualify-card"><div class="qualify-icon ic-tool"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
+        <div class="qualify-card"><div class="qualify-icon ic-light"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
+        <div class="qualify-card"><div class="qualify-icon ic-ac"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
       </div>
     </div>
   </section>
@@ -455,10 +535,10 @@
         <p class="catalog-note">價格資訊僅對通過審核之會員顯示。</p>
       </div>
       <div class="catalog-grid">
-        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Panasonic</p><p class="catalog-name">六門變頻冰箱</p><p class="catalog-spec">600L 系列 · 多色可選</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Hitachi</p><p class="catalog-name">滾筒洗衣乾衣機</p><p class="catalog-spec">13kg/10kg · 風熨燙系列</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">LG</p><p class="catalog-name">OLED 4K 電視</p><p class="catalog-spec">65" · MLA 面板 · 多尺寸</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Mitsubishi</p><p class="catalog-name">變頻冷暖分離式</p><p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-fridge"><svg viewBox="0 0 48 48" fill="none"><rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.4"/><line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">Panasonic</p><p class="catalog-name">六門變頻冰箱</p><p class="catalog-spec">600L 系列 · 多色可選</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-washer"><svg viewBox="0 0 48 48" fill="none"><rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.4"/><circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.4"/><circle cx="31" cy="13" r="1.7" fill="#fff"/></svg></div><p class="catalog-brand">Hitachi</p><p class="catalog-name">滾筒洗衣乾衣機</p><p class="catalog-spec">13kg/10kg · 風熨燙系列</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-tv"><svg viewBox="0 0 48 48" fill="none"><rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.4"/><line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.4"/><line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">LG</p><p class="catalog-name">OLED 4K 電視</p><p class="catalog-spec">65" · MLA 面板 · 多尺寸</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-ac"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><p class="catalog-brand">Mitsubishi</p><p class="catalog-name">變頻冷暖分離式</p><p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
       </div>
     </div>
   </section>
@@ -954,7 +1034,7 @@ function showLoading(show) {
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   if (!text) return;
   const items = [];
@@ -983,7 +1063,7 @@ function initPaymentWatermark() {
   const layer = document.getElementById('payment-watermark');
   if (!layer) return;
   layer.innerHTML = '';
-  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   for (let i = 0; i < 24; i++) {
     const el = document.createElement('span');
@@ -1648,11 +1728,11 @@ function handleCTA() {
     // 單純 scrollIntoView 對 display:none 元素無效（按鈕看似沒反應）。
     // 改為清掉殘留 inline style，讓 body.approved 的 CSS 還原查價系統視圖。
     landingVisible = false;
+    window.scrollTo(0, 0);
     document.getElementById('landing-content').style.cssText = '';
     document.getElementById('price-page').style.display = '';
     const tbtn = document.getElementById('toggle-landing-btn');
     if (tbtn) tbtn.textContent = '關於 SAO';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
   if (memberStatus==='pending')  { showOverlay('overlay-pending'); return; }
@@ -1669,21 +1749,20 @@ document.getElementById('nav-logo').addEventListener('click', function(e) {
     window.location.hash = ''; 
     return;
   }
-  if (memberStatus !== 'approved') { window.scrollTo({top:0,behavior:'smooth'}); return; }
+  if (memberStatus !== 'approved') { window.scrollTo(0, 0); return; }
   landingVisible = !landingVisible;
   const landing = document.getElementById('landing-content');
   const price   = document.getElementById('price-page');
   const btn     = document.getElementById('toggle-landing-btn');
+  window.scrollTo(0, 0);
   if (landingVisible) {
     landing.style.cssText = 'display:block !important';
     price.style.display   = 'none';
     btn.textContent       = '回到查價';
-    window.scrollTo({top:0,behavior:'smooth'});
   } else {
     landing.style.cssText = 'display:none !important';
     price.style.display   = 'block';
     btn.textContent       = '關於 SAO';
-    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
   }
 });
 document.getElementById('toggle-landing-btn').addEventListener('click', function() {
