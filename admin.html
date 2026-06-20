@@ -251,7 +251,7 @@
 
     /* 產品編輯 */
     .price-input {
-      width: 100px; padding: 4px 8px;
+      width: 82px; padding: 4px 8px;
       border: 1px solid var(--divider); border-radius: 2px;
       font-family: var(--sans); font-size: 13px; color: var(--text-pri);
       background: var(--bg); outline: none; text-align: right;
@@ -419,7 +419,7 @@
       <div class="content">
         <div class="table-card">
           <div class="table-header">
-            <h3>產品列表（點擊加價率可直接編輯）</h3>
+            <h3>產品列表（點擊 A/B/C 級價可直接編輯）</h3>
           </div>
           <div id="products-table-wrap">
             <div class="empty-state">載入中…</div>
@@ -639,16 +639,13 @@ function loadOrders() {
 ───────────────────────── */
 function loadProducts() {
   document.getElementById('products-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
-  // 用 admin 身份取得產品（此處直接讀 Sheet，簡化流程）
-  fetchGET({ action:'getProducts', lineUID:'__admin__', category:'all' })
+  fetchGET({ action:'getProductsAdmin', password:PASSWORD })
     .then(data => {
-      if (!data.success && data.error && data.error.includes('權限')) {
-        // admin uid 沒有設為 approved，改用 getMembers 後再顯示提示
+      if (!data.success) {
         document.getElementById('products-table-wrap').innerHTML =
-          '<div class="empty-state">請先在 Members Sheet 新增一筆 LineUID=__admin__ 且 Status=approved 的紀錄，或直接到 Google Sheet 管理產品。</div>';
+          '<div class="empty-state">載入失敗：'+(data.error||'')+'</div>';
         return;
       }
-      if (!data.success) return showToast('載入失敗：'+data.error);
       renderProductsTable(data.products);
     });
 }
@@ -662,7 +659,7 @@ function renderProductsTable(products) {
     <table>
       <thead><tr>
         <th>品牌</th><th>型號</th><th>分類</th><th>類型</th>
-        <th>加價率</th><th>報價</th><th>狀態</th>
+        <th>A級價</th><th>B級價</th><th>C級價</th><th>狀態</th>
       </tr></thead>
       <tbody>
         ${products.map(p => `
@@ -671,13 +668,9 @@ function renderProductsTable(products) {
             <td style="font-size:12px;color:var(--text-sec);">${p.Model||'—'}<br><span style="font-size:12px;">${p.DisplayName||''}</span></td>
             <td>${p.Category||'—'}</td>
             <td><span class="badge badge-${p.Type==='star'?'star':'profit'}">${p.Type==='star'?'明星款':'常規款'}</span></td>
-            <td>
-              <input class="price-input" type="number" step="0.01" min="0" max="0.5"
-                value="${parseFloat(p.MarginRate)||0.10}"
-                onblur="saveMargin('${esc(p.ProductID)}', this.value)"
-                title="按 Enter 或點擊其他地方儲存"/>
-            </td>
-            <td style="font-variant-numeric:tabular-nums;">$${(p.Price||0).toLocaleString()}</td>
+            <td>${priceCell(p.ProductID,'A級價',p.PriceA)}</td>
+            <td>${priceCell(p.ProductID,'B級價',p.PriceB)}</td>
+            <td>${priceCell(p.ProductID,'C級價',p.PriceC)}</td>
             <td>
               <span style="font-size:12px;color:${p.Active?'var(--green)':'var(--red)'}">
                 ${p.Active ? '▲ 上架' : '▼ 下架'}
@@ -689,11 +682,23 @@ function renderProductsTable(products) {
     </table>`;
 }
 
-function saveMargin(productId, value) {
-  const rate = parseFloat(value);
-  if (isNaN(rate) || rate < 0 || rate > 0.5) { showToast('加價率需介於 0~0.5'); return; }
-  fetchPOST({ action:'updateProduct', productId, field:'MarginRate', value:rate, password:PASSWORD })
-    .then(d => showToast(d.success ? '✓ 加價率已更新' : '更新失敗：'+d.error));
+// 單一階層價格輸入格（空值顯示「未設」，整數）
+function priceCell(productId, field, value) {
+  const v = (value === '' || value === null || value === undefined) ? '' : parseInt(value, 10);
+  return `<input class="price-input" type="number" step="1" min="0"
+    value="${isNaN(v) ? '' : v}" placeholder="未設"
+    onblur="savePrice('${esc(productId)}','${field}', this.value)"
+    title="按 Enter 或點擊其他地方儲存"/>`;
+}
+
+function savePrice(productId, field, value) {
+  let v = value;
+  if (value !== '') {
+    v = parseInt(value, 10);
+    if (isNaN(v) || v < 0) { showToast('價格需為 0 或正整數'); return; }
+  }
+  fetchPOST({ action:'updateProduct', productId, field, value:v, password:PASSWORD })
+    .then(d => showToast(d.success ? '✓ '+field+'已更新' : '更新失敗：'+(d.error||'')));
 }
 
 /* ─────────────────────────

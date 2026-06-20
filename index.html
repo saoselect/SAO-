@@ -814,7 +814,6 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhdD6DTDooiasKmidU3nYG
 let currentUser  = null;
 let memberStatus = null;
 let cachedProducts = [];
-let cachedConfig   = null;
 let currentOrder   = {};
 let purchasedItems = []; // 用於記錄明細，防禦亂碼與「購物車訂單」的抽象化
 let pendingCheckout = null; // 修正：暫存結帳表單，待會員同意條款後才正式送單
@@ -1484,12 +1483,6 @@ document.getElementById('product-grid').addEventListener('click', function(e) {
 
 /* ── 條款呈現 ── */
 async function showTerms() {
-  if (!cachedConfig) {
-    try {
-      const data = await callGAS({ action: 'getConfig' });
-      if (data.success) cachedConfig = data.config;
-    } catch(e) {}
-  }
   const termsHtml = [
     '<strong style="color:var(--text-pri);">1. 封閉式 B2B 通路：</strong>僅限實名審核之專業夥伴，全線商品來自原廠授權通路，為原廠正品並享完整原廠保固。',
     '<strong style="color:var(--text-pri);">2. 貨源與金流：</strong>採「先匯款、後排單」，款項匯入指定帳戶後即時鎖貨；若確認後缺貨或無法供貨，該品項全額退款。',
@@ -1561,7 +1554,6 @@ function renderPaymentItemsList() {
 
 document.getElementById('terms-confirm-btn').addEventListener('click', async function() {
   if (!document.getElementById('terms-agree-check').checked) return;
-  if (!cachedConfig) { showToast('載入中，請稍候'); return; }
   if (!pendingCheckout || !cart.length) { showToast('購物車資料遺失，請重新下單'); return; }
 
   // 修正：會員同意條款後，才正式送單；送單成功才進入匯款資訊
