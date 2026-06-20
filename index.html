@@ -56,19 +56,7 @@
     .hero-geometry{position:absolute;inset:0;pointer-events:none;}
     .hero-geometry::before{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:var(--bg-card);clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
     .hero-geometry::after{content:'';position:absolute;top:50%;right:12%;transform:translateY(-50%);width:1px;height:60%;background:var(--gold-line);}
-    .hero-illus-row{display:flex;gap:14px;margin:8px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
-    .hero-illus-row::-webkit-scrollbar{display:none;}
-    .hero-illus-chip{flex:0 0 auto;width:78px;text-align:center;}
-    .hero-illus-icon{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(26,25,22,0.10);}
-    .hero-illus-icon svg{width:42px;height:42px;display:block;}
-    .hero-illus-label{display:block;margin-top:8px;font-size:10px;letter-spacing:0.06em;color:var(--text-sec);font-weight:500;white-space:nowrap;}
-    .ic-fridge{background:#7E8F71;}
-    .ic-washer{background:#5F7E91;}
-    .ic-ac{background:#C0922B;}
-    .ic-tv{background:#2B2A27;}
-    .ic-light{background:#B2623F;}
-    .ic-tool{background:#3F6664;}
-    @media(max-width:768px){.hero-illus-icon{width:68px;height:68px;}.hero-illus-chip{width:68px;}.hero-illus-icon svg{width:36px;height:36px;}}
+    .hero-wordmark{position:absolute;top:50%;right:4%;transform:translateY(-52%);font-family:var(--serif);font-size:clamp(88px,14vw,160px);font-weight:300;font-style:italic;letter-spacing:-0.02em;color:transparent;-webkit-text-stroke:1px rgba(197,169,106,0.22);line-height:1;pointer-events:none;user-select:none;}
     .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
     .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.08;letter-spacing:-0.01em;color:var(--text-pri);max-width:600px;margin-bottom:28px;}
@@ -388,6 +376,7 @@
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
+    <div class="hero-wordmark" aria-hidden="true">S·A·O</div>
     <div class="container">
       <div class="hero-content">
         <p class="hero-eyebrow">封閉式 B2B 採購通道 · 僅限專業設計師</p>
@@ -399,71 +388,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
           <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">了解更多</button>
-        </div>
-
-        <div class="hero-illus-row" aria-hidden="true">
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-fridge">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.2"/>
-                <line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.2"/>
-                <line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-                <line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">冰箱</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-washer">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.2"/>
-                <circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.2"/>
-                <circle cx="31" cy="13" r="1.6" fill="#fff"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">洗衣機</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-ac">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.2"/>
-                <line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">空調</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-tv">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.2"/>
-                <line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.2"/>
-                <line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">電視</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-light">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/>
-                <path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
-                <circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">燈具</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-tool">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="8" y="8" width="17" height="11" rx="2" transform="rotate(-28 16.5 13.5)" stroke="#fff" stroke-width="2.2"/>
-                <line x1="20" y1="20" x2="36" y2="36" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">裝潢工法</span>
-          </div>
         </div>
       </div>
       <div class="hero-meta">
@@ -889,6 +813,10 @@
       <h2 class="panel-title">歷史明細紀錄</h2>
       <button class="panel-close" data-close="overlay-history">✕</button>
     </div>
+    <div id="history-controls" style="display:none;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
+      <select id="history-month-filter" style="flex:1;font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--divider);border-radius:var(--radius-md);background:var(--bg-card);color:var(--text-pri);cursor:pointer;"></select>
+      <button id="history-download-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">⬇ 下載 Excel</button>
+    </div>
     <div class="panel-body" id="history-body" style="max-height:60svh;overflow-y:auto;">
       <p style="color:var(--text-sec);font-size:13px;">載入中…</p>
     </div>
@@ -1046,7 +974,7 @@ function showLoading(show) {
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   if (!text) return;
   const items = [];
@@ -1075,7 +1003,7 @@ function initPaymentWatermark() {
   const layer = document.getElementById('payment-watermark');
   if (!layer) return;
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   for (let i = 0; i < 24; i++) {
     const el = document.createElement('span');
@@ -1420,9 +1348,30 @@ document.getElementById('checkout-submit-btn').addEventListener('click', functio
 });
 
 /* ── 歷史紀錄明細呈現 ── */
+/* ── 歷史採購紀錄：月份篩選 + 日期 + 匯出 Excel(CSV) ── */
+let historyOrders = [];
+let currentHistoryFilter = 'all';
+
+function historyMonthKey(o) {
+  const s = String(o.CreatedAt || o.createdAt || '');
+  return s.length >= 7 ? s.slice(0, 7) : '未知';   // "2026-06"
+}
+function historyMonthLabel(key) {
+  if (key === '未知') return '未知日期';
+  return key.slice(0, 4) + ' 年 ' + parseInt(key.slice(5, 7), 10) + ' 月';
+}
+function filterHistoryOrders(filter) {
+  return filter === 'all' ? historyOrders : historyOrders.filter(o => historyMonthKey(o) === filter);
+}
+function historyItemsOf(o) {
+  try { return JSON.parse(o.CartJSON || o.cartJSON || '[]'); } catch (e) { return []; }
+}
+
 document.getElementById('history-btn').addEventListener('click', async function() {
   showOverlay('overlay-history');
   const body = document.getElementById('history-body');
+  const controls = document.getElementById('history-controls');
+  controls.style.display = 'none';
   body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">載入中…</p>';
   try {
     const data = await callGAS({ action: 'getMyOrders', lineUID: currentUser?.lineUID || '' });
@@ -1430,48 +1379,121 @@ document.getElementById('history-btn').addEventListener('click', async function(
       body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">目前尚無訂單紀錄</p>';
       return;
     }
-    const byMonth = {};
-    data.orders.forEach(o => {
-      const d = new Date(o.CreatedAt || o.createdAt || '');
-      const key = isNaN(d) ? '未知日期' : d.getFullYear() + ' 年 ' + (d.getMonth()+1) + ' 月';
-      if (!byMonth[key]) byMonth[key] = [];
-      byMonth[key].push(o);
-    });
+    historyOrders = data.orders;
 
-    let html = '';
-    Object.keys(byMonth).reverse().forEach(month => {
-      const orders = byMonth[month];
-      const monthTotal = orders.reduce((s, o) => s + (parseFloat(o.TotalPrice||o.totalPrice)||0), 0);
-      html += '<div class="history-month">';
-      html += '<p class="history-month-title">' + month + '</p>';
-      orders.forEach(o => {
-        const items = (() => { try { return JSON.parse(o.CartJSON||o.cartJSON||'[]'); } catch(e) { return []; } })();
-        if (items.length) {
-          items.forEach(item => {
-            const p = item.price > 0 ? '$' + (item.price * item.qty).toLocaleString() : '請洽報價';
-            html += '<div class="history-row">';
-            html += '<span class="history-model">' + item.model + '</span>';
-            html += '<span class="history-qty">×' + item.qty + '</span>';
-            html += '<span class="history-price">' + p + '</span>';
-            html += '</div>';
-          });
-        } else {
-          const p = parseFloat(o.TotalPrice||o.totalPrice) > 0 ? '$' + parseFloat(o.TotalPrice||o.totalPrice).toLocaleString() : '請洽報價';
-          html += '<div class="history-row">';
-          html += '<span class="history-model">' + (o.ModelName||o.modelName||o.ProductID||'專案訂單') + '</span>';
-          html += '<span class="history-qty">×' + (o.Quantity||1) + '</span>';
-          html += '<span class="history-price">' + p + '</span>';
-          html += '</div>';
-        }
-      });
-      if (monthTotal > 0) { html += '<p class="history-month-total">本月合計：$' + monthTotal.toLocaleString() + '</p>'; }
-      html += '</div>';
-    });
-    body.innerHTML = html;
-  } catch(e) {
+    // 月份下拉（由近至遠）
+    const months = [...new Set(historyOrders.map(historyMonthKey))].sort().reverse();
+    const sel = document.getElementById('history-month-filter');
+    sel.innerHTML = '<option value="all">全部月份</option>' +
+      months.map(m => '<option value="' + m + '">' + historyMonthLabel(m) + '</option>').join('');
+    sel.value = 'all';
+    sel.onchange = function() { renderHistory(this.value); };
+    document.getElementById('history-download-btn').onclick = downloadHistoryCSV;
+    controls.style.display = 'flex';
+
+    renderHistory('all');
+  } catch (e) {
     body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">載入失敗，請重試</p>';
   }
 });
+
+function renderHistory(filter) {
+  currentHistoryFilter = filter;
+  const body = document.getElementById('history-body');
+  const orders = filterHistoryOrders(filter);
+  if (!orders.length) {
+    body.innerHTML = '<p style="color:var(--text-sec);font-size:13px;text-align:center;padding:24px;">此區間尚無紀錄</p>';
+    return;
+  }
+  const byMonth = {};
+  orders.forEach(o => { const k = historyMonthKey(o); (byMonth[k] = byMonth[k] || []).push(o); });
+
+  let html = '';
+  Object.keys(byMonth).sort().reverse().forEach(monthK => {
+    const monthOrders = byMonth[monthK];
+    const monthTotal = monthOrders.reduce((s, o) => s + (parseFloat(o.TotalPrice || o.totalPrice) || 0), 0);
+    html += '<div class="history-month">';
+    html += '<p class="history-month-title">' + historyMonthLabel(monthK) + '</p>';
+
+    monthOrders.forEach(o => {
+      const dateStr = String(o.CreatedAt || o.createdAt || '').slice(0, 16) || '—';
+      const oid = String(o.OrderID || o.orderId || '');
+      const oidShort = oid ? oid.slice(-6) : '';
+      html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 2px;">';
+      html += '<span style="font-size:12px;color:var(--text-pri);font-weight:500;">' + dateStr + '</span>';
+      if (oidShort) html += '<span style="font-size:10px;color:var(--text-sec);letter-spacing:0.04em;">單號 …' + oidShort + '</span>';
+      html += '</div>';
+
+      const items = historyItemsOf(o);
+      if (items.length) {
+        items.forEach(item => {
+          const qty = Number(item.qty || 1);
+          const price = Number(item.price || 0);
+          const p = price > 0 ? '$' + (price * qty).toLocaleString() : '請洽報價';
+          html += '<div class="history-row"><span class="history-model">' + (item.model || item.name || '品項') +
+                  '</span><span class="history-qty">×' + qty + '</span><span class="history-price">' + p + '</span></div>';
+        });
+      } else {
+        const tp = parseFloat(o.TotalPrice || o.totalPrice) || 0;
+        const p = tp > 0 ? '$' + tp.toLocaleString() : '請洽報價';
+        html += '<div class="history-row"><span class="history-model">' + (o.OrderDetail || o.ModelName || o.modelName || o.ProductID || '專案訂單') +
+                '</span><span class="history-qty">×' + (o.Quantity || 1) + '</span><span class="history-price">' + p + '</span></div>';
+      }
+    });
+
+    if (monthTotal > 0) html += '<p class="history-month-total">本月合計：$' + monthTotal.toLocaleString() + '</p>';
+    html += '</div>';
+  });
+  body.innerHTML = html;
+}
+
+/* ── 匯出 Excel(CSV，UTF-8 BOM，可直接用 Excel 開啟對帳) ── */
+function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+function todayStamp() {
+  const d = new Date();
+  return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+}
+function downloadHistoryCSV() {
+  const orders = filterHistoryOrders(currentHistoryFilter);
+  if (!orders.length) { showToast('此區間無資料可匯出'); return; }
+  const rows = [['訂單日期', '訂單編號', '型號', '數量', '單價', '小計', '送貨地址', '交期', '狀態']];
+  orders.forEach(o => {
+    const date = String(o.CreatedAt || o.createdAt || '');
+    const oid  = String(o.OrderID || o.orderId || '');
+    const addr = String(o.Address || o.address || '');
+    const dl   = String(o.Deadline || o.deadline || '');
+    const st   = String(o.Status || o.status || '');
+    const items = historyItemsOf(o);
+    if (items.length) {
+      items.forEach(it => {
+        const qty = Number(it.qty || 1);
+        const price = Number(it.price || 0);
+        rows.push([date, oid, String(it.model || it.name || ''), qty, price || '', (price * qty) || '', addr, dl, st]);
+      });
+    } else {
+      const tp = parseFloat(o.TotalPrice || o.totalPrice) || 0;
+      rows.push([date, oid, String(o.OrderDetail || o.ModelName || '專案訂單'), Number(o.Quantity || 1), '', tp, addr, dl, st]);
+    }
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+  const label = currentHistoryFilter === 'all' ? '全部' : currentHistoryFilter;
+  triggerDownload(csv, 'SAO採購明細_' + label + '_' + todayStamp() + '.csv');
+}
+function triggerDownload(text, filename) {
+  try {
+    const blob = new Blob([text], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
+    if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
+      showToast('若無法下載，請按右上「⋮」改用其他瀏覽器開啟後再下載');
+    }
+  } catch (e) {
+    showToast('下載失敗，請改用外部瀏覽器開啟');
+  }
+}
 
 document.getElementById('product-grid').addEventListener('click', function(e) {
   const btn = e.target.closest('.btn-order');
