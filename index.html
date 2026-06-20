@@ -34,8 +34,8 @@
       --radius:2px; --radius-md:4px;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text-pri);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    html{scroll-behavior:smooth;overflow-x:hidden;}
+    body{background:var(--bg);color:var(--text-pri);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
     .container{max-width:960px;margin:0 auto;padding:0 32px;}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
     .tag{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);padding:3px 10px;border-radius:var(--radius);}
@@ -68,10 +68,12 @@
     .ic-tv{background:#2B2A27;}
     .ic-light{background:#B2623F;}
     .ic-tool{background:#3F6664;}
+    .ic-material{background:#9C7A54;}
+    .ic-furniture{background:#6B5B73;}
     @media(max-width:768px){.hero-illus-icon{width:68px;height:68px;}.hero-illus-chip{width:68px;}.hero-illus-icon svg{width:36px;height:36px;}}
     .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
-    .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.15;letter-spacing:-0.01em;color:var(--text-pri);max-width:11.5em;word-break:keep-all;margin-bottom:28px;}
+    .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.15;letter-spacing:-0.01em;color:var(--text-pri);max-width:11.5em;margin-bottom:28px;}
     .hero-title em{font-style:italic;color:var(--gold);}
     .hero-sub{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--text-sec);max-width:400px;line-height:1.8;margin-bottom:48px;}
     .hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
@@ -141,6 +143,7 @@
     .catalog-type{font-size:10px;letter-spacing:0.10em;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius);}
     .type-star{background:var(--gold-dim);color:var(--gold);}
     .type-profit{background:rgba(26,26,24,0.06);color:var(--text-sec);}
+    .type-soon{background:transparent;color:var(--text-sec);border:1px dashed var(--divider);font-style:italic;}
 
     /* CTA */
     .section-cta{padding:120px 0;background:var(--bg);text-align:center;}
@@ -532,13 +535,16 @@
     <div class="container">
       <div class="catalog-header">
         <div><p class="section-label">品類預覽</p><h2 class="section-title">部分品項一覽</h2></div>
-        <p class="catalog-note">價格資訊僅對通過審核之會員顯示。</p>
+        <p class="catalog-note">家電品項價格資訊僅對通過審核之會員顯示；建材／燈飾／家具為合作洽談中之品類。</p>
       </div>
       <div class="catalog-grid">
         <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-fridge"><svg viewBox="0 0 48 48" fill="none"><rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.4"/><line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">Panasonic</p><p class="catalog-name">六門變頻冰箱</p><p class="catalog-spec">600L 系列 · 多色可選</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
         <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-washer"><svg viewBox="0 0 48 48" fill="none"><rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.4"/><circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.4"/><circle cx="31" cy="13" r="1.7" fill="#fff"/></svg></div><p class="catalog-brand">Hitachi</p><p class="catalog-name">滾筒洗衣乾衣機</p><p class="catalog-spec">13kg/10kg · 風熨燙系列</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
         <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-tv"><svg viewBox="0 0 48 48" fill="none"><rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.4"/><line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.4"/><line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">LG</p><p class="catalog-name">OLED 4K 電視</p><p class="catalog-spec">65" · MLA 面板 · 多尺寸</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
         <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-ac"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><p class="catalog-brand">Mitsubishi</p><p class="catalog-name">變頻冷暖分離式</p><p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-material"><svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="3" stroke="#fff" stroke-width="2.4"/><line x1="8" y1="8" x2="40" y2="40" stroke="#fff" stroke-width="2.2"/><line x1="8" y1="22" x2="22" y2="8" stroke="#fff" stroke-width="1.6" opacity="0.7"/><line x1="26" y1="40" x2="40" y2="26" stroke="#fff" stroke-width="1.6" opacity="0.7"/></svg></div><p class="catalog-brand">建材</p><p class="catalog-name">磁磚 / 木地板 / 五金</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-light"><svg viewBox="0 0 48 48" fill="none"><line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/><path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/></svg></div><p class="catalog-brand">燈飾</p><p class="catalog-name">吊燈 / 軌道燈 / 崁燈</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-furniture"><svg viewBox="0 0 48 48" fill="none"><path d="M9,26 a4,4 0 014,-4 h22 a4,4 0 014,4 v8 h-30 z" stroke="#fff" stroke-width="2.2"/><line x1="9" y1="26" x2="9" y2="38" stroke="#fff" stroke-width="2.2"/><line x1="39" y1="26" x2="39" y2="38" stroke="#fff" stroke-width="2.2"/><line x1="9" y1="34" x2="39" y2="34" stroke="#fff" stroke-width="1.6" opacity="0.7"/></svg></div><p class="catalog-brand">家具</p><p class="catalog-name">沙發 / 訂製櫥櫃</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
       </div>
     </div>
   </section>
