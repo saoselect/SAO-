@@ -379,7 +379,7 @@
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
     <div class="hero-blueprint" aria-hidden="true">
-      <svg viewBox="0 0 440 560" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 440 620" xmlns="http://www.w3.org/2000/svg">
         <path d="M40,60 L360,60 L360,260 L260,260 L260,460 L40,460 Z" fill="none" stroke="var(--gold-line)" stroke-width="1"/>
 
         <line x1="40" y1="34" x2="360" y2="34" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
@@ -439,6 +439,49 @@
           <line x1="0" y1="28" x2="180" y2="28" stroke="var(--gold-line)" stroke-width="0.4"/>
           <text x="12" y="18" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--text-pri)">S·A·O Plan</text>
           <text x="12" y="44" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.10em" fill="var(--text-sec)">SCALE 1 : 50 — NO. 01</text>
+        </g>
+
+        <text x="20" y="557" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.14em" fill="var(--text-sec)">材質 · 工法圖例</text>
+        <line x1="20" y1="563" x2="420" y2="563" stroke="var(--gold-line)" stroke-width="0.5"/>
+
+        <g opacity="0.85">
+          <line x1="60" y1="569" x2="60" y2="579" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.5"/>
+          <path d="M50,579 L70,579 L65,593 L55,593 Z" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
+          <circle cx="60" cy="586" r="1.6" fill="var(--gold)"/>
+          <text x="60" y="610" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">燈具</text>
+        </g>
+
+        <g opacity="0.85">
+          <rect x="126" y="575" width="28" height="28" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
+          <line x1="126" y1="575" x2="154" y2="603" stroke="var(--gold-line)" stroke-width="0.6"/>
+          <text x="140" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">建材</text>
+        </g>
+
+        <g opacity="0.85">
+          <circle cx="220" cy="589" r="10" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.55"/>
+          <line x1="202" y1="589" x2="238" y2="589" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.4"/>
+          <line x1="213" y1="582" x2="227" y2="596" stroke="var(--gold-line)" stroke-width="0.7"/>
+          <line x1="227" y1="582" x2="213" y2="596" stroke="var(--gold-line)" stroke-width="0.7"/>
+          <text x="220" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">水管</text>
+        </g>
+
+        <g opacity="0.85">
+          <rect x="286" y="577" width="28" height="24" rx="3" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
+          <circle cx="294" cy="589" r="1.4" fill="var(--text-sec)"/>
+          <circle cx="306" cy="589" r="1.4" fill="var(--text-sec)"/>
+          <path d="M298,581 L302,587 L299,587 L303,595" fill="none" stroke="var(--gold-line)" stroke-width="0.8"/>
+          <text x="300" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">電路</text>
+        </g>
+
+        <g opacity="0.85">
+          <path d="M366,601 L366,573 L394,573" fill="none" stroke="var(--text-pri)" stroke-width="0.9" opacity="0.6"/>
+          <line x1="362" y1="579" x2="366" y2="579" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <line x1="362" y1="587" x2="366" y2="587" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <line x1="362" y1="595" x2="366" y2="595" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <line x1="372" y1="569" x2="372" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <line x1="380" y1="569" x2="380" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <line x1="388" y1="569" x2="388" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
+          <text x="380" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">木作</text>
         </g>
       </svg>
     </div>
@@ -1035,7 +1078,7 @@ function showLoading(show) {
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   if (!text) return;
   const items = [];
@@ -1064,7 +1107,7 @@ function initPaymentWatermark() {
   const layer = document.getElementById('payment-watermark');
   if (!layer) return;
   layer.innerHTML = '';
-  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   for (let i = 0; i < 24; i++) {
     const el = document.createElement('span');
