@@ -56,9 +56,19 @@
     .hero-geometry{position:absolute;inset:0;pointer-events:none;}
     .hero-geometry::before{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:var(--bg-card);clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
     .hero-geometry::after{content:'';position:absolute;top:50%;right:12%;transform:translateY(-50%);width:1px;height:60%;background:var(--gold-line);}
-    .hero-blueprint{position:absolute;top:50%;right:6%;transform:translateY(-50%);width:clamp(260px,32vw,400px);opacity:0.95;pointer-events:none;user-select:none;}
-    .hero-blueprint svg{width:100%;height:auto;display:block;}
-    @media(max-width:900px){.hero-blueprint{display:none;}}
+    .hero-illus-row{display:flex;gap:14px;margin:8px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
+    .hero-illus-row::-webkit-scrollbar{display:none;}
+    .hero-illus-chip{flex:0 0 auto;width:78px;text-align:center;}
+    .hero-illus-icon{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(26,25,22,0.10);}
+    .hero-illus-icon svg{width:42px;height:42px;display:block;}
+    .hero-illus-label{display:block;margin-top:8px;font-size:10px;letter-spacing:0.06em;color:var(--text-sec);font-weight:500;white-space:nowrap;}
+    .ic-fridge{background:#7E8F71;}
+    .ic-washer{background:#5F7E91;}
+    .ic-ac{background:#C0922B;}
+    .ic-tv{background:#2B2A27;}
+    .ic-light{background:#B2623F;}
+    .ic-tool{background:#3F6664;}
+    @media(max-width:768px){.hero-illus-icon{width:68px;height:68px;}.hero-illus-chip{width:68px;}.hero-illus-icon svg{width:36px;height:36px;}}
     .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
     .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.08;letter-spacing:-0.01em;color:var(--text-pri);max-width:600px;margin-bottom:28px;}
@@ -378,113 +388,6 @@
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
-    <div class="hero-blueprint" aria-hidden="true">
-      <svg viewBox="0 0 440 620" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40,60 L360,60 L360,260 L260,260 L260,460 L40,460 Z" fill="none" stroke="var(--gold-line)" stroke-width="1"/>
-
-        <line x1="40" y1="34" x2="360" y2="34" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <line x1="40" y1="28" x2="40" y2="40" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <line x1="360" y1="28" x2="360" y2="40" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <text x="200" y="23" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1.2" fill="var(--text-sec)">9,600</text>
-
-        <line x1="18" y1="60" x2="18" y2="460" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <line x1="12" y1="60" x2="24" y2="60" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <line x1="12" y1="460" x2="24" y2="460" stroke="var(--text-sec)" stroke-width="0.6" opacity="0.5"/>
-        <text x="10" y="260" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1.2" fill="var(--text-sec)" transform="rotate(-90 10 260)">12,400</text>
-
-        <g transform="translate(390,40)" opacity="0.75">
-          <circle r="14" fill="none" stroke="var(--gold-line)" stroke-width="0.8"/>
-          <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--gold-line)" stroke-width="0.8"/>
-          <path d="M0,-14 L-4,-6 L4,-6 Z" fill="var(--gold)"/>
-          <text x="0" y="-20" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="10" fill="var(--gold)">N</text>
-        </g>
-
-        <g>
-          <rect x="55" y="75" width="50" height="70" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
-          <line x1="80" y1="75" x2="80" y2="145" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.4"/>
-          <line x1="83" y1="95" x2="83" y2="105" stroke="var(--text-pri)" stroke-width="1" opacity="0.5"/>
-          <line x1="105" y1="110" x2="140" y2="110" stroke="var(--gold-line)" stroke-width="0.6"/>
-          <text x="145" y="108" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">REF</text>
-          <text x="145" y="120" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">01</text>
-        </g>
-
-        <g>
-          <rect x="170" y="80" width="55" height="55" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
-          <circle cx="197.5" cy="107.5" r="18" fill="none" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.5"/>
-          <line x1="225" y1="100" x2="255" y2="100" stroke="var(--gold-line)" stroke-width="0.6"/>
-          <text x="260" y="98" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">W/D</text>
-          <text x="260" y="110" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">02</text>
-        </g>
-
-        <g>
-          <rect x="300" y="64" width="48" height="16" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
-          <line x1="305" y1="68" x2="343" y2="68" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
-          <line x1="305" y1="72" x2="343" y2="72" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
-          <line x1="305" y1="76" x2="343" y2="76" stroke="var(--text-pri)" stroke-width="0.4" opacity="0.4"/>
-          <line x1="300" y1="90" x2="280" y2="105" stroke="var(--gold-line)" stroke-width="0.6"/>
-          <text x="255" y="113" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">A/C</text>
-          <text x="255" y="125" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">03</text>
-        </g>
-
-        <g>
-          <rect x="60" y="300" width="62" height="5" fill="none" stroke="var(--text-pri)" stroke-width="1" opacity="0.65"/>
-          <rect x="75" y="305" width="32" height="10" fill="none" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.45"/>
-          <line x1="122" y1="305" x2="155" y2="322" stroke="var(--gold-line)" stroke-width="0.6"/>
-          <text x="160" y="325" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="0.08em" fill="var(--text-sec)">TV</text>
-          <text x="160" y="337" font-family="Cormorant Garamond, serif" font-style="italic" font-size="11" fill="var(--gold)">04</text>
-        </g>
-
-        <g transform="translate(180,480)">
-          <rect x="0" y="0" width="180" height="56" fill="none" stroke="var(--gold-line)" stroke-width="0.7"/>
-          <line x1="0" y1="28" x2="180" y2="28" stroke="var(--gold-line)" stroke-width="0.4"/>
-          <text x="12" y="18" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--text-pri)">S·A·O Plan</text>
-          <text x="12" y="44" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.10em" fill="var(--text-sec)">SCALE 1 : 50 — NO. 01</text>
-        </g>
-
-        <text x="20" y="557" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.14em" fill="var(--text-sec)">材質 · 工法圖例</text>
-        <line x1="20" y1="563" x2="420" y2="563" stroke="var(--gold-line)" stroke-width="0.5"/>
-
-        <g opacity="0.85">
-          <line x1="60" y1="569" x2="60" y2="579" stroke="var(--text-pri)" stroke-width="0.7" opacity="0.5"/>
-          <path d="M50,579 L70,579 L65,593 L55,593 Z" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
-          <circle cx="60" cy="586" r="1.6" fill="var(--gold)"/>
-          <text x="60" y="610" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">燈具</text>
-        </g>
-
-        <g opacity="0.85">
-          <rect x="126" y="575" width="28" height="28" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
-          <line x1="126" y1="575" x2="154" y2="603" stroke="var(--gold-line)" stroke-width="0.6"/>
-          <text x="140" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">建材</text>
-        </g>
-
-        <g opacity="0.85">
-          <circle cx="220" cy="589" r="10" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.55"/>
-          <line x1="202" y1="589" x2="238" y2="589" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.4"/>
-          <line x1="213" y1="582" x2="227" y2="596" stroke="var(--gold-line)" stroke-width="0.7"/>
-          <line x1="227" y1="582" x2="213" y2="596" stroke="var(--gold-line)" stroke-width="0.7"/>
-          <text x="220" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">水管</text>
-        </g>
-
-        <g opacity="0.85">
-          <rect x="286" y="577" width="28" height="24" rx="3" fill="none" stroke="var(--text-pri)" stroke-width="0.8" opacity="0.6"/>
-          <circle cx="294" cy="589" r="1.4" fill="var(--text-sec)"/>
-          <circle cx="306" cy="589" r="1.4" fill="var(--text-sec)"/>
-          <path d="M298,581 L302,587 L299,587 L303,595" fill="none" stroke="var(--gold-line)" stroke-width="0.8"/>
-          <text x="300" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">電路</text>
-        </g>
-
-        <g opacity="0.85">
-          <path d="M366,601 L366,573 L394,573" fill="none" stroke="var(--text-pri)" stroke-width="0.9" opacity="0.6"/>
-          <line x1="362" y1="579" x2="366" y2="579" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <line x1="362" y1="587" x2="366" y2="587" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <line x1="362" y1="595" x2="366" y2="595" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <line x1="372" y1="569" x2="372" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <line x1="380" y1="569" x2="380" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <line x1="388" y1="569" x2="388" y2="573" stroke="var(--text-pri)" stroke-width="0.6" opacity="0.5"/>
-          <text x="380" y="616" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="0.08em" fill="var(--text-sec)">木作</text>
-        </g>
-      </svg>
-    </div>
     <div class="container">
       <div class="hero-content">
         <p class="hero-eyebrow">封閉式 B2B 採購通道 · 僅限專業設計師</p>
@@ -496,6 +399,71 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
           <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">了解更多</button>
+        </div>
+
+        <div class="hero-illus-row" aria-hidden="true">
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-fridge">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.2"/>
+                <line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.2"/>
+                <line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">冰箱</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-washer">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.2"/>
+                <circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.2"/>
+                <circle cx="31" cy="13" r="1.6" fill="#fff"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">洗衣機</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-ac">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.2"/>
+                <line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">空調</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-tv">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.2"/>
+                <line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.2"/>
+                <line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">電視</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-light">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/>
+                <path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
+                <circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">燈具</span>
+          </div>
+          <div class="hero-illus-chip">
+            <div class="hero-illus-icon ic-tool">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="8" width="17" height="11" rx="2" transform="rotate(-28 16.5 13.5)" stroke="#fff" stroke-width="2.2"/>
+                <line x1="20" y1="20" x2="36" y2="36" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="hero-illus-label">裝潢工法</span>
+          </div>
         </div>
       </div>
       <div class="hero-meta">
@@ -1078,7 +1046,7 @@ function showLoading(show) {
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   if (!text) return;
   const items = [];
@@ -1107,7 +1075,7 @@ function initPaymentWatermark() {
   const layer = document.getElementById('payment-watermark');
   if (!layer) return;
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName].filter(Boolean);
+  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   for (let i = 0; i < 24; i++) {
     const el = document.createElement('span');
