@@ -923,6 +923,7 @@
     <div id="history-controls" style="display:none;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
       <select id="history-month-filter" style="flex:1;font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--divider);border-radius:var(--radius-md);background:var(--bg-card);color:var(--text-pri);cursor:pointer;"></select>
       <button id="history-download-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">⬇ 下載 Excel</button>
+      <button id="history-copy-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">📋 複製明細</button>
     </div>
     <div class="panel-body" id="history-body" style="max-height:60svh;overflow-y:auto;">
       <p style="color:var(--text-sec);font-size:13px;">載入中…</p>
@@ -1518,6 +1519,7 @@ document.getElementById('history-btn').addEventListener('click', async function(
     sel.value = 'all';
     sel.onchange = function() { renderHistory(this.value); };
     document.getElementById('history-download-btn').onclick = downloadHistoryCSV;
+    var _cb = document.getElementById('history-copy-btn'); if (_cb) _cb.onclick = copyHistoryTSV;
     controls.style.display = 'flex';
 
     renderHistory('all');
@@ -1582,9 +1584,9 @@ function todayStamp() {
   const d = new Date();
   return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
 }
-function downloadHistoryCSV() {
+function buildHistoryRows() {
   const orders = filterHistoryOrders(currentHistoryFilter);
-  if (!orders.length) { showToast('此區間無資料可匯出'); return; }
+  if (!orders.length) return null;
   const rows = [['訂單日期', '訂單編號', '型號', '數量', '單價', '小計', '送貨地址', '交期', '狀態']];
   orders.forEach(o => {
     const date = String(o.CreatedAt || o.createdAt || '');
@@ -1604,9 +1606,36 @@ function downloadHistoryCSV() {
       rows.push([date, oid, String(o.OrderDetail || o.ModelName || '專案訂單'), Number(o.Quantity || 1), '', tp, addr, dl, st]);
     }
   });
+  return rows;
+}
+function downloadHistoryCSV() {
+  const rows = buildHistoryRows();
+  if (!rows) { showToast('此區間無資料可匯出'); return; }
   const csv = '\uFEFF' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
   const label = currentHistoryFilter === 'all' ? '全部' : currentHistoryFilter;
   triggerDownload(csv, 'SAO採購明細_' + label + '_' + todayStamp() + '.csv');
+}
+function copyHistoryTSV() {
+  const rows = buildHistoryRows();
+  if (!rows) { showToast('此區間無資料可複製'); return; }
+  const tsv = rows.map(function(r){ return r.map(function(c){ return String(c==null?'':c).replace(/\t/g,' ').replace(/\r?\n/g,' '); }).join('\t'); }).join('\n');
+  copyTextToClipboard(tsv);
+}
+function copyTextToClipboard(text) {
+  var ok = function(){ showToast('✓ 明細已複製，貼到 Excel／Google 試算表即可（自動分欄）'); };
+  var fb = function(){
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var done = document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(done ? '✓ 明細已複製，貼到 Excel／Google 試算表即可' : '複製失敗，請改用外部瀏覽器下載');
+    } catch (e) { showToast('複製失敗，請改用外部瀏覽器下載'); }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(fb);
+  } else { fb(); }
 }
 function triggerDownload(text, filename) {
   try {
@@ -1617,7 +1646,7 @@ function triggerDownload(text, filename) {
     document.body.appendChild(a); a.click();
     setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
     if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
-      showToast('若無法下載，請按右上「⋮」改用其他瀏覽器開啟後再下載');
+      showToast('LINE 內無法直接下載檔案，請改按「📋 複製明細」貼到 Excel；或右上「⋮」用外部瀏覽器開啟');
     }
   } catch (e) {
     showToast('下載失敗，請改用外部瀏覽器開啟');
