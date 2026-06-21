@@ -1499,6 +1499,11 @@ function filterHistoryOrders(filter) {
 function historyItemsOf(o) {
   try { return JSON.parse(o.CartJSON || o.cartJSON || '[]'); } catch (e) { return []; }
 }
+function orderTotal(o) {
+  const items = historyItemsOf(o);
+  if (items.length) return items.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 1), 0);
+  return parseFloat(o.TotalPrice || o.totalPrice) || 0;
+}
 
 document.getElementById('history-btn').addEventListener('click', async function() {
   showOverlay('overlay-history');
@@ -1545,17 +1550,17 @@ function renderHistory(filter) {
   let html = '';
   Object.keys(byMonth).sort().reverse().forEach(monthK => {
     const monthOrders = byMonth[monthK];
-    const monthTotal = monthOrders.reduce((s, o) => s + (parseFloat(o.TotalPrice || o.totalPrice) || 0), 0);
+    const monthTotal = monthOrders.reduce((s, o) => s + orderTotal(o), 0);
     html += '<div class="history-month">';
     html += '<p class="history-month-title">' + historyMonthLabel(monthK) + '</p>';
 
     monthOrders.forEach(o => {
       const dateStr = String(o.CreatedAt || o.createdAt || '').slice(0, 16) || '—';
       const oid = String(o.OrderID || o.orderId || '');
-      const oidShort = oid ? oid.slice(-6) : '';
+      const oidShort = oid ? (oid.length <= 16 ? oid : '…' + oid.slice(-6)) : '';
       html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 2px;">';
       html += '<span style="font-size:12px;color:var(--text-pri);font-weight:500;">' + dateStr + '</span>';
-      if (oidShort) html += '<span style="font-size:10px;color:var(--text-sec);letter-spacing:0.04em;">單號 …' + oidShort + '</span>';
+      if (oidShort) html += '<span style="font-size:10px;color:var(--text-sec);letter-spacing:0.04em;">單號 ' + oidShort + '</span>';
       html += '</div>';
 
       const items = historyItemsOf(o);
