@@ -600,11 +600,17 @@ function runTaxCheck() {
       out.push('檢查碼：' + (r.checksumValid ? '<span class="tc-ok">通過</span>' : '<span class="tc-bad">錯誤（疑似亂編）</span>'));
       if (!r.checksumValid) { box.innerHTML = out.join(''); return; }
       if (r.found) {
+        out.push('類型：' + (r.entityType==='商業' ? '商業登記行號' : '公司登記'));
         out.push('登記名稱：<strong>'+esc(r.officialName||'')+'</strong>');
-        out.push('登記狀況：' + (r.dissolved ? '<span class="tc-bad">'+esc(r.statusDesc||'已解散/撤銷/廢止')+'（不可申請）</span>'
-                            : r.suspended ? '<span class="tc-warn">'+esc(r.statusDesc||'停業')+'</span>'
-                            : r.active   ? '<span class="tc-ok">'+esc(r.statusDesc||'營業中')+'</span>'
-                            : esc(r.statusDesc||'未知')));
+        if (r.responsibleName) out.push('負責人：'+esc(r.responsibleName));
+        if (r.active === null) {
+          out.push('登記狀況：<span class="tc-warn">已登記行號，營業狀況需人工確認</span>');
+        } else {
+          out.push('登記狀況：' + (r.dissolved ? '<span class="tc-bad">'+esc(r.statusDesc||'已解散/撤銷/廢止')+'（不可申請）</span>'
+                              : r.suspended ? '<span class="tc-warn">'+esc(r.statusDesc||'停業')+'</span>'
+                              : r.active   ? '<span class="tc-ok">'+esc(r.statusDesc||'營業中')+'</span>'
+                              : esc(r.statusDesc||'未知')));
+        }
         if (name) out.push('名稱比對：' + (r.nameMatch ? '<span class="tc-ok">吻合</span>' : '<span class="tc-warn">與登記不符</span>'));
       } else if (r.needsManualReview) {
         out.push('<span class="tc-warn">'+esc(r.note||'公司登記查無，可能為商業登記行號，需人工核對名片')+'</span>');
