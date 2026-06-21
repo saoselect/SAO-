@@ -457,7 +457,9 @@
     <button class="modal-close" onclick="document.getElementById('card-modal').classList.remove('open')">✕</button>
     <h3 id="card-modal-name"></h3>
     <p id="card-modal-company" style="font-size:12px;color:var(--text-sec);"></p>
-    <img id="card-modal-img" src="" alt="名片"/>
+    <p id="card-modal-status" style="font-size:12px;color:var(--text-sec);margin-top:10px;">載入中…</p>
+    <img id="card-modal-img" src="" alt="名片" style="display:none;"/>
+    <a id="card-modal-link" href="#" target="_blank" rel="noopener" style="display:none;font-size:12px;color:var(--gold);margin-top:10px;text-decoration:underline;">改用 Google Drive 開啟原始檔 ↗</a>
   </div>
 </div>
 
@@ -642,8 +644,33 @@ function doBlock(lineUID) {
 function showCard(lineUID, company, name, imgUrl) {
   document.getElementById('card-modal-name').textContent    = name || lineUID;
   document.getElementById('card-modal-company').textContent = company;
-  document.getElementById('card-modal-img').src             = imgUrl;
+  const imgEl    = document.getElementById('card-modal-img');
+  const statusEl = document.getElementById('card-modal-status');
+  const linkEl   = document.getElementById('card-modal-link');
+
+  imgEl.style.display    = 'none';
+  imgEl.src               = '';
+  linkEl.style.display   = 'none';
+  linkEl.href             = imgUrl;
+  statusEl.style.display = 'block';
+  statusEl.textContent   = '載入中…';
   document.getElementById('card-modal').classList.add('open');
+
+  fetchPOST({ action: 'getCardImage', url: imgUrl, password: PASSWORD })
+    .then(d => {
+      if (d.success) {
+        imgEl.src = d.dataUrl;
+        imgEl.style.display = 'block';
+        statusEl.style.display = 'none';
+      } else {
+        statusEl.textContent = '圖片載入失敗：' + (d.error || '');
+        linkEl.style.display = 'inline-block';
+      }
+    })
+    .catch(() => {
+      statusEl.textContent = '圖片載入失敗，請改用下方連結開啟';
+      linkEl.style.display = 'inline-block';
+    });
 }
 function closeCardModal(e) {
   if (e.target === document.getElementById('card-modal'))

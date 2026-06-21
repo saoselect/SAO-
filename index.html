@@ -978,7 +978,7 @@ function callGAS(params) {
     s.onerror = () => { delete window[cb]; document.body.removeChild(s); reject(new Error('連線失敗')); };
     window[cb] = (data) => { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); resolve(data); };
     document.body.appendChild(s);
-    setTimeout(() => { if(window[cb]) { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); reject(new Error('逾時')); } }, 12000);
+    setTimeout(() => { if(window[cb]) { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); reject(new Error('逾時')); } }, 30000);
   });
 }
 
@@ -1859,7 +1859,11 @@ document.getElementById('register-submit-btn').addEventListener('click', async f
       closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success');
     }
     else { showToast('送出失敗：'+(data.error||'請稍後再試')); }
-  } catch(e) { showToast('連線失敗，請重試'); }
+  } catch(e) {
+    showToast(e && e.message === '逾時'
+      ? '統編查核處理較久，請稍候留意 LINE 通知；若 1 分鐘後仍未收到，再重新送出一次'
+      : '連線失敗，請確認網路後重試');
+  }
   this.disabled = false; this.textContent = '送出申請';
 });
 
