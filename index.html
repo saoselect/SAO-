@@ -982,6 +982,33 @@ function callGAS(params) {
   });
 }
 
+/* ── POST 連線（GAS 安全寫法：不帶 JSON content-type，避開 GAS 無法回應的 CORS 預檢）── */
+async function postGAS(payload) {
+  const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+  return await res.json();
+}
+
+/* ── 圖片壓縮成 base64（限制尺寸，縮小上傳量）── */
+function fileToScaledDataURL(file, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('讀檔失敗'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('圖片解析失敗'));
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) { const r = Math.min(maxDim / w, maxDim / h); w = Math.round(w * r); h = Math.round(h * r); }
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 /* ── LINE LIFF 初始化 ── */
 async function initLiff() {
   const safetyTimer = setTimeout(() => {
@@ -1811,9 +1838,24 @@ document.getElementById('register-submit-btn').addEventListener('click', async f
   if (!company||!taxID||!phone) { showToast('請填寫所有必填欄位'); return; }
   if (!validateTaxID(taxID)) { document.getElementById('input-taxid').classList.add('error'); errEl.classList.add('show'); return; }
   document.getElementById('input-taxid').classList.remove('error'); errEl.classList.remove('show');
+  if (!currentUser || !currentUser.lineUID) {
+    showToast('請先用右上「登入」完成 LINE 登入後再申請');
+    return;
+  }
   this.disabled = true; this.textContent = '送出中…';
   try {
-    const data = await callGAS({ action:'registerMember', lineUID: currentUser?.lineUID||'demo_'+Date.now(), displayName: currentUser?.displayName||'', companyName: company, taxID, phone, cardImageUrl:'' });
+    let cardUrl = '';
+    const cardFile = document.getElementById('input-card').files[0];
+    if (cardFile) {
+      try {
+        this.textContent = '上傳名片中…';
+        const dataUrl = await fileToScaledDataURL(cardFile, 1280, 0.82);
+        const up = await postGAS({ action:'uploadCardImage', dataUrl: dataUrl, taxID: taxID, company: company });
+        if (up && up.success) cardUrl = up.url; else showToast('名片上傳失敗，仍以無名片送出');
+      } catch (ce) { showToast('名片處理失敗，仍以無名片送出'); }
+      this.textContent = '送出中…';
+    }
+    const data = await callGAS({ action:'registerMember', lineUID: currentUser.lineUID, displayName: currentUser.displayName||'', companyName: company, taxID, phone, cardImageUrl: cardUrl });
     if (data.success) { closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success'); }
     else { showToast('送出失敗：'+(data.error||'請稍後再試')); }
   } catch(e) { showToast('連線失敗，請重試'); }
