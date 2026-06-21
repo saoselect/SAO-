@@ -1842,21 +1842,22 @@ document.getElementById('register-submit-btn').addEventListener('click', async f
     showToast('請先用右上「登入」完成 LINE 登入後再申請');
     return;
   }
+  // 名片先壓成 base64（最佳努力，失敗略過，不影響申請）
+  let cardDataUrl = '';
+  const cardFile = document.getElementById('input-card').files[0];
+  if (cardFile) {
+    try { cardDataUrl = await fileToScaledDataURL(cardFile, 1280, 0.82); } catch (ce) { cardDataUrl = ''; }
+  }
   this.disabled = true; this.textContent = '送出中…';
   try {
-    let cardUrl = '';
-    const cardFile = document.getElementById('input-card').files[0];
-    if (cardFile) {
-      try {
-        this.textContent = '上傳名片中…';
-        const dataUrl = await fileToScaledDataURL(cardFile, 1280, 0.82);
-        const up = await postGAS({ action:'uploadCardImage', dataUrl: dataUrl, taxID: taxID, company: company });
-        if (up && up.success) cardUrl = up.url; else showToast('名片上傳失敗，仍以無名片送出');
-      } catch (ce) { showToast('名片處理失敗，仍以無名片送出'); }
-      this.textContent = '送出中…';
+    const data = await callGAS({ action:'registerMember', lineUID: currentUser.lineUID, displayName: currentUser.displayName||'', companyName: company, taxID, phone, cardImageUrl:'' });
+    if (data.success) {
+      // 申請成功後再上傳名片：no-cors 最佳努力，GAS 依 lineUID 寫回該會員列（不讀回應，故不會卡住申請）
+      if (cardDataUrl) {
+        try { fetch(GAS_URL, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'uploadCardImage', dataUrl: cardDataUrl, lineUID: currentUser.lineUID, taxID: taxID, company: company }) }); } catch (ue) {}
+      }
+      closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success');
     }
-    const data = await callGAS({ action:'registerMember', lineUID: currentUser.lineUID, displayName: currentUser.displayName||'', companyName: company, taxID, phone, cardImageUrl: cardUrl });
-    if (data.success) { closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success'); }
     else { showToast('送出失敗：'+(data.error||'請稍後再試')); }
   } catch(e) { showToast('連線失敗，請重試'); }
   this.disabled = false; this.textContent = '送出申請';
