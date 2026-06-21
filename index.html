@@ -374,6 +374,9 @@
       .hero-illus-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 10px;overflow:visible;}
       .hero-illus-chip{width:auto;}
       .hero-illus-icon{margin-left:auto;margin-right:auto;}
+      #history-controls{padding-left:18px !important;padding-right:18px !important;}
+      #history-month-filter{flex:1 1 100% !important;}
+      #history-download-btn, #history-copy-btn{flex:1 1 calc(50% - 4px) !important;justify-content:center;text-align:center;}
     }
     @media(max-width:480px){
       .hero-title{font-size:30px;line-height:1.22;}
@@ -920,7 +923,7 @@
       <h2 class="panel-title">歷史明細紀錄</h2>
       <button class="panel-close" data-close="overlay-history">✕</button>
     </div>
-    <div id="history-controls" style="display:none;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
+    <div id="history-controls" style="display:none;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
       <select id="history-month-filter" style="flex:1;font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--divider);border-radius:var(--radius-md);background:var(--bg-card);color:var(--text-pri);cursor:pointer;"></select>
       <button id="history-download-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">⬇ 下載 Excel</button>
       <button id="history-copy-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">📋 複製明細</button>
