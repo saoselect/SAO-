@@ -1067,20 +1067,25 @@ function applyState(status, data) {
   }
 }
 
-function doLineLogin() {
+async function doLineLogin() {
+  if (typeof liff === 'undefined' || !liff.init) { showToast('登入元件載入中，請稍候再試'); return; }
+  // 確保已初始化（頁面載入時若 init 失敗，這裡再試一次；失敗就明白告知，不默默變 guest）
+  let inited = false;
+  try { await liff.init({ liffId: LIFF_ID }); inited = true; } catch (e) { inited = false; }
+  if (!inited) { showToast('LINE 登入初始化失敗，請改從 LINE 官方帳號開啟，或檢查 LIFF 設定'); return; }
+  if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.origin + location.pathname }); return; }
+  // 已登入 → 直接取 profile + 查會員狀態（不靠 reload，避免再次踩到 init 失敗）
   try {
-    if (typeof liff !== 'undefined' && liff.login) {
-      if (liff.isLoggedIn && liff.isLoggedIn()) {
-        showToast('已登入，正在重新整理…');
-        setTimeout(() => location.reload(), 600);
-      } else {
-        liff.login({ redirectUri: location.origin + location.pathname });
-      }
-    } else {
-      showToast('登入服務尚未就緒，請稍候再試或從 LINE 開啟');
-    }
+    showToast('登入成功，讀取會員狀態…');
+    const prof = await liff.getProfile();
+    currentUser = { lineUID: prof.userId, displayName: prof.displayName };
+    console.log('LINE userId:', prof.userId);  // 供比對 Members 試算表，排查 UID 是否一致
+    await checkMemberStatus(currentUser.lineUID);
+    if (memberStatus === 'approved')      showToast('歡迎回來，' + (currentUser.displayName || '') + '，已進入查價系統');
+    else if (memberStatus === 'pending')  showToast('您的申請審核中，請耐心等候');
+    else                                  showToast('此 LINE 帳號尚非會員，請先申請查價資格');
   } catch (e) {
-    showToast('無法啟動登入，請從 LINE 官方帳號開啟此頁');
+    showToast('讀取會員資料失敗，請稍後再試');
   }
 }
 
