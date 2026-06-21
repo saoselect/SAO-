@@ -50,6 +50,9 @@
     .nav-links a:hover{color:var(--text-pri);}
     .nav-cta{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--bg);background:var(--text-pri);border:none;padding:9px 20px;border-radius:var(--radius);cursor:pointer;text-decoration:none;transition:background 0.2s;}
     .nav-cta:hover{background:var(--gold);}
+    .nav-actions{display:flex;align-items:center;gap:12px;}
+    .nav-login{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-pri);background:none;border:1px solid var(--text-pri);padding:8px 18px;border-radius:var(--radius);cursor:pointer;transition:all 0.2s;}
+    .nav-login:hover{background:var(--text-pri);color:var(--bg);}
 
     /* HERO */
     .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:60px;position:relative;overflow:hidden;}
@@ -355,6 +358,8 @@
     @media(max-width:768px){
       .container{padding:0 20px;}
       .nav-links{display:none;}
+      .nav-actions{gap:8px;}
+      .nav-cta, .nav-login{padding:8px 13px;font-size:11px;letter-spacing:0.05em;}
       .about-grid{grid-template-columns:1fr;gap:48px;}
       .qualify-cards{grid-template-columns:1fr;}
       .process-steps{grid-template-columns:1fr 1fr;gap:32px;}
@@ -395,8 +400,12 @@
       <li><a href="#qualify">申請資格</a></li>
       <li><a href="#process">申請流程</a></li>
       <li><a href="#catalog">品類預覽</a></li>
+      <li><a href="#terms">服務條款</a></li>
     </ul>
-    <button class="nav-cta" id="nav-cta-btn">申請查價資格</button>
+    <div class="nav-actions">
+      <button class="nav-login" id="nav-login-btn" onclick="doLineLogin()">登入</button>
+      <button class="nav-cta" id="nav-cta-btn">申請查價資格</button>
+    </div>
   </div>
 </nav>
 
@@ -1036,6 +1045,7 @@ function applyState(status, data) {
     btn.textContent = '查價系統';
     document.body.classList.remove('guest');
     document.body.classList.add('approved');
+    const _lb = document.getElementById('nav-login-btn'); if (_lb) _lb.style.display = 'none';
     document.getElementById('member-name-display').textContent = data.companyName || currentUser?.displayName || '設計師';
     if (!currentUser) currentUser = {};
     currentUser.lineUID     = data.lineUID;
@@ -1054,6 +1064,23 @@ function applyState(status, data) {
     btn.textContent = '帳號受限';
   } else {
     btn.textContent = '申請查價資格';
+  }
+}
+
+function doLineLogin() {
+  try {
+    if (typeof liff !== 'undefined' && liff.login) {
+      if (liff.isLoggedIn && liff.isLoggedIn()) {
+        showToast('已登入，正在重新整理…');
+        setTimeout(() => location.reload(), 600);
+      } else {
+        liff.login({ redirectUri: location.origin + location.pathname });
+      }
+    } else {
+      showToast('登入服務尚未就緒，請稍候再試或從 LINE 開啟');
+    }
+  } catch (e) {
+    showToast('無法啟動登入，請從 LINE 官方帳號開啟此頁');
   }
 }
 
