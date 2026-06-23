@@ -491,16 +491,32 @@ function loginWithLine() {
   catch (e) { showError('login-error', 'LINE 登入啟動失敗，請改用下方備援密碼'); }
 }
 
+function decodeJwtPayload(token) {
+  try {
+    var p = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (p.length % 4) p += '=';
+    return JSON.parse(atob(p));
+  } catch (e) { return null; }
+}
+
 async function enterWithLine() {
   let idToken = null;
   try { idToken = liff.getIDToken(); } catch (e) {}
-  if (!idToken) { showError('login-error', '無法取得 LINE 憑證，請重新登入或用備援密碼'); return; }
+  if (!idToken) {
+    showError('login-error', '無法取得 LINE 憑證（請確認 Login channel 已開啟 openid scope），或改用備援密碼');
+    return;
+  }
   ADMIN_AUTH = { idToken: idToken };
   try {
     const data = await callGAS({ action: 'getMembers' });
     if (!data.success) {
       ADMIN_AUTH = {};
-      showError('login-error', data.error || '此 LINE 帳號非管理員');
+      // 診斷：顯示 LINE 實際回傳的 sub / aud，照此填回 GAS 即可
+      const pl = decodeJwtPayload(idToken) || {};
+      showError('login-error',
+        '此 LINE 帳號未被授權。請把 GAS 設成 → LINE_ADMIN_UID = ' + (pl.sub || '?') +
+        '；LINE_LOGIN_CHANNEL_ID = ' + (pl.aud || '?') + '（重新部署後再登入）。可先用備援密碼進入。');
+      console.log('[SAO 診斷] sub =', pl.sub, ' aud =', pl.aud);
       return;
     }
     document.getElementById('login-screen').classList.add('hidden');
