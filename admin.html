@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SAO 後台管理</title>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -173,18 +174,6 @@
       transition: all 0.15s;
     }
     .filter-tab.active { background: var(--text-pri); color: #fff; border-color: var(--text-pri); }
-    .taxcheck-card { background: var(--bg-card,#fff); border:1px solid var(--divider); border-radius:8px; padding:14px 16px; margin-bottom:16px; }
-    .taxcheck-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .taxcheck-input { padding:8px 10px; border:1px solid var(--divider); border-radius:4px; font-size:13px; color:var(--text-pri); background:var(--bg,#fff); }
-    #taxcheck-input { width:160px; font-variant-numeric:tabular-nums; }
-    #taxcheck-name { width:200px; }
-    .taxcheck-result { margin-top:10px; font-size:13px; line-height:1.7; color:var(--text-pri); }
-    .taxcheck-result:empty { display:none; }
-    .tc-ok { color:var(--green,#2e7d32); font-weight:600; }
-    .tc-bad { color:var(--red,#c62828); font-weight:600; }
-    .tc-warn { color:#b26a00; font-weight:600; }
-    tr.group-row td { background:rgba(0,0,0,0.045); font-size:13px; color:var(--text-pri); padding:10px 12px; border-top:2px solid var(--divider); }
-    .audit-note { display:block; margin-top:3px; font-size:11px; color:var(--text-sec); line-height:1.5; }
     table { width: 100%; border-collapse: collapse; }
     th {
       padding: 10px 16px; text-align: left;
@@ -263,7 +252,7 @@
 
     /* 產品編輯 */
     .price-input {
-      width: 82px; padding: 4px 8px;
+      width: 100px; padding: 4px 8px;
       border: 1px solid var(--divider); border-radius: 2px;
       font-family: var(--sans); font-size: 13px; color: var(--text-pri);
       background: var(--bg); outline: none; text-align: right;
@@ -345,13 +334,16 @@
   <div class="login-box">
     <p class="login-logo">S<span>·</span>A<span>·</span>O 後台</p>
     <h1>管理登入</h1>
-    <div class="field">
-      <label for="login-pass">管理密碼</label>
-      <input type="password" id="login-pass" placeholder="輸入管理密碼" onkeydown="if(event.key==='Enter')doLogin()"/>
-    </div>
-    <p class="error-msg" id="login-error">密碼錯誤，請重試</p>
-    <br>
-    <button class="btn btn-dark btn-full" onclick="doLogin()">進入後台</button>
+    <p class="error-msg" id="login-error"></p>
+    <button class="btn btn-dark btn-full" onclick="loginWithLine()">使用 LINE 登入</button>
+    <details style="margin-top:14px;">
+      <summary style="cursor:pointer;font-size:12px;color:#999;">備援登入（管理密碼）</summary>
+      <div class="field" style="margin-top:10px;">
+        <label for="login-pass">管理密碼</label>
+        <input type="password" id="login-pass" placeholder="僅 LINE 登入異常時使用" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <button class="btn btn-ghost btn-full" onclick="doLogin()">以密碼進入</button>
+    </details>
   </div>
 </div>
 
@@ -380,14 +372,6 @@
         </div>
       </div>
       <div class="content">
-        <div class="taxcheck-card">
-          <div class="taxcheck-row">
-            <input id="taxcheck-input" class="taxcheck-input" placeholder="統一編號（8碼）" maxlength="8" inputmode="numeric"/>
-            <input id="taxcheck-name" class="taxcheck-input" placeholder="公司名稱（選填，比對用）"/>
-            <button class="btn" onclick="runTaxCheck()">統編健檢</button>
-          </div>
-          <div id="taxcheck-result" class="taxcheck-result"></div>
-        </div>
         <div class="stat-cards" id="member-stats">
           <div class="stat-card"><p class="stat-label">待審核</p><p class="stat-value gold" id="stat-pending">—</p></div>
           <div class="stat-card"><p class="stat-label">已核准</p><p class="stat-value" id="stat-approved">—</p></div>
@@ -439,7 +423,7 @@
       <div class="content">
         <div class="table-card">
           <div class="table-header">
-            <h3>產品列表（點擊 A/B/C 級價可直接編輯）</h3>
+            <h3>產品列表（報價請於試算表 A／B／C 級價欄維護）</h3>
           </div>
           <div id="products-table-wrap">
             <div class="empty-state">載入中…</div>
@@ -457,9 +441,7 @@
     <button class="modal-close" onclick="document.getElementById('card-modal').classList.remove('open')">✕</button>
     <h3 id="card-modal-name"></h3>
     <p id="card-modal-company" style="font-size:12px;color:var(--text-sec);"></p>
-    <p id="card-modal-status" style="font-size:12px;color:var(--text-sec);margin-top:10px;">載入中…</p>
-    <img id="card-modal-img" src="" alt="名片" style="display:none;"/>
-    <a id="card-modal-link" href="#" target="_blank" rel="noopener" style="display:none;font-size:12px;color:var(--gold);margin-top:10px;text-decoration:underline;">改用 Google Drive 開啟原始檔 ↗</a>
+    <img id="card-modal-img" src="" alt="名片"/>
   </div>
 </div>
 
@@ -472,6 +454,8 @@
 ───────────────────────── */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhdD6DTDooiasKmidU3nYGzI32juZhiZA7fNL-9se3y7iY-b0qM33soj-H4RodB4N5/exec';
 let PASSWORD = '';
+let ADMIN_AUTH = {};                       // 登入後存 { idToken }；密碼備援時維持空
+const LIFF_ID = '2010363089-IaA8fmYO';
 let allMembers = [];
 
 /* ─────────────────────────
@@ -480,11 +464,12 @@ let allMembers = [];
 function doLogin() {
   const pass = document.getElementById('login-pass').value.trim();
   if (!pass) { showError('login-error', '請輸入管理密碼'); return; }
+  ADMIN_AUTH = {};                 // 密碼備援路徑：不帶 token
   PASSWORD = pass;
   // 用 getMembers 驗證密碼
   fetchGET({ action: 'getMembers', password: PASSWORD })
     .then(data => {
-      if (!data.success) { showError('login-error', '密碼錯誤，請重試'); return; }
+      if (!data.success) { showError('login-error', data.error || '密碼錯誤，請重試'); return; }
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('admin-shell').classList.remove('hidden');
       document.getElementById('admin-shell').classList.add('visible');
@@ -493,8 +478,46 @@ function doLogin() {
     .catch(() => showError('login-error', '無法連線，請確認 GAS URL'));
 }
 
+/* ── LINE 官方登入（主要方式）：token 由 GAS 向 LINE 驗證，userId 無法偽造 ── */
+async function bootAdmin() {
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if (liff.isLoggedIn()) { await enterWithLine(); }
+  } catch (e) { /* LIFF 失敗 → 停在登入畫面，可用備援密碼 */ }
+}
+
+function loginWithLine() {
+  try { liff.login({ redirectUri: location.href }); }
+  catch (e) { showError('login-error', 'LINE 登入啟動失敗，請改用下方備援密碼'); }
+}
+
+async function enterWithLine() {
+  let idToken = null;
+  try { idToken = liff.getIDToken(); } catch (e) {}
+  if (!idToken) { showError('login-error', '無法取得 LINE 憑證，請重新登入或用備援密碼'); return; }
+  ADMIN_AUTH = { idToken: idToken };
+  try {
+    const data = await callGAS({ action: 'getMembers' });
+    if (!data.success) {
+      ADMIN_AUTH = {};
+      showError('login-error', data.error || '此 LINE 帳號非管理員');
+      return;
+    }
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('admin-shell').classList.remove('hidden');
+    document.getElementById('admin-shell').classList.add('visible');
+    renderMembers(data.members);
+  } catch (e) {
+    ADMIN_AUTH = {};
+    showError('login-error', '連線失敗，請重試');
+  }
+}
+window.addEventListener('load', bootAdmin);
+
 function doLogout() {
   PASSWORD = '';
+  ADMIN_AUTH = {};
+  try { if (typeof liff !== 'undefined' && liff.isLoggedIn()) liff.logout(); } catch (e) {}
   document.getElementById('admin-shell').classList.add('hidden');
   document.getElementById('admin-shell').classList.remove('visible');
   document.getElementById('login-screen').classList.remove('hidden');
@@ -546,20 +569,25 @@ function filterMembers(status, btn) {
 function renderMemberTable(list) {
   const wrap = document.getElementById('members-table-wrap');
   if (!list.length) { wrap.innerHTML = '<div class="empty-state">沒有符合的會員</div>'; return; }
-  // 依統編分組：同一家公司的設計師收在一起
-  const groups = {}, order = [];
-  list.forEach(m => {
-    const k = m.TaxID || '—';
-    if (!groups[k]) { groups[k] = []; order.push(k); }
-    groups[k].push(m);
-  });
-  const memberRow = m => `
+  wrap.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>申請時間</th><th>公司名稱</th><th>統編</th><th>手機</th>
+        <th>狀態</th><th>等級</th><th>名片</th><th>操作</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(m => `
           <tr>
             <td data-label="申請時間" style="color:var(--text-sec);font-size:12px;">${(m.CreatedAt||'—').replace('T',' ').replace('.000Z','')}</td>
-            <td data-label="設計師"><strong>${m.LineDisplayName||'—'}</strong>${m.Note ? `<span class="audit-note">${esc(String(m.Note))}</span>` : ''}</td>
+            <td data-label="公司名稱"><strong>${m.CompanyName||'—'}</strong></td>
             <td data-label="統編" style="font-variant-numeric:tabular-nums;">${m.TaxID||'—'}</td>
             <td data-label="手機">${m.Phone||'—'}</td>
             <td data-label="狀態"><span class="badge badge-${m.Status||'pending'}">${statusLabel(m.Status)}</span></td>
+            <td data-label="等級">
+              <select onchange="saveTier('${esc(m.LineUID)}', this.value)" style="font-size:12px;padding:4px 6px;border:1px solid var(--line,#d8d2c4);border-radius:4px;background:#fff;">
+                ${['A','B','C'].map(t => `<option value="${t}" ${String(m.Tier||'C').toUpperCase()===t?'selected':''}>${t} 級</option>`).join('')}
+              </select>
+            </td>
             <td data-label="名片">
               ${m.CardImageURL
                 ? `<button class="btn-xs" onclick="showCard('${esc(m.LineUID)}','${esc(m.CompanyName)}','${esc(m.LineDisplayName)}','${esc(m.CardImageURL)}')">查看</button>`
@@ -572,54 +600,10 @@ function renderMemberTable(list) {
                 ${m.Status !== 'blocked'  ? `<button class="btn-xs block"   onclick="doBlock('${esc(m.LineUID)}')">封鎖</button>`  : ''}
               </div>
             </td>
-          </tr>`;
-  const body = order.map(k => {
-    const g = groups[k];
-    const head = `<tr class="group-row"><td colspan="7">🏢 <strong>${esc(g[0].CompanyName||'—')}</strong>　統編 ${k}　·　${g.length} 位設計師</td></tr>`;
-    return head + g.map(memberRow).join('');
-  }).join('');
-  wrap.innerHTML = `
-    <table>
-      <thead><tr>
-        <th>申請時間</th><th>設計師</th><th>統編</th><th>手機</th>
-        <th>狀態</th><th>名片</th><th>操作</th>
-      </tr></thead>
-      <tbody>${body}</tbody>
+          </tr>
+        `).join('')}
+      </tbody>
     </table>`;
-}
-
-function runTaxCheck() {
-  const tax  = (document.getElementById('taxcheck-input').value||'').trim();
-  const name = (document.getElementById('taxcheck-name').value||'').trim();
-  const box  = document.getElementById('taxcheck-result');
-  if (!/^\d{8}$/.test(tax)) { box.innerHTML = '<span class="tc-bad">請輸入 8 碼數字統編</span>'; return; }
-  box.innerHTML = '查詢中…';
-  fetchGET({ action:'verifyTaxID', taxID:tax, companyName:name, password:PASSWORD })
-    .then(d => {
-      if (!d.success) { box.innerHTML = '<span class="tc-bad">查詢失敗：'+(d.error||'')+'</span>'; return; }
-      const r = d.result || {};
-      const out = [];
-      out.push('檢查碼：' + (r.checksumValid ? '<span class="tc-ok">通過</span>' : '<span class="tc-bad">錯誤（疑似亂編）</span>'));
-      if (!r.checksumValid) { box.innerHTML = out.join(''); return; }
-      if (r.found) {
-        out.push('類型：' + (r.entityType==='商業' ? '商業登記行號' : '公司登記'));
-        out.push('登記名稱：<strong>'+esc(r.officialName||'')+'</strong>');
-        if (r.responsibleName) out.push('負責人：'+esc(r.responsibleName));
-        if (r.active === null) {
-          out.push('登記狀況：<span class="tc-warn">已登記行號，營業狀況需人工確認</span>');
-        } else {
-          out.push('登記狀況：' + (r.dissolved ? '<span class="tc-bad">'+esc(r.statusDesc||'已解散/撤銷/廢止')+'（不可申請）</span>'
-                              : r.suspended ? '<span class="tc-warn">'+esc(r.statusDesc||'停業')+'</span>'
-                              : r.active   ? '<span class="tc-ok">'+esc(r.statusDesc||'營業中')+'</span>'
-                              : esc(r.statusDesc||'未知')));
-        }
-        if (name) out.push('名稱比對：' + (r.nameMatch ? '<span class="tc-ok">吻合</span>' : '<span class="tc-warn">與登記不符</span>'));
-      } else if (r.needsManualReview) {
-        out.push('<span class="tc-warn">'+esc(r.note||'公司登記查無，可能為商業登記行號，需人工核對名片')+'</span>');
-      }
-      box.innerHTML = out.join('<br>');
-    })
-    .catch(()=> box.innerHTML = '<span class="tc-bad">連線失敗</span>');
 }
 
 function doApprove(lineUID) {
@@ -644,33 +628,8 @@ function doBlock(lineUID) {
 function showCard(lineUID, company, name, imgUrl) {
   document.getElementById('card-modal-name').textContent    = name || lineUID;
   document.getElementById('card-modal-company').textContent = company;
-  const imgEl    = document.getElementById('card-modal-img');
-  const statusEl = document.getElementById('card-modal-status');
-  const linkEl   = document.getElementById('card-modal-link');
-
-  imgEl.style.display    = 'none';
-  imgEl.src               = '';
-  linkEl.style.display   = 'none';
-  linkEl.href             = imgUrl;
-  statusEl.style.display = 'block';
-  statusEl.textContent   = '載入中…';
+  document.getElementById('card-modal-img').src             = imgUrl;
   document.getElementById('card-modal').classList.add('open');
-
-  fetchPOST({ action: 'getCardImage', url: imgUrl, password: PASSWORD })
-    .then(d => {
-      if (d.success) {
-        imgEl.src = d.dataUrl;
-        imgEl.style.display = 'block';
-        statusEl.style.display = 'none';
-      } else {
-        statusEl.textContent = '圖片載入失敗：' + (d.error || '');
-        linkEl.style.display = 'inline-block';
-      }
-    })
-    .catch(() => {
-      statusEl.textContent = '圖片載入失敗，請改用下方連結開啟';
-      linkEl.style.display = 'inline-block';
-    });
 }
 function closeCardModal(e) {
   if (e.target === document.getElementById('card-modal'))
@@ -730,13 +689,16 @@ function loadOrders() {
 ───────────────────────── */
 function loadProducts() {
   document.getElementById('products-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
-  fetchGET({ action:'getProductsAdmin', password:PASSWORD })
+  // 用 admin 身份取得產品（此處直接讀 Sheet，簡化流程）
+  fetchGET({ action:'getProducts', lineUID:'__admin__', category:'all' })
     .then(data => {
-      if (!data.success) {
+      if (!data.success && data.error && data.error.includes('權限')) {
+        // admin uid 沒有設為 approved，改用 getMembers 後再顯示提示
         document.getElementById('products-table-wrap').innerHTML =
-          '<div class="empty-state">載入失敗：'+(data.error||'')+'</div>';
+          '<div class="empty-state">請先在 Members Sheet 新增一筆 LineUID=__admin__ 且 Status=approved 的紀錄，或直接到 Google Sheet 管理產品。</div>';
         return;
       }
+      if (!data.success) return showToast('載入失敗：'+data.error);
       renderProductsTable(data.products);
     });
 }
@@ -750,7 +712,7 @@ function renderProductsTable(products) {
     <table>
       <thead><tr>
         <th>品牌</th><th>型號</th><th>分類</th><th>類型</th>
-        <th>A級價</th><th>B級價</th><th>C級價</th><th>狀態</th>
+        <th>報價</th><th>狀態</th>
       </tr></thead>
       <tbody>
         ${products.map(p => `
@@ -759,9 +721,7 @@ function renderProductsTable(products) {
             <td style="font-size:12px;color:var(--text-sec);">${p.Model||'—'}<br><span style="font-size:12px;">${p.DisplayName||''}</span></td>
             <td>${p.Category||'—'}</td>
             <td><span class="badge badge-${p.Type==='star'?'star':'profit'}">${p.Type==='star'?'明星款':'常規款'}</span></td>
-            <td>${priceCell(p.ProductID,'A級價',p.PriceA)}</td>
-            <td>${priceCell(p.ProductID,'B級價',p.PriceB)}</td>
-            <td>${priceCell(p.ProductID,'C級價',p.PriceC)}</td>
+            <td style="font-variant-numeric:tabular-nums;">$${(p.Price||0).toLocaleString()}</td>
             <td>
               <span style="font-size:12px;color:${p.Active?'var(--green)':'var(--red)'}">
                 ${p.Active ? '▲ 上架' : '▼ 下架'}
@@ -773,37 +733,23 @@ function renderProductsTable(products) {
     </table>`;
 }
 
-// 單一階層價格輸入格（空值顯示「未設」，整數）
-function priceCell(productId, field, value) {
-  const v = (value === '' || value === null || value === undefined) ? '' : parseInt(value, 10);
-  return `<input class="price-input" type="number" step="1" min="0"
-    value="${isNaN(v) ? '' : v}" placeholder="未設"
-    onblur="savePrice('${esc(productId)}','${field}', this.value)"
-    title="按 Enter 或點擊其他地方儲存"/>`;
-}
-
-function savePrice(productId, field, value) {
-  let v = value;
-  if (value !== '') {
-    v = parseInt(value, 10);
-    if (isNaN(v) || v < 0) { showToast('價格需為 0 或正整數'); return; }
-  }
-  fetchPOST({ action:'updateProduct', productId, field, value:v, password:PASSWORD })
-    .then(d => showToast(d.success ? '✓ '+field+'已更新' : '更新失敗：'+(d.error||'')));
+function saveTier(lineUID, tier) {
+  fetchPOST({ action:'setMemberTier', lineUID, tier, password:PASSWORD })
+    .then(d => showToast(d.success ? ('✓ 已調整為 ' + d.tier + ' 級') : ('更新失敗：'+d.error)))
+    .catch(() => showToast('連線失敗'));
 }
 
 /* ─────────────────────────
    共用工具
 ───────────────────────── */
 // 所有請求統一用 JSONP（解決 CORS 問題）
-// 全部後台操作改走真 POST（密碼不再出現在網址；GAS 安全寫法：不帶 JSON content-type 避開預檢）
-function fetchGET(params) { return fetch(GAS_URL, { method: 'POST', body: JSON.stringify(params) }).then(function(r){ return r.json(); }); }
-function fetchPOST(body)  { return fetch(GAS_URL, { method: 'POST', body: JSON.stringify(body)   }).then(function(r){ return r.json(); }); }
+function fetchGET(params) { return callGAS(params); }
+function fetchPOST(body)  { return callGAS(body); }
 function callGAS(params) {
   return new Promise((resolve, reject) => {
     const cbName = 'gasAdmin_' + Date.now() + '_' + Math.floor(Math.random()*9999);
     const script = document.createElement('script');
-    const qs     = new URLSearchParams({ ...params, callback: cbName }).toString();
+    const qs     = new URLSearchParams({ ...params, ...ADMIN_AUTH, callback: cbName }).toString();
     script.src   = GAS_URL + '?' + qs;
     script.onerror = () => {
       delete window[cbName];

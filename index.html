@@ -34,8 +34,8 @@
       --radius:2px; --radius-md:4px;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;overflow-x:hidden;}
-    body{background:var(--bg);color:var(--text-pri);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text-pri);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
     .container{max-width:960px;margin:0 auto;padding:0 32px;}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
     .tag{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);padding:3px 10px;border-radius:var(--radius);}
@@ -50,42 +50,24 @@
     .nav-links a:hover{color:var(--text-pri);}
     .nav-cta{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--bg);background:var(--text-pri);border:none;padding:9px 20px;border-radius:var(--radius);cursor:pointer;text-decoration:none;transition:background 0.2s;}
     .nav-cta:hover{background:var(--gold);}
-    .nav-actions{display:flex;align-items:center;gap:12px;}
-    .nav-login{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-pri);background:none;border:1px solid var(--text-pri);padding:8px 18px;border-radius:var(--radius);cursor:pointer;transition:all 0.2s;}
-    .nav-login:hover{background:var(--text-pri);color:var(--bg);}
 
     /* HERO */
     .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:60px;position:relative;overflow:hidden;}
     .hero-geometry{position:absolute;inset:0;pointer-events:none;}
     .hero-geometry::before{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:var(--bg-card);clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
     .hero-geometry::after{content:'';position:absolute;top:50%;right:12%;transform:translateY(-50%);width:1px;height:60%;background:var(--gold-line);}
-    .hero-illus-row{display:flex;gap:14px;margin:8px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
-    .hero-illus-row::-webkit-scrollbar{display:none;}
-    .hero-illus-chip{flex:0 0 auto;width:78px;text-align:center;}
-    .hero-illus-icon{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(26,25,22,0.10);}
-    .hero-illus-icon svg{width:42px;height:42px;display:block;}
-    .hero-illus-label{display:block;margin-top:8px;font-size:10px;letter-spacing:0.06em;color:var(--text-sec);font-weight:500;white-space:nowrap;}
-    .ic-fridge{background:#7E8F71;}
-    .ic-washer{background:#5F7E91;}
-    .ic-ac{background:#C0922B;}
-    .ic-tv{background:#2B2A27;}
-    .ic-light{background:#B2623F;}
-    .ic-tool{background:#3F6664;}
-    .ic-material{background:#9C7A54;}
-    .ic-furniture{background:#6B5B73;}
-    @media(max-width:768px){.hero-illus-icon{width:68px;height:68px;}.hero-illus-chip{width:68px;}.hero-illus-icon svg{width:36px;height:36px;}}
-    .hero-content{position:relative;z-index:1;padding:80px 0 72px;min-width:0;}
-    .hero>.container{min-width:0;}
+    .hero-wordmark{position:absolute;top:50%;right:4%;transform:translateY(-52%);font-family:var(--serif);font-size:clamp(88px,14vw,160px);font-weight:300;font-style:italic;letter-spacing:-0.02em;color:transparent;-webkit-text-stroke:1px rgba(197,169,106,0.22);line-height:1;pointer-events:none;user-select:none;}
+    .hero-content{position:relative;z-index:1;padding:80px 0 72px;}
     .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:0.20em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;}
-    .hero-title{font-family:var(--serif);font-size:clamp(28px,7vw,72px);font-weight:300;line-height:1.18;letter-spacing:-0.01em;color:var(--text-pri);max-width:min(11.5em,100%);margin-bottom:28px;overflow-wrap:anywhere;word-break:break-word;}
+    .hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.08;letter-spacing:-0.01em;color:var(--text-pri);max-width:600px;margin-bottom:28px;}
     .hero-title em{font-style:italic;color:var(--gold);}
-    .hero-sub{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--text-sec);max-width:min(400px,100%);line-height:1.8;margin-bottom:48px;}
+    .hero-sub{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--text-sec);max-width:400px;line-height:1.8;margin-bottom:48px;}
     .hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
     .btn-primary{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--text-pri);border:none;padding:14px 28px;border-radius:var(--radius);cursor:pointer;text-decoration:none;transition:background 0.25s,transform 0.15s;}
     .btn-primary:hover{background:var(--gold);transform:translateY(-1px);}
     .btn-secondary{font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:4px;padding:0;}
     .btn-secondary:hover{color:var(--text-pri);}
-    .hero-meta{position:relative;z-index:1;border-top:1px solid var(--divider);padding:20px 0;display:flex;flex-wrap:wrap;gap:40px;}
+    .hero-meta{position:relative;z-index:1;border-top:1px solid var(--divider);padding:20px 0;display:flex;gap:40px;}
     .hero-meta-item{display:flex;flex-direction:column;gap:4px;}
     .hero-meta-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-sec);opacity:0.7;}
     .hero-meta-value{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--text-pri);}
@@ -114,8 +96,6 @@
     .qualify-card:hover{background:rgba(40,38,34,0.95);}
     .qualify-icon{width:40px;height:40px;border:1px solid var(--gold-line);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
     .qualify-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
-    .qualify-icon.ic-tool,.qualify-icon.ic-light,.qualify-icon.ic-ac{border:none;border-radius:10px;}
-    .qualify-icon.ic-tool svg,.qualify-icon.ic-light svg,.qualify-icon.ic-ac svg{stroke:#fff;}
     .qualify-card h3{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--text-inv);margin-bottom:12px;}
     .qualify-card p{font-size:13px;font-weight:300;color:rgba(232,228,220,0.55);line-height:1.8;}
 
@@ -136,8 +116,6 @@
     .catalog-note{font-size:12px;font-weight:300;color:var(--text-sec);text-align:right;max-width:220px;line-height:1.6;}
     .catalog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
     .catalog-item{background:var(--bg);border-radius:var(--radius-md);overflow:hidden;position:relative;}
-    .catalog-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-    .catalog-icon svg{width:26px;height:26px;display:block;}
     .catalog-item-inner{padding:28px 24px 24px;}
     .catalog-brand{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;}
     .catalog-name{font-family:var(--serif);font-size:16px;font-weight:400;color:var(--text-pri);margin-bottom:4px;}
@@ -147,7 +125,6 @@
     .catalog-type{font-size:10px;letter-spacing:0.10em;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius);}
     .type-star{background:var(--gold-dim);color:var(--gold);}
     .type-profit{background:rgba(26,26,24,0.06);color:var(--text-sec);}
-    .type-soon{background:transparent;color:var(--text-sec);border:1px dashed var(--divider);font-style:italic;}
 
     /* CTA */
     .section-cta{padding:120px 0;background:var(--bg);text-align:center;}
@@ -358,8 +335,6 @@
     @media(max-width:768px){
       .container{padding:0 20px;}
       .nav-links{display:none;}
-      .nav-actions{gap:8px;}
-      .nav-cta, .nav-login{padding:8px 13px;font-size:11px;letter-spacing:0.05em;}
       .about-grid{grid-template-columns:1fr;gap:48px;}
       .qualify-cards{grid-template-columns:1fr;}
       .process-steps{grid-template-columns:1fr 1fr;gap:32px;}
@@ -367,20 +342,9 @@
       .catalog-grid{grid-template-columns:1fr 1fr;}
       .footer-inner{flex-direction:column;gap:12px;text-align:center;}
       .product-grid{grid-template-columns:1fr 1fr;}
-      .hero-meta{gap:16px 24px;}
-      .hero-meta-value{font-size:16px;}
-      .hero-title{font-size:clamp(26px,6.6vw,38px);}
-      .hero-sub{font-size:13.5px;}
-      .hero-illus-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 10px;overflow:visible;}
-      .hero-illus-chip{width:auto;}
-      .hero-illus-icon{margin-left:auto;margin-right:auto;}
-      #history-controls{padding-left:18px !important;padding-right:18px !important;}
-      #history-month-filter{flex:1 1 100% !important;}
-      #history-download-btn, #history-copy-btn{flex:1 1 calc(50% - 4px) !important;justify-content:center;text-align:center;}
+      .hero-meta{gap:24px;flex-wrap:wrap;}
     }
     @media(max-width:480px){
-      .hero-title{font-size:30px;line-height:1.22;}
-      .hero-sub{font-size:13px;}
       .catalog-grid{grid-template-columns:1fr;}
       .product-grid{grid-template-columns:1fr;}
       .catalog-header{flex-direction:column;align-items:flex-start;gap:16px;}
@@ -403,12 +367,8 @@
       <li><a href="#qualify">申請資格</a></li>
       <li><a href="#process">申請流程</a></li>
       <li><a href="#catalog">品類預覽</a></li>
-      <li><a href="#terms">服務條款</a></li>
     </ul>
-    <div class="nav-actions">
-      <button class="nav-login" id="nav-login-btn" onclick="doLineLogin()">登入</button>
-      <button class="nav-cta" id="nav-cta-btn">申請查價資格</button>
-    </div>
+    <button class="nav-cta" id="nav-cta-btn">申請查價資格</button>
   </div>
 </nav>
 
@@ -416,6 +376,7 @@
 <main id="landing-content" class="landing-content">
   <section class="hero">
     <div class="hero-geometry" aria-hidden="true"></div>
+    <div class="hero-wordmark" aria-hidden="true">S·A·O</div>
     <div class="container">
       <div class="hero-content">
         <p class="hero-eyebrow">封閉式 B2B 採購通道 · 僅限專業設計師</p>
@@ -427,93 +388,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
           <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">了解更多</button>
-        </div>
-
-        <div class="hero-illus-row" aria-hidden="true">
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-fridge">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.2"/>
-                <line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.2"/>
-                <line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-                <line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">冰箱</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-washer">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.2"/>
-                <circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.2"/>
-                <circle cx="31" cy="13" r="1.6" fill="#fff"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">洗衣機</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-ac">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.2"/>
-                <line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                <path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">空調</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-tv">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.2"/>
-                <line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.2"/>
-                <line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">電視</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-light">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/>
-                <path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
-                <circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">燈飾</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-tool">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="8" y="8" width="17" height="11" rx="2" transform="rotate(-28 16.5 13.5)" stroke="#fff" stroke-width="2.2"/>
-                <line x1="20" y1="20" x2="36" y2="36" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">裝潢工法</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-material">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="8" y="8" width="32" height="32" rx="3" stroke="#fff" stroke-width="2.2"/>
-                <line x1="8" y1="8" x2="40" y2="40" stroke="#fff" stroke-width="2.2"/>
-                <line x1="8" y1="22" x2="22" y2="8" stroke="#fff" stroke-width="1.6" opacity="0.7"/>
-                <line x1="26" y1="40" x2="40" y2="26" stroke="#fff" stroke-width="1.6" opacity="0.7"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">建材</span>
-          </div>
-          <div class="hero-illus-chip">
-            <div class="hero-illus-icon ic-furniture">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9,26 a4,4 0 014,-4 h22 a4,4 0 014,4 v8 h-30 z" stroke="#fff" stroke-width="2.2"/>
-                <line x1="9" y1="26" x2="9" y2="38" stroke="#fff" stroke-width="2.2"/>
-                <line x1="39" y1="26" x2="39" y2="38" stroke="#fff" stroke-width="2.2"/>
-                <line x1="9" y1="34" x2="39" y2="34" stroke="#fff" stroke-width="1.6" opacity="0.7"/>
-              </svg>
-            </div>
-            <span class="hero-illus-label">家具</span>
-          </div>
         </div>
       </div>
       <div class="hero-meta">
@@ -552,9 +426,9 @@
         <h2 class="section-title">哪些身份可以申請</h2>
       </div>
       <div class="qualify-cards">
-        <div class="qualify-card"><div class="qualify-icon ic-tool"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
-        <div class="qualify-card"><div class="qualify-icon ic-light"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
-        <div class="qualify-card"><div class="qualify-icon ic-ac"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
+        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>室內設計師</h3><p>具備室內裝修相關設計業務，持有公司統編或工作室登記，每年有穩定案量。</p></div>
+        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>統包工程業者</h3><p>承接住宅或商業空間統包工程，家電採購為工程報價的固定項目之一。</p></div>
+        <div class="qualify-card"><div class="qualify-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div><h3>建案配備顧問</h3><p>負責建設公司或代銷單位之家電配備規劃，具備批量採購與規格統整需求。</p></div>
       </div>
     </div>
   </section>
@@ -578,16 +452,13 @@
     <div class="container">
       <div class="catalog-header">
         <div><p class="section-label">品類預覽</p><h2 class="section-title">部分品項一覽</h2></div>
-        <p class="catalog-note">家電品項價格資訊僅對通過審核之會員顯示；建材／燈飾／家具為合作洽談中之品類。</p>
+        <p class="catalog-note">價格資訊僅對通過審核之會員顯示。</p>
       </div>
       <div class="catalog-grid">
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-fridge"><svg viewBox="0 0 48 48" fill="none"><rect x="14" y="6" width="20" height="36" rx="3" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="34" y2="19" stroke="#fff" stroke-width="2.4"/><line x1="18" y1="10" x2="18" y2="15" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><line x1="18" y1="23" x2="18" y2="28" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">Panasonic</p><p class="catalog-name">六門變頻冰箱</p><p class="catalog-spec">600L 系列 · 多色可選</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-washer"><svg viewBox="0 0 48 48" fill="none"><rect x="9" y="8" width="30" height="32" rx="4" stroke="#fff" stroke-width="2.4"/><circle cx="24" cy="26" r="9" stroke="#fff" stroke-width="2.4"/><circle cx="31" cy="13" r="1.7" fill="#fff"/></svg></div><p class="catalog-brand">Hitachi</p><p class="catalog-name">滾筒洗衣乾衣機</p><p class="catalog-spec">13kg/10kg · 風熨燙系列</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-tv"><svg viewBox="0 0 48 48" fill="none"><rect x="7" y="9" width="34" height="21" rx="2.5" stroke="#fff" stroke-width="2.4"/><line x1="24" y1="30" x2="24" y2="36" stroke="#fff" stroke-width="2.4"/><line x1="15" y1="38" x2="33" y2="38" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><p class="catalog-brand">LG</p><p class="catalog-name">OLED 4K 電視</p><p class="catalog-spec">65" · MLA 面板 · 多尺寸</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-ac"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="16" width="36" height="13" rx="4" stroke="#fff" stroke-width="2.4"/><line x1="14" y1="19" x2="14" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="24" y1="19" x2="24" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><line x1="34" y1="19" x2="34" y2="26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M16,29 Q24,38 32,29" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><p class="catalog-brand">Mitsubishi</p><p class="catalog-name">變頻冷暖分離式</p><p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-material"><svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="3" stroke="#fff" stroke-width="2.4"/><line x1="8" y1="8" x2="40" y2="40" stroke="#fff" stroke-width="2.2"/><line x1="8" y1="22" x2="22" y2="8" stroke="#fff" stroke-width="1.6" opacity="0.7"/><line x1="26" y1="40" x2="40" y2="26" stroke="#fff" stroke-width="1.6" opacity="0.7"/></svg></div><p class="catalog-brand">建材</p><p class="catalog-name">磁磚 / 木地板 / 五金</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-light"><svg viewBox="0 0 48 48" fill="none"><line x1="24" y1="5" x2="24" y2="15" stroke="#fff" stroke-width="2.2"/><path d="M15,15 L33,15 L28,29 L20,29 Z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><circle cx="24" cy="35" r="4" fill="#fff" opacity="0.92"/></svg></div><p class="catalog-brand">燈飾</p><p class="catalog-name">吊燈 / 軌道燈 / 崁燈</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
-        <div class="catalog-item"><div class="catalog-item-inner"><div class="catalog-icon ic-furniture"><svg viewBox="0 0 48 48" fill="none"><path d="M9,26 a4,4 0 014,-4 h22 a4,4 0 014,4 v8 h-30 z" stroke="#fff" stroke-width="2.2"/><line x1="9" y1="26" x2="9" y2="38" stroke="#fff" stroke-width="2.2"/><line x1="39" y1="26" x2="39" y2="38" stroke="#fff" stroke-width="2.2"/><line x1="9" y1="34" x2="39" y2="34" stroke="#fff" stroke-width="1.6" opacity="0.7"/></svg></div><p class="catalog-brand">家具</p><p class="catalog-name">沙發 / 訂製櫥櫃</p><p class="catalog-spec">依設計案規格洽詢</p><div class="catalog-price-row"><span class="price-locked">敬請期待</span><span class="catalog-type type-soon">洽談合作中</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Panasonic</p><p class="catalog-name">六門變頻冰箱</p><p class="catalog-spec">600L 系列 · 多色可選</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Hitachi</p><p class="catalog-name">滾筒洗衣乾衣機</p><p class="catalog-spec">13kg/10kg · 風熨燙系列</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">LG</p><p class="catalog-name">OLED 4K 電視</p><p class="catalog-spec">65" · MLA 面板 · 多尺寸</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-star">明星款</span></div></div></div>
+        <div class="catalog-item"><div class="catalog-item-inner"><p class="catalog-brand">Mitsubishi</p><p class="catalog-name">變頻冷暖分離式</p><p class="catalog-spec">適用 6–14 坪 · R32 冷媒</p><div class="catalog-price-row"><span class="price-locked">審核後可見</span><span class="catalog-type type-profit">常規款</span></div></div></div>
       </div>
     </div>
   </section>
@@ -923,10 +794,9 @@
       <h2 class="panel-title">歷史明細紀錄</h2>
       <button class="panel-close" data-close="overlay-history">✕</button>
     </div>
-    <div id="history-controls" style="display:none;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
+    <div id="history-controls" style="display:none;gap:8px;align-items:center;padding:14px 32px 12px;border-bottom:1px solid var(--divider);">
       <select id="history-month-filter" style="flex:1;font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--divider);border-radius:var(--radius-md);background:var(--bg-card);color:var(--text-pri);cursor:pointer;"></select>
       <button id="history-download-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">⬇ 下載 Excel</button>
-      <button id="history-copy-btn" style="font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--gold);background:none;border:1px solid var(--gold);padding:9px 14px;border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;">📋 複製明細</button>
     </div>
     <div class="panel-body" id="history-body" style="max-height:60svh;overflow-y:auto;">
       <p style="color:var(--text-sec);font-size:13px;">載入中…</p>
@@ -944,6 +814,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhdD6DTDooiasKmidU3nYG
 let currentUser  = null;
 let memberStatus = null;
 let cachedProducts = [];
+let cachedConfig   = null;
 let currentOrder   = {};
 let purchasedItems = []; // 用於記錄明細，防禦亂碼與「購物車訂單」的抽象化
 let pendingCheckout = null; // 修正：暫存結帳表單，待會員同意條款後才正式送單
@@ -978,34 +849,7 @@ function callGAS(params) {
     s.onerror = () => { delete window[cb]; document.body.removeChild(s); reject(new Error('連線失敗')); };
     window[cb] = (data) => { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); resolve(data); };
     document.body.appendChild(s);
-    setTimeout(() => { if(window[cb]) { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); reject(new Error('逾時')); } }, 30000);
-  });
-}
-
-/* ── POST 連線（GAS 安全寫法：不帶 JSON content-type，避開 GAS 無法回應的 CORS 預檢）── */
-async function postGAS(payload) {
-  const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
-  return await res.json();
-}
-
-/* ── 圖片壓縮成 base64（限制尺寸，縮小上傳量）── */
-function fileToScaledDataURL(file, maxDim, quality) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('讀檔失敗'));
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = () => reject(new Error('圖片解析失敗'));
-      img.onload = () => {
-        let w = img.width, h = img.height;
-        if (w > maxDim || h > maxDim) { const r = Math.min(maxDim / w, maxDim / h); w = Math.round(w * r); h = Math.round(h * r); }
-        const c = document.createElement('canvas'); c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(c.toDataURL('image/jpeg', quality));
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+    setTimeout(() => { if(window[cb]) { delete window[cb]; if(document.body.contains(s)) document.body.removeChild(s); reject(new Error('逾時')); } }, 12000);
   });
 }
 
@@ -1076,7 +920,6 @@ function applyState(status, data) {
     btn.textContent = '查價系統';
     document.body.classList.remove('guest');
     document.body.classList.add('approved');
-    const _lb = document.getElementById('nav-login-btn'); if (_lb) _lb.style.display = 'none';
     document.getElementById('member-name-display').textContent = data.companyName || currentUser?.displayName || '設計師';
     if (!currentUser) currentUser = {};
     currentUser.lineUID     = data.lineUID;
@@ -1098,28 +941,6 @@ function applyState(status, data) {
   }
 }
 
-async function doLineLogin() {
-  if (typeof liff === 'undefined' || !liff.init) { showToast('登入元件載入中，請稍候再試'); return; }
-  // 確保已初始化（頁面載入時若 init 失敗，這裡再試一次；失敗就明白告知，不默默變 guest）
-  let inited = false;
-  try { await liff.init({ liffId: LIFF_ID }); inited = true; } catch (e) { inited = false; }
-  if (!inited) { showToast('LINE 登入初始化失敗，請改從 LINE 官方帳號開啟，或檢查 LIFF 設定'); return; }
-  if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.origin + location.pathname }); return; }
-  // 已登入 → 直接取 profile + 查會員狀態（不靠 reload，避免再次踩到 init 失敗）
-  try {
-    showToast('登入成功，讀取會員狀態…');
-    const prof = await liff.getProfile();
-    currentUser = { lineUID: prof.userId, displayName: prof.displayName };
-    console.log('LINE userId:', prof.userId);  // 供比對 Members 試算表，排查 UID 是否一致
-    await checkMemberStatus(currentUser.lineUID);
-    if (memberStatus === 'approved')      showToast('歡迎回來，' + (currentUser.displayName || '') + '，已進入查價系統');
-    else if (memberStatus === 'pending')  showToast('您的申請審核中，請耐心等候');
-    else                                  showToast('此 LINE 帳號尚非會員，請先申請查價資格');
-  } catch (e) {
-    showToast('讀取會員資料失敗，請稍後再試');
-  }
-}
-
 function showLoading(show) {
   const el = document.getElementById('liff-loading');
   if (!el) return;
@@ -1134,7 +955,7 @@ function showLoading(show) {
 function initWatermark() {
   const layer = document.getElementById('watermark-layer');
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   if (!text) return;
   const items = [];
@@ -1163,7 +984,7 @@ function initPaymentWatermark() {
   const layer = document.getElementById('payment-watermark');
   if (!layer) return;
   layer.innerHTML = '';
-  const parts = [currentUser?.displayName, currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
+  const parts = [currentUser?.taxID, currentUser?.companyName, currentUser?.phone].filter(Boolean);
   const text  = parts.map(String).join(' · ');
   for (let i = 0; i < 24; i++) {
     const el = document.createElement('span');
@@ -1526,11 +1347,6 @@ function filterHistoryOrders(filter) {
 function historyItemsOf(o) {
   try { return JSON.parse(o.CartJSON || o.cartJSON || '[]'); } catch (e) { return []; }
 }
-function orderTotal(o) {
-  const items = historyItemsOf(o);
-  if (items.length) return items.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 1), 0);
-  return parseFloat(o.TotalPrice || o.totalPrice) || 0;
-}
 
 document.getElementById('history-btn').addEventListener('click', async function() {
   showOverlay('overlay-history');
@@ -1554,7 +1370,6 @@ document.getElementById('history-btn').addEventListener('click', async function(
     sel.value = 'all';
     sel.onchange = function() { renderHistory(this.value); };
     document.getElementById('history-download-btn').onclick = downloadHistoryCSV;
-    var _cb = document.getElementById('history-copy-btn'); if (_cb) _cb.onclick = copyHistoryTSV;
     controls.style.display = 'flex';
 
     renderHistory('all');
@@ -1577,17 +1392,17 @@ function renderHistory(filter) {
   let html = '';
   Object.keys(byMonth).sort().reverse().forEach(monthK => {
     const monthOrders = byMonth[monthK];
-    const monthTotal = monthOrders.reduce((s, o) => s + orderTotal(o), 0);
+    const monthTotal = monthOrders.reduce((s, o) => s + (parseFloat(o.TotalPrice || o.totalPrice) || 0), 0);
     html += '<div class="history-month">';
     html += '<p class="history-month-title">' + historyMonthLabel(monthK) + '</p>';
 
     monthOrders.forEach(o => {
       const dateStr = String(o.CreatedAt || o.createdAt || '').slice(0, 16) || '—';
       const oid = String(o.OrderID || o.orderId || '');
-      const oidShort = oid ? (oid.length <= 16 ? oid : '…' + oid.slice(-6)) : '';
+      const oidShort = oid ? oid.slice(-6) : '';
       html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 2px;">';
       html += '<span style="font-size:12px;color:var(--text-pri);font-weight:500;">' + dateStr + '</span>';
-      if (oidShort) html += '<span style="font-size:10px;color:var(--text-sec);letter-spacing:0.04em;">單號 ' + oidShort + '</span>';
+      if (oidShort) html += '<span style="font-size:10px;color:var(--text-sec);letter-spacing:0.04em;">單號 …' + oidShort + '</span>';
       html += '</div>';
 
       const items = historyItemsOf(o);
@@ -1619,9 +1434,9 @@ function todayStamp() {
   const d = new Date();
   return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
 }
-function buildHistoryRows() {
+function downloadHistoryCSV() {
   const orders = filterHistoryOrders(currentHistoryFilter);
-  if (!orders.length) return null;
+  if (!orders.length) { showToast('此區間無資料可匯出'); return; }
   const rows = [['訂單日期', '訂單編號', '型號', '數量', '單價', '小計', '送貨地址', '交期', '狀態']];
   orders.forEach(o => {
     const date = String(o.CreatedAt || o.createdAt || '');
@@ -1641,36 +1456,9 @@ function buildHistoryRows() {
       rows.push([date, oid, String(o.OrderDetail || o.ModelName || '專案訂單'), Number(o.Quantity || 1), '', tp, addr, dl, st]);
     }
   });
-  return rows;
-}
-function downloadHistoryCSV() {
-  const rows = buildHistoryRows();
-  if (!rows) { showToast('此區間無資料可匯出'); return; }
   const csv = '\uFEFF' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
   const label = currentHistoryFilter === 'all' ? '全部' : currentHistoryFilter;
   triggerDownload(csv, 'SAO採購明細_' + label + '_' + todayStamp() + '.csv');
-}
-function copyHistoryTSV() {
-  const rows = buildHistoryRows();
-  if (!rows) { showToast('此區間無資料可複製'); return; }
-  const tsv = rows.map(function(r){ return r.map(function(c){ return String(c==null?'':c).replace(/\t/g,' ').replace(/\r?\n/g,' '); }).join('\t'); }).join('\n');
-  copyTextToClipboard(tsv);
-}
-function copyTextToClipboard(text) {
-  var ok = function(){ showToast('✓ 明細已複製，貼到 Excel／Google 試算表即可（自動分欄）'); };
-  var fb = function(){
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0';
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      var done = document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast(done ? '✓ 明細已複製，貼到 Excel／Google 試算表即可' : '複製失敗，請改用外部瀏覽器下載');
-    } catch (e) { showToast('複製失敗，請改用外部瀏覽器下載'); }
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(ok).catch(fb);
-  } else { fb(); }
 }
 function triggerDownload(text, filename) {
   try {
@@ -1681,7 +1469,7 @@ function triggerDownload(text, filename) {
     document.body.appendChild(a); a.click();
     setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
     if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
-      showToast('LINE 內無法直接下載檔案，請改按「📋 複製明細」貼到 Excel；或右上「⋮」用外部瀏覽器開啟');
+      showToast('若無法下載，請按右上「⋮」改用其他瀏覽器開啟後再下載');
     }
   } catch (e) {
     showToast('下載失敗，請改用外部瀏覽器開啟');
@@ -1696,6 +1484,12 @@ document.getElementById('product-grid').addEventListener('click', function(e) {
 
 /* ── 條款呈現 ── */
 async function showTerms() {
+  if (!cachedConfig) {
+    try {
+      const data = await callGAS({ action: 'getConfig' });
+      if (data.success) cachedConfig = data.config;
+    } catch(e) {}
+  }
   const termsHtml = [
     '<strong style="color:var(--text-pri);">1. 封閉式 B2B 通路：</strong>僅限實名審核之專業夥伴，全線商品來自原廠授權通路，為原廠正品並享完整原廠保固。',
     '<strong style="color:var(--text-pri);">2. 貨源與金流：</strong>採「先匯款、後排單」，款項匯入指定帳戶後即時鎖貨；若確認後缺貨或無法供貨，該品項全額退款。',
@@ -1767,6 +1561,7 @@ function renderPaymentItemsList() {
 
 document.getElementById('terms-confirm-btn').addEventListener('click', async function() {
   if (!document.getElementById('terms-agree-check').checked) return;
+  if (!cachedConfig) { showToast('載入中，請稍候'); return; }
   if (!pendingCheckout || !cart.length) { showToast('購物車資料遺失，請重新下單'); return; }
 
   // 修正：會員同意條款後，才正式送單；送單成功才進入匯款資訊
@@ -1838,32 +1633,12 @@ document.getElementById('register-submit-btn').addEventListener('click', async f
   if (!company||!taxID||!phone) { showToast('請填寫所有必填欄位'); return; }
   if (!validateTaxID(taxID)) { document.getElementById('input-taxid').classList.add('error'); errEl.classList.add('show'); return; }
   document.getElementById('input-taxid').classList.remove('error'); errEl.classList.remove('show');
-  if (!currentUser || !currentUser.lineUID) {
-    showToast('請先用右上「登入」完成 LINE 登入後再申請');
-    return;
-  }
-  // 名片先壓成 base64（最佳努力，失敗略過，不影響申請）
-  let cardDataUrl = '';
-  const cardFile = document.getElementById('input-card').files[0];
-  if (cardFile) {
-    try { cardDataUrl = await fileToScaledDataURL(cardFile, 1280, 0.82); } catch (ce) { cardDataUrl = ''; }
-  }
   this.disabled = true; this.textContent = '送出中…';
   try {
-    const data = await callGAS({ action:'registerMember', lineUID: currentUser.lineUID, displayName: currentUser.displayName||'', companyName: company, taxID, phone, cardImageUrl:'' });
-    if (data.success) {
-      // 申請成功後再上傳名片：no-cors 最佳努力，GAS 依 lineUID 寫回該會員列（不讀回應，故不會卡住申請）
-      if (cardDataUrl) {
-        try { fetch(GAS_URL, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'uploadCardImage', dataUrl: cardDataUrl, lineUID: currentUser.lineUID, taxID: taxID, company: company }) }); } catch (ue) {}
-      }
-      closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success');
-    }
+    const data = await callGAS({ action:'registerMember', lineUID: currentUser?.lineUID||'demo_'+Date.now(), displayName: currentUser?.displayName||'', companyName: company, taxID, phone, cardImageUrl:'' });
+    if (data.success) { closeOverlay('overlay-register'); memberStatus='pending'; showOverlay('overlay-success'); }
     else { showToast('送出失敗：'+(data.error||'請稍後再試')); }
-  } catch(e) {
-    showToast(e && e.message === '逾時'
-      ? '統編查核處理較久，請稍候留意 LINE 通知；若 1 分鐘後仍未收到，再重新送出一次'
-      : '連線失敗，請確認網路後重試');
-  }
+  } catch(e) { showToast('連線失敗，請重試'); }
   this.disabled = false; this.textContent = '送出申請';
 });
 
@@ -1881,11 +1656,11 @@ function handleCTA() {
     // 單純 scrollIntoView 對 display:none 元素無效（按鈕看似沒反應）。
     // 改為清掉殘留 inline style，讓 body.approved 的 CSS 還原查價系統視圖。
     landingVisible = false;
-    window.scrollTo(0, 0);
     document.getElementById('landing-content').style.cssText = '';
     document.getElementById('price-page').style.display = '';
     const tbtn = document.getElementById('toggle-landing-btn');
     if (tbtn) tbtn.textContent = '關於 SAO';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
   if (memberStatus==='pending')  { showOverlay('overlay-pending'); return; }
@@ -1902,20 +1677,21 @@ document.getElementById('nav-logo').addEventListener('click', function(e) {
     window.location.hash = ''; 
     return;
   }
-  if (memberStatus !== 'approved') { window.scrollTo(0, 0); return; }
+  if (memberStatus !== 'approved') { window.scrollTo({top:0,behavior:'smooth'}); return; }
   landingVisible = !landingVisible;
   const landing = document.getElementById('landing-content');
   const price   = document.getElementById('price-page');
   const btn     = document.getElementById('toggle-landing-btn');
-  window.scrollTo(0, 0);
   if (landingVisible) {
     landing.style.cssText = 'display:block !important';
     price.style.display   = 'none';
     btn.textContent       = '回到查價';
+    window.scrollTo({top:0,behavior:'smooth'});
   } else {
     landing.style.cssText = 'display:none !important';
     price.style.display   = 'block';
     btn.textContent       = '關於 SAO';
+    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
   }
 });
 document.getElementById('toggle-landing-btn').addEventListener('click', function() {
