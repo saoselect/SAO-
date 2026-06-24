@@ -481,14 +481,17 @@ function doLogin() {
 /* ── LINE 官方登入（主要方式）：token 由 GAS 向 LINE 驗證，userId 無法偽造 ── */
 async function bootAdmin() {
   // 安全計時器：init 萬一卡住，不要讓畫面沒反應（登入畫面仍在，可用備援密碼）
+  let initDone = false;
   const safety = setTimeout(() => {
-    showError('login-error', 'LINE 連線逾時，請重試或用下方備援密碼');
+    if (initDone) return;
+    showError('login-error', 'LINE 連線逾時（建議改用 Chrome / Safari 開啟，而非 LINE 內建瀏覽器）。或用下方備援密碼。');
   }, 8000);
   try {
     const url = new URL(location.href);
     const hasCallback = url.searchParams.has('code') || url.searchParams.has('state');
 
     await liff.init({ liffId: LIFF_ID, withLoginOnExternalBrowser: true });
+    initDone = true;
     clearTimeout(safety);
 
     if (!liff.isLoggedIn()) {
@@ -506,8 +509,11 @@ async function bootAdmin() {
     }
     await enterWithLine();
   } catch (e) {
+    initDone = true;
     clearTimeout(safety);
-    showError('login-error', 'LINE 初始化失敗，請重試或用下方備援密碼');
+    const detail = (e && (e.message || e.code)) ? (' [' + (e.code || '') + ' ' + (e.message || '') + ']') : '';
+    showError('login-error', 'LINE 初始化失敗' + detail + '。請用 Chrome / Safari 開啟，或用備援密碼。');
+    console.error('[SAO LIFF init error]', e);
   }
 }
 
