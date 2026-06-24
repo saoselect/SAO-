@@ -736,17 +736,19 @@ function loadOrders() {
 ───────────────────────── */
 function loadProducts() {
   document.getElementById('products-table-wrap').innerHTML = '<div class="empty-state">載入中…</div>';
-  // 用 admin 身份取得產品（此處直接讀 Sheet，簡化流程）
-  fetchGET({ action:'getProducts', lineUID:'__admin__', category:'all' })
+  // 後台已通過 LINE 簽章驗證（ADMIN_AUTH 內帶 idToken），GAS 端會以管理員身份直接回傳產品清單
+  callGAS({ action:'getProducts', category:'all' })
     .then(data => {
-      if (!data.success && data.error && data.error.includes('權限')) {
-        // admin uid 沒有設為 approved，改用 getMembers 後再顯示提示
+      if (!data.success) {
         document.getElementById('products-table-wrap').innerHTML =
-          '<div class="empty-state">請先在 Members Sheet 新增一筆 LineUID=__admin__ 且 Status=approved 的紀錄，或直接到 Google Sheet 管理產品。</div>';
+          '<div class="empty-state">載入失敗：' + (data.error || '請重新登入後再試') + '</div>';
         return;
       }
-      if (!data.success) return showToast('載入失敗：'+data.error);
       renderProductsTable(data.products);
+    })
+    .catch(() => {
+      document.getElementById('products-table-wrap').innerHTML =
+        '<div class="empty-state">連線失敗，請重試</div>';
     });
 }
 
