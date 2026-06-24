@@ -455,7 +455,7 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhdD6DTDooiasKmidU3nYGzI32juZhiZA7fNL-9se3y7iY-b0qM33soj-H4RodB4N5/exec';
 let PASSWORD = '';
 let ADMIN_AUTH = {};                       // 登入後存 { idToken }；密碼備援時維持空
-const LIFF_ID = '2010363089-IaA8fmYO';
+const LIFF_ID = '2010363089-NPaR3Hdg';   // 後台專用 LIFF（與前台查價 LIFF 分離）
 let allMembers = [];
 
 /* ─────────────────────────
@@ -488,7 +488,7 @@ async function bootAdmin() {
     const url = new URL(location.href);
     const hasCallback = url.searchParams.has('code') || url.searchParams.has('state');
 
-    await liff.init({ liffId: LIFF_ID });
+    await liff.init({ liffId: LIFF_ID, withLoginOnExternalBrowser: true });
     clearTimeout(safety);
 
     if (!liff.isLoggedIn()) {
