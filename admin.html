@@ -761,7 +761,7 @@ function renderProductsTable(products) {
     <table>
       <thead><tr>
         <th>品牌</th><th>型號</th><th>分類</th><th>類型</th>
-        <th>報價</th><th>狀態</th>
+        <th>底牌成本</th><th>A 級價</th><th>B 級價</th><th>C 級價</th><th>狀態</th>
       </tr></thead>
       <tbody>
         ${products.map(p => `
@@ -770,7 +770,10 @@ function renderProductsTable(products) {
             <td style="font-size:12px;color:var(--text-sec);">${p.Model||'—'}<br><span style="font-size:12px;">${p.DisplayName||''}</span></td>
             <td>${p.Category||'—'}</td>
             <td><span class="badge badge-${p.Type==='star'?'star':'profit'}">${p.Type==='star'?'明星款':'常規款'}</span></td>
-            <td style="font-variant-numeric:tabular-nums;">$${(p.Price||0).toLocaleString()}</td>
+            <td style="font-variant-numeric:tabular-nums;color:var(--text-sec);">${(p.Cost||0) ? '$'+p.Cost.toLocaleString() : '—'}</td>
+            <td style="font-variant-numeric:tabular-nums;">${(p.PriceA||0) ? '$'+p.PriceA.toLocaleString() : '—'}</td>
+            <td style="font-variant-numeric:tabular-nums;">${(p.PriceB||0) ? '$'+p.PriceB.toLocaleString() : '—'}</td>
+            <td style="font-variant-numeric:tabular-nums;">${(p.PriceC||0) ? '$'+p.PriceC.toLocaleString() : '—'}</td>
             <td>
               <span style="font-size:12px;color:${p.Active?'var(--green)':'var(--red)'}">
                 ${p.Active ? '▲ 上架' : '▼ 下架'}
