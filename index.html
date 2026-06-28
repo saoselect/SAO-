@@ -219,10 +219,10 @@
     .terms-list strong { color: var(--text-pri); font-weight: 500; }
     .terms-quote { background: var(--bg-card); border-left: 2px solid var(--gold); padding: 20px 24px; font-size: 13px; color: var(--text-sec); line-height: 1.8; font-style: italic; margin-top: 40px; border-radius: 0 var(--radius) var(--radius) 0; }
 
-    .price-page-header{background:var(--bg-deep);padding:48px 0 40px;}
+    .price-page-header{background:var(--bg-deep);padding:26px 0 22px;}
     .price-page-header .section-label{color:var(--gold);margin-bottom:8px;}
-    .price-welcome{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--text-inv);}
-    .price-welcome em{font-style:italic;color:var(--gold);}
+    .price-welcome{font-family:var(--serif);font-size:23px;font-weight:300;color:var(--text-inv);line-height:1.3;margin:0;}
+    .price-welcome em{font-style:italic;color:var(--gold);display:inline-block;}
     .category-tabs{background:var(--bg);border-bottom:1px solid var(--divider);position:sticky;top:60px;z-index:50;}
     .tabs-inner{display:flex;overflow-x:auto;scrollbar-width:none;}
     .tabs-inner::-webkit-scrollbar{display:none;}
@@ -579,7 +579,7 @@
 <div class="price-page" id="price-page" role="main">
   <div class="price-page-header">
     <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:10px;">
         <p class="section-label" style="margin-bottom:0;">已通過審核 · 專業查價通道</p>
         <div style="display:flex;gap:10px;align-items:center;">
           <span id="tier-badge" style="font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);padding:4px 10px;border-radius:2px;"></span>
@@ -609,6 +609,15 @@
 
       <!-- 第二步：選擇品類 (選擇品牌後才會顯示) -->
       <div id="category-selector-wrapper" style="margin-top:14px;border-top:1px solid var(--divider);padding-top:12px;display:none;">
+        <!-- 收合狀態：選好品類後顯示一行 -->
+        <div id="category-collapsed" style="display:none;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);">目前品類</span>
+          <span id="current-cat-name" style="font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:0.04em;color:var(--text-pri);background:var(--bg-card);border:1px solid var(--divider);border-radius:var(--radius);padding:8px 18px;"></span>
+          <button id="change-cat-btn" type="button" style="margin-left:auto;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.06em;color:var(--gold);background:none;border:none;cursor:pointer;padding:8px 0;">切換品類 ▾</button>
+        </div>
+
+        <!-- 展開狀態：四大群組 -->
+        <div id="category-expanded">
         <p style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:12px;">第二步：選擇品類 (Category)</p>
 
         <div class="cat-group">
@@ -649,6 +658,7 @@
         <div style="text-align:right;">
           <button class="cat-tab" style="color:var(--gold);border:none;background:none;padding:6px 0;" id="back-top-btn">↑ 回頂部</button>
         </div>
+        </div><!-- /category-expanded -->
       </div>
 
     </div>
@@ -1150,8 +1160,12 @@ document.querySelectorAll('.brand-btn').forEach(btn => {
     selectedCat    = '';
     selectedSeries = 'all';
 
-    // 展開第二步：品類選擇
+    // 展開第二步：品類選擇（回到展開狀態）
     document.getElementById('category-selector-wrapper').style.display = 'block';
+    const _exp0 = document.getElementById('category-expanded');
+    const _col0 = document.getElementById('category-collapsed');
+    if (_exp0) _exp0.style.display = 'block';
+    if (_col0) _col0.style.display = 'none';
     
     // 隱藏第三步系列，重置分類按鈕
     document.getElementById('series-bar').style.display = 'none';
@@ -1179,9 +1193,28 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     selectedCat    = this.dataset.cat;
     selectedSeries = 'all';
 
+    // 收合分類選單，改顯示「目前品類 ｜ 切換品類」一行
+    const _curName = document.getElementById('current-cat-name');
+    const _exp = document.getElementById('category-expanded');
+    const _col = document.getElementById('category-collapsed');
+    if (_curName) _curName.textContent = this.textContent.trim();
+    if (_exp) _exp.style.display = 'none';
+    if (_col) _col.style.display = 'flex';
+
     loadProducts(selectedCat, 'all');
   });
 });
+
+// 「切換品類」展開分類選單
+(function(){
+  const cb = document.getElementById('change-cat-btn');
+  if (cb) cb.addEventListener('click', function(){
+    const exp = document.getElementById('category-expanded');
+    const col = document.getElementById('category-collapsed');
+    if (exp) exp.style.display = 'block';
+    if (col) col.style.display = 'none';
+  });
+})();
 
 // 載入與篩選商品
 async function loadProducts(cat, series) {
@@ -1244,6 +1277,9 @@ async function loadProducts(cat, series) {
     if (_searchBar)   _searchBar.style.display = brandFiltered.length ? 'block' : 'none';
 
     applyProductSearch();
+
+    // 選完品類後，平滑捲動到系列／商品區，避免被擠在長選單下方
+    scrollToShelf();
 
   } catch (e) {
     console.error(e);
@@ -1369,6 +1405,27 @@ function applyProductSearch() {
   const si = document.getElementById('product-search-input');
   if (si) si.addEventListener('input', applyProductSearch);
 })();
+
+/* ── 選完品類自動捲動到系列／商品區 ── */
+function scrollToShelf() {
+  const NAV_OFFSET = 70; // 固定導覽列 60px + 緩衝
+  const seriesBar = document.getElementById('series-bar');
+  const searchBar = document.getElementById('product-search-bar');
+  let target = null;
+  if (seriesBar && seriesBar.style.display !== 'none') {
+    target = seriesBar;                       // 空調：先看到系列選擇
+  } else if (searchBar && searchBar.style.display !== 'none') {
+    target = searchBar;                       // 其他品類：搜尋框 + 商品
+  } else {
+    target = document.getElementById('product-grid');
+  }
+  if (!target) return;
+  // 等版面套用後再量測位置（系列列剛切換顯示）
+  requestAnimationFrame(function(){
+    const y = target.getBoundingClientRect().top + window.pageYOffset - NAV_OFFSET;
+    window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
+  });
+}
 
 
 let cart = []; 
