@@ -312,6 +312,18 @@
     .product-search-input::placeholder{color:var(--text-sec);}
     .product-search-hint{font-size:11px;color:var(--text-sec);margin:7px 2px 0;letter-spacing:0.04em;}
 
+    /* 全站搜尋結果 */
+    .gs-results{margin-top:12px;border:1px solid var(--divider);border-radius:var(--radius-md);overflow:hidden;max-height:62vh;overflow-y:auto;background:var(--bg);}
+    .gs-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--divider);}
+    .gs-row:last-child{border-bottom:none;}
+    .gs-meta{min-width:0;}
+    .gs-tagline{font-size:10px;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;margin:0 0 3px;}
+    .gs-model{font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:0.02em;color:var(--text-pri);margin:0;word-break:break-word;}
+    .gs-spec{font-size:12px;color:var(--text-sec);margin:2px 0 0;}
+    .gs-right{text-align:right;flex-shrink:0;}
+    .gs-price{font-family:var(--serif);font-size:15px;color:var(--text-pri);margin:0 0 6px;}
+    .gs-empty{padding:18px 14px;color:var(--text-sec);font-size:13px;text-align:center;letter-spacing:0.03em;}
+
     .series-btn{padding:7px 16px;font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.06em;background:var(--bg);border:1px solid var(--divider);border-radius:2px;cursor:pointer;color:var(--text-sec);transition:all 0.15s;white-space:nowrap;}
     .series-btn.active{background:var(--text-pri);color:var(--bg);border-color:var(--text-pri);}
     .series-btn:hover{border-color:var(--gold);color:var(--gold);}
@@ -592,6 +604,14 @@
     </div>
   </div>
 
+  <!-- 全站型號搜尋（不分品牌／品類） -->
+  <div style="background:var(--bg-card);border-bottom:1px solid var(--divider);">
+    <div class="container" style="padding-top:18px;padding-bottom:18px;">
+      <input type="text" id="global-search-input" class="product-search-input" placeholder="全站搜尋商品型號（型號、品名皆可，例：NR-F607、變頻冷氣）" autocomplete="off">
+      <div id="global-search-results" style="display:none;"></div>
+    </div>
+  </div>
+
   <!-- STICKY FILTER SYSTEM (BRAND FIRST -> CAT SECOND) -->
   <div style="background:var(--bg);border-bottom:1px solid var(--divider);position:sticky;top:60px;z-index:50;">
     <div class="container" style="padding-top:14px;padding-bottom:14px;">
@@ -667,8 +687,17 @@
   <!-- 第三步：選擇系列 (僅在選擇「空調」時動態顯示) -->
   <div id="series-bar" style="background:var(--bg-card);border-bottom:1px solid var(--divider);display:none;">
     <div class="container" style="padding-top:16px;padding-bottom:16px;">
-      <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px;">第三步：選擇系列 (Series)</p>
-      <div id="series-selector" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      <!-- 收合狀態：選好系列後顯示一行 -->
+      <div id="series-collapsed" style="display:none;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);">目前系列</span>
+        <span id="current-series-name" style="font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.04em;color:var(--text-pri);background:var(--bg);border:1px solid var(--divider);border-radius:var(--radius);padding:7px 16px;"></span>
+        <button id="change-series-btn" type="button" style="margin-left:auto;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.06em;color:var(--gold);background:none;border:none;cursor:pointer;padding:7px 0;">切換系列 ▾</button>
+      </div>
+      <!-- 展開狀態 -->
+      <div id="series-expanded">
+        <p style="font-size:11px;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:10px;">第三步：選擇系列 (Series)</p>
+        <div id="series-selector" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
     </div>
   </div>
 
@@ -1292,7 +1321,13 @@ function renderSeriesBar(seriesList, activeSeries) {
   const sel = document.getElementById('series-selector');
   if (!seriesList.length) { bar.style.display = 'none'; return; }
   bar.style.display = 'block';
-  
+
+  // 每次重建系列時回到展開狀態
+  const sExp = document.getElementById('series-expanded');
+  const sCol = document.getElementById('series-collapsed');
+  if (sExp) sExp.style.display = 'block';
+  if (sCol) sCol.style.display = 'none';
+
   sel.innerHTML = seriesList.map(s => {
     const displayName = s === 'all' ? '全部系列' : s;
     return '<button class="series-btn' + (s === activeSeries ? ' active' : '') + '" data-series="' + s + '">' + displayName + '</button>';
@@ -1304,6 +1339,13 @@ function renderSeriesBar(seriesList, activeSeries) {
       this.classList.add('active');
       selectedSeries = this.dataset.series;
       applyProductSearch();
+
+      // 收合系列列，改顯示「目前系列 ｜ 切換系列」，並帶到下方型號
+      const _curS = document.getElementById('current-series-name');
+      if (_curS) _curS.textContent = this.textContent.trim();
+      if (sExp) sExp.style.display = 'none';
+      if (sCol) sCol.style.display = 'flex';
+      scrollToGrid();
     });
   });
 }
@@ -1426,6 +1468,112 @@ function scrollToShelf() {
     window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
   });
 }
+
+/* ── 捲動到商品型號區（選完系列用） ── */
+function scrollToGrid() {
+  const NAV_OFFSET = 70;
+  const sb = document.getElementById('product-search-bar');
+  const target = (sb && sb.style.display !== 'none') ? sb : document.getElementById('product-grid');
+  if (!target) return;
+  requestAnimationFrame(function(){
+    const y = target.getBoundingClientRect().top + window.pageYOffset - NAV_OFFSET;
+    window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
+  });
+}
+
+// 「切換系列」展開系列列
+(function(){
+  const cs = document.getElementById('change-series-btn');
+  if (cs) cs.addEventListener('click', function(){
+    const e = document.getElementById('series-expanded');
+    const c = document.getElementById('series-collapsed');
+    if (e) e.style.display = 'block';
+    if (c) c.style.display = 'none';
+  });
+})();
+
+/* ── 全站型號搜尋（不分品牌／品類，純前端快取過濾） ── */
+const CAT_LABELS = { ac:'空調', fridge:'冰箱', washer:'洗衣機', tv:'電視', kitchen:'廚房調理', air:'空氣淨化', water:'淨水設備', bath:'衛浴設備', light:'照明', clean:'生活清潔', care:'美容美髮' };
+let allSiteProducts = null;   // 全站商品快取
+let gsTimer = null;
+
+async function ensureAllProducts() {
+  if (allSiteProducts) return allSiteProducts;
+  const data = await callGAS({ action:'getProducts', lineUID: currentUser?.lineUID || '', category:'all', series:'all' });
+  allSiteProducts = (data && data.success) ? (data.products || []) : [];
+  return allSiteProducts;
+}
+
+function onGlobalSearch() {
+  const input = document.getElementById('global-search-input');
+  const box   = document.getElementById('global-search-results');
+  if (!input || !box) return;
+  const raw = input.value.trim();
+  const kw  = raw.toLowerCase();
+  if (!kw) { box.style.display = 'none'; box.innerHTML = ''; return; }
+
+  clearTimeout(gsTimer);
+  gsTimer = setTimeout(async function(){
+    box.style.display = 'block';
+    box.innerHTML = '<div class="gs-results"><p class="gs-empty">搜尋中…</p></div>';
+    let list;
+    try { list = await ensureAllProducts(); }
+    catch(e){ box.innerHTML = '<div class="gs-results"><p class="gs-empty">搜尋連線失敗，請稍後再試</p></div>'; return; }
+
+    // 若使用者已清空或改字，放棄這次結果
+    if (input.value.trim().toLowerCase() !== kw) return;
+
+    const matches = list.filter(function(p){
+      const catLabel = CAT_LABELS[String(p.Category).toLowerCase()] || p.Category || '';
+      const hay = [(p.Model||''), (p.DisplayName||''), (p.Spec||''), (p.Brand||''), catLabel].join(' ').toLowerCase();
+      return hay.includes(kw);
+    }).slice(0, 40);
+
+    renderGlobalResults(matches, raw);
+  }, 220);
+}
+
+function renderGlobalResults(matches, raw) {
+  const box = document.getElementById('global-search-results');
+  if (!matches.length) {
+    box.innerHTML = '<div class="gs-results"><p class="gs-empty">查無「' + raw + '」相關商品，可改用上方「聯絡客服」協助查詢</p></div>';
+    return;
+  }
+  let html = '<div class="gs-results">';
+  matches.forEach(function(p){
+    const catLabel = CAT_LABELS[String(p.Category).toLowerCase()] || p.Category || '';
+    const tagline  = [p.Brand, catLabel].filter(Boolean).join(' · ');
+    const model    = p.Model || p.DisplayName || '';
+    const isConsult = p.Type && String(p.Type).toLowerCase() === 'consult';
+    html += '<div class="gs-row"><div class="gs-meta">';
+    html += '<p class="gs-tagline">' + tagline + '</p>';
+    html += '<p class="gs-model">' + model + '</p>';
+    if (p.Spec) html += '<p class="gs-spec">' + p.Spec + '</p>';
+    html += '</div><div class="gs-right">';
+    if (isConsult) {
+      html += '<a href="https://line.me/R/ti/p/@267thqnd" class="btn-order" style="text-decoration:none;">LINE 諮詢</a>';
+    } else {
+      if (p.HasPrice && p.Price > 0) html += '<p class="gs-price">$' + Number(p.Price).toLocaleString() + '</p>';
+      else html += '<p class="gs-price" style="font-size:12px;color:var(--text-sec);">請洽報價</p>';
+      html += '<button class="btn-order gs-add" data-pid="' + p.ProductID + '" data-brand="' + p.Brand + '" data-name="' + (p.DisplayName||p.Model) + '" data-model="' + p.Model + '" data-price="' + (p.HasPrice ? p.Price : 0) + '">＋ 加入購物車</button>';
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+  box.innerHTML = html;
+}
+
+(function(){
+  const gi = document.getElementById('global-search-input');
+  if (gi) gi.addEventListener('input', onGlobalSearch);
+  const box = document.getElementById('global-search-results');
+  if (box) box.addEventListener('click', function(e){
+    const btn = e.target.closest('.gs-add');
+    if (!btn) return;
+    cartAddItem(btn.dataset.pid, btn.dataset.brand, btn.dataset.name, btn.dataset.model, btn.dataset.price);
+  });
+})();
+
 
 
 let cart = []; 
