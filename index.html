@@ -301,6 +301,17 @@
       color: var(--gold);
     }
 
+    /* 分類群組 */
+    .cat-group{margin-bottom:14px;}
+    .cat-group-label{display:block;font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+    .cat-group-tabs{display:flex;flex-wrap:wrap;gap:8px;}
+
+    /* 商品搜尋框 */
+    .product-search-input{width:100%;box-sizing:border-box;padding:13px 16px;font-family:var(--sans);font-size:14px;letter-spacing:0.04em;color:var(--text-pri);background:var(--bg);border:1px solid var(--divider);border-radius:var(--radius-md);outline:none;transition:border-color 0.15s;}
+    .product-search-input:focus{border-color:var(--gold);}
+    .product-search-input::placeholder{color:var(--text-sec);}
+    .product-search-hint{font-size:11px;color:var(--text-sec);margin:7px 2px 0;letter-spacing:0.04em;}
+
     .series-btn{padding:7px 16px;font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:0.06em;background:var(--bg);border:1px solid var(--divider);border-radius:2px;cursor:pointer;color:var(--text-sec);transition:all 0.15s;white-space:nowrap;}
     .series-btn.active{background:var(--text-pri);color:var(--bg);border-color:var(--text-pri);}
     .series-btn:hover{border-color:var(--gold);color:var(--gold);}
@@ -598,13 +609,45 @@
 
       <!-- 第二步：選擇品類 (選擇品牌後才會顯示) -->
       <div id="category-selector-wrapper" style="margin-top:14px;border-top:1px solid var(--divider);padding-top:12px;display:none;">
-        <p style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px;">第二步：選擇品類 (Category)</p>
-        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;">
-          <button class="cat-tab" data-cat="ac">空調</button>
-          <button class="cat-tab" data-cat="fridge">冰箱</button>
-          <button class="cat-tab" data-cat="washer">洗衣機</button>
-          <button class="cat-tab" data-cat="tv">電視</button>
-          <button class="cat-tab" style="margin-left:auto;color:var(--gold);border:none;background:none;padding:8px 0;" id="back-top-btn">↑ 回頂部</button>
+        <p style="font-size:11px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:12px;">第二步：選擇品類 (Category)</p>
+
+        <div class="cat-group">
+          <span class="cat-group-label">主要家電</span>
+          <div class="cat-group-tabs">
+            <button class="cat-tab" data-cat="ac">空調</button>
+            <button class="cat-tab" data-cat="fridge">冰箱</button>
+            <button class="cat-tab" data-cat="washer">洗衣機</button>
+            <button class="cat-tab" data-cat="tv">電視</button>
+          </div>
+        </div>
+
+        <div class="cat-group">
+          <span class="cat-group-label">廚房家電</span>
+          <div class="cat-group-tabs">
+            <button class="cat-tab" data-cat="kitchen">廚房調理</button>
+          </div>
+        </div>
+
+        <div class="cat-group">
+          <span class="cat-group-label">居家生活</span>
+          <div class="cat-group-tabs">
+            <button class="cat-tab" data-cat="air">空氣淨化</button>
+            <button class="cat-tab" data-cat="water">淨水設備</button>
+            <button class="cat-tab" data-cat="bath">衛浴設備</button>
+            <button class="cat-tab" data-cat="light">照明</button>
+            <button class="cat-tab" data-cat="clean">生活清潔</button>
+          </div>
+        </div>
+
+        <div class="cat-group" style="margin-bottom:6px;">
+          <span class="cat-group-label">個人護理</span>
+          <div class="cat-group-tabs">
+            <button class="cat-tab" data-cat="care">美容美髮</button>
+          </div>
+        </div>
+
+        <div style="text-align:right;">
+          <button class="cat-tab" style="color:var(--gold);border:none;background:none;padding:6px 0;" id="back-top-btn">↑ 回頂部</button>
         </div>
       </div>
 
@@ -621,6 +664,10 @@
 
   <section style="padding:32px 0 80px;background:var(--bg-card);">
     <div class="container">
+      <div class="product-search-bar" id="product-search-bar" style="display:none;margin-bottom:20px;">
+        <input type="text" class="product-search-input" id="product-search-input" placeholder="搜尋型號或品名（例：NR-F607、洗碗機、吹風機）" autocomplete="off">
+        <p class="product-search-hint" id="product-search-hint"></p>
+      </div>
       <div id="product-grid"></div>
     </div>
   </section>
@@ -1113,6 +1160,8 @@ document.querySelectorAll('.brand-btn').forEach(btn => {
     // 提示選擇品類
     const grid = document.getElementById('product-grid');
     grid.innerHTML = '<p style="color:var(--text-sec);font-size:14px;padding:40px 0;text-align:center;">請繼續選擇下方「第二步：選擇品類」以查看 ' + selectedBrand + ' 商品</p>';
+    const sb = document.getElementById('product-search-bar');
+    if (sb) sb.style.display = 'none';
   });
 });
 
@@ -1188,12 +1237,13 @@ async function loadProducts(cat, series) {
       document.getElementById('series-bar').style.display = 'none';
     }
 
-    // 篩選特定系列
-    const productsToRender = series === 'all'
-      ? brandFiltered
-      : brandFiltered.filter(p => p.Series === series);
+    // 重置搜尋並依是否有商品決定是否顯示搜尋框
+    const _searchBar   = document.getElementById('product-search-bar');
+    const _searchInput = document.getElementById('product-search-input');
+    if (_searchInput) _searchInput.value = '';
+    if (_searchBar)   _searchBar.style.display = brandFiltered.length ? 'block' : 'none';
 
-    renderProducts(productsToRender, cat);
+    applyProductSearch();
 
   } catch (e) {
     console.error(e);
@@ -1217,9 +1267,7 @@ function renderSeriesBar(seriesList, activeSeries) {
       sel.querySelectorAll('.series-btn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       selectedSeries = this.dataset.series;
-      
-      const filtered = selectedSeries === 'all' ? allProducts : allProducts.filter(p => p.Series === selectedSeries);
-      renderProducts(filtered, selectedCat);
+      applyProductSearch();
     });
   });
 }
@@ -1286,7 +1334,43 @@ function renderProducts(products, cat) {
   grid.innerHTML = html;
 }
 
-/* ── 購物車模組 ── */
+/* ── 商品搜尋（即時篩選目前類別） ── */
+function applyProductSearch() {
+  const input = document.getElementById('product-search-input');
+  const raw   = input ? input.value.trim() : '';
+  const kw    = raw.toLowerCase();
+  const hint  = document.getElementById('product-search-hint');
+
+  // 基底：尊重目前選擇的系列範圍
+  const base = (selectedSeries === 'all')
+    ? allProducts
+    : allProducts.filter(p => p.Series === selectedSeries);
+
+  if (!kw) {
+    if (hint) hint.textContent = '';
+    renderProducts(base, selectedCat);
+    return;
+  }
+
+  const filtered = base.filter(p => {
+    const hay = [(p.Model||''), (p.DisplayName||''), (p.Spec||''), (p.Series||'')].join(' ').toLowerCase();
+    return hay.includes(kw);
+  });
+
+  if (hint) {
+    hint.textContent = filtered.length
+      ? ('共 ' + filtered.length + ' 項符合「' + raw + '」')
+      : ('查無「' + raw + '」，可改用上方「聯絡客服」由專人協助查詢');
+  }
+  renderProducts(filtered, selectedCat);
+}
+
+(function(){
+  const si = document.getElementById('product-search-input');
+  if (si) si.addEventListener('input', applyProductSearch);
+})();
+
+
 let cart = []; 
 
 function cartAddItem(pid, brand, name, model, price) {
