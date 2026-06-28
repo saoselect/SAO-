@@ -1279,22 +1279,21 @@ async function loadProducts(cat, series) {
     const tierEl = document.getElementById('tier-badge');
     if (tierEl) tierEl.textContent = tier + ' 級會員';
 
-    // 從 DisplayName 萃取系列（GAS 無 Series 欄位時的備援）
+    // 先擷取「真正填了系列欄」的清單（需在 DisplayName 備援之前，
+    // 否則沒填系列的品項會各自被當成一個系列，跑出一堆按鈕）
+    const realSeries = [];
+    brandFiltered.forEach(p => {
+      if (p.Series && !realSeries.includes(p.Series)) realSeries.push(p.Series);
+    });
+
+    // 從 DisplayName 萃取系列（GAS 無 Series 欄位時的備援，供商品清單分組標題用）
     brandFiltered.forEach(p => {
       if (!p.Series && p.DisplayName) p.Series = p.DisplayName;
     });
 
-    // 提取不重複的系列列表
-    const uniqueSeries = ['all'];
-    brandFiltered.forEach(p => {
-      if (p.Series && !uniqueSeries.includes(p.Series)) {
-        uniqueSeries.push(p.Series);
-      }
-    });
-
-    // 核心需求：僅點選「空調」時，才顯示系列選擇
-    if (cat === 'ac' && uniqueSeries.length > 1) {
-      renderSeriesBar(uniqueSeries, series);
+    // 任何品類只要有 2 種以上「真實系列」就顯示可點的系列篩選列（不再限定空調）
+    if (realSeries.length >= 2) {
+      renderSeriesBar(['all'].concat(realSeries), series);
     } else {
       document.getElementById('series-bar').style.display = 'none';
     }
